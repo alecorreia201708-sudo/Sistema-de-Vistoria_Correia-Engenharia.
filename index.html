@@ -1,3 +1,2064 @@
 <!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Vistoria Técnica de Imóveis</title>
-<link rel="stylesheet" href="css/styles.css"></head><body><header><button id="back" class="noprint" aria-label="Voltar">‹</button><h1 id="ttl">Vistoria</h1><span class="s" id="net"></span></header><main id="app"></main><div id="toast"></div>
-<script src="js/utils.js"></script><script src="js/database.js"></script><script src="js/inspections.js"></script><script src="js/views.js"></script><script src="js/app.js"></script></body></html>
+<style>:root{--b:#1f3a4d;--bg:#f4f5f6;--t:#1d2329;--m:#5d6873;--l:#d9dde1;--ok:#2e7d4f;--nc:#c0392b;--na:#6b7280;--nv:#b7791f}
+*{box-sizing:border-box}body{margin:0;font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--t)}
+header{position:sticky;top:0;z-index:5;background:var(--b);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;align-items:center;gap:10px}
+header h1{font-size:17px;margin:0;flex:1}header .s{font-size:13px;opacity:.85}header button{background:none;border:0;color:#fff;font-size:22px;padding:0 6px}
+main{max-width:760px;margin:0 auto;padding:14px 14px 90px}
+.card{background:#fff;border:1px solid var(--l);border-radius:10px;padding:14px;margin-bottom:12px}
+.card h3{margin:0 0 4px;font-size:16px}.mut{color:var(--m);font-size:14px}
+button,.btn{font:inherit;min-height:46px;padding:0 16px;border-radius:8px;border:1px solid var(--b);background:#fff;color:var(--b);cursor:pointer}
+button.p{background:var(--b);color:#fff}button.d{border-color:var(--nc);color:var(--nc)}button:disabled{opacity:.45}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.row>*{flex:1 1 auto}
+label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #b9c0c7;border-radius:8px;background:#fff}textarea{min-height:70px}
+.chk{display:flex;gap:10px;align-items:center;color:var(--t);font-size:16px}.chk input{width:22px;height:22px}
+.bar{height:8px;background:var(--l);border-radius:4px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--ok)}
+.st{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.st button{min-height:50px;font-weight:600}
+.st button.ok.on{background:var(--ok);border-color:var(--ok);color:#fff}.st button.nc.on{background:var(--nc);border-color:var(--nc);color:#fff}
+.st button.na.on{background:var(--na);border-color:var(--na);color:#fff}.st button.nv.on{background:var(--nv);border-color:var(--nv);color:#fff}
+.st button.ok{color:var(--ok);border-color:var(--ok)}.st button.nc{color:var(--nc);border-color:var(--nc)}.st button.na{color:var(--na);border-color:var(--na)}.st button.nv{color:var(--nv);border-color:var(--nv)}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:10px;color:#fff}.tag.ok{background:var(--ok)}.tag.nc{background:var(--nc)}.tag.na{background:var(--na)}.tag.nv{background:var(--nv)}.tag.pe{background:#9aa3ab}
+.it{border-left:4px solid var(--l)}.it.ok{border-color:var(--ok)}.it.nc{border-color:var(--nc)}.it.na{border-color:var(--na)}.it.nv{border-color:var(--nv)}
+.ph{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.ph div{position:relative}.ph img{width:84px;height:84px;object-fit:cover;border-radius:6px}.ph b{position:absolute;top:-6px;right:-6px;background:var(--nc);color:#fff;border-radius:50%;width:22px;height:22px;text-align:center;line-height:22px;font-size:14px}
+.sub{background:#fbf3f2;border:1px solid #efc9c4;border-radius:8px;padding:10px;margin-top:10px}
+#toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:8px 14px;border-radius:20px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.ctr{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}.ctr b{display:block;font-size:22px}
+/* impressão do relatório */
+@media print{header,#toast,.noprint{display:none!important}body{background:#fff}.card{break-inside:avoid;border-color:#bbb}main{max-width:none;padding:0}}
+</style></head><body><header><button id="back" class="noprint" aria-label="Voltar">‹</button><h1 id="ttl">Vistoria</h1><span class="s" id="net"></span></header><main id="app"></main><div id="toast"></div>
+<script type="application/json" id="catalogo">{
+  "metadata": {
+    "catalog_id": "CAT-AMB-005-BANHEIRO",
+    "name": "Catálogo técnico de vistoria - Banheiro",
+    "version": "1.0.0",
+    "language": "pt-BR",
+    "created_on": "2026-11-04",
+    "status": "draft_for_technical_validation",
+    "description": "Base inicial editável de critérios para vistoria de recebimento de apartamento. Deve ser adaptada à unidade, ao escopo contratado e aos documentos disponíveis.",
+    "important_notes": [
+      "Catálogo original estruturado a partir dos critérios desenvolvidos na conversa; não reproduz literalmente o material de referência enviado.",
+      "Os critérios são sugestões de inspeção visual, funcional, dimensional ou documental e não constituem, isoladamente, laudo conclusivo sobre causa, responsabilidade, desempenho ou garantia.",
+      "Testes com água e testes funcionais dependem de autorização, disponibilidade dos sistemas e condições seguras.",
+      "Não desmontar componentes, abrir quadros, perfurar, remover revestimentos ou manipular condutores energizados durante a vistoria ordinária.",
+      "Ensaios e medições elétricas devem ser definidos e executados por profissional habilitado, com instrumentos adequados e procedimento compatível.",
+      "Critérios normativos devem ser vinculados somente após validação da edição vigente, escopo e aplicabilidade ao empreendimento e ao item."
+    ]
+  },
+  "inspection_statuses": [
+    {
+      "id": "CONFORME",
+      "label": "Conforme",
+      "requires_note": false
+    },
+    {
+      "id": "NAO_CONFORME",
+      "label": "Não conforme",
+      "requires_note": true
+    },
+    {
+      "id": "NAO_SE_APLICA",
+      "label": "Não se aplica",
+      "requires_note": true
+    },
+    {
+      "id": "NAO_VERIFICADO",
+      "label": "Não verificado",
+      "requires_note": true
+    }
+  ],
+  "nonconformity_fields": [
+    "description",
+    "exact_location",
+    "photos",
+    "priority",
+    "recommendation",
+    "observations"
+  ],
+  "not_verified_reasons": [
+    "Ausência de fornecimento de água",
+    "Ausência de energia elétrica",
+    "Acesso impedido",
+    "Equipamento não instalado ou indisponível",
+    "Teste não autorizado",
+    "Condição insegura",
+    "Outro"
+  ],
+  "criterion_origin_types": [
+    {
+      "id": "LIBRARY",
+      "label": "Critério da biblioteca técnica"
+    },
+    {
+      "id": "ADAPTED",
+      "label": "Critério da biblioteca adaptado para a unidade"
+    },
+    {
+      "id": "PROPERTY_SPECIFIC",
+      "label": "Critério específico da unidade"
+    }
+  ],
+  "reference_library": [
+    {
+      "id": "REF-NBR-15575",
+      "designation": "ABNT NBR 15575",
+      "subject": "Edificações habitacionais — Desempenho",
+      "validation_status": "pending_validation",
+      "notes": "Verificar partes, edição vigente e aplicabilidade ao requisito."
+    },
+    {
+      "id": "REF-NBR-13753",
+      "designation": "ABNT NBR 13753",
+      "subject": "Revestimento de piso interno ou externo com placas cerâmicas e argamassa colante",
+      "validation_status": "pending_validation",
+      "notes": "Aplicar somente quando pertinente ao sistema de revestimento."
+    },
+    {
+      "id": "REF-NBR-13754",
+      "designation": "ABNT NBR 13754",
+      "subject": "Revestimento de paredes internas com placas cerâmicas e argamassa colante",
+      "validation_status": "pending_validation",
+      "notes": "Aplicar somente quando pertinente ao sistema de revestimento."
+    },
+    {
+      "id": "REF-NBR-8160",
+      "designation": "ABNT NBR 8160",
+      "subject": "Sistemas prediais de esgoto sanitário — Projeto e execução",
+      "validation_status": "pending_validation",
+      "notes": "Verificar escopo e edição vigente."
+    },
+    {
+      "id": "REF-NBR-5626",
+      "designation": "ABNT NBR 5626",
+      "subject": "Sistemas prediais de água fria e água quente — Projeto, execução, operação e manutenção",
+      "validation_status": "pending_validation",
+      "notes": "Verificar escopo e edição vigente."
+    },
+    {
+      "id": "REF-NBR-5410",
+      "designation": "ABNT NBR 5410",
+      "subject": "Instalações elétricas de baixa tensão",
+      "validation_status": "pending_validation",
+      "notes": "Não usar inspeção visual simples como substituta de verificações e ensaios elétricos previstos."
+    },
+    {
+      "id": "REF-NBR-14136",
+      "designation": "ABNT NBR 14136",
+      "subject": "Plugues e tomadas para uso doméstico e análogo",
+      "validation_status": "pending_validation",
+      "notes": "Verificar edição vigente e aplicabilidade."
+    },
+    {
+      "id": "REF-NBR-9050",
+      "designation": "ABNT NBR 9050",
+      "subject": "Acessibilidade a edificações, mobiliário, espaços e equipamentos urbanos",
+      "validation_status": "pending_validation",
+      "notes": "Aplicabilidade depende das exigências do empreendimento e da unidade."
+    },
+    {
+      "id": "REF-NBR-7199",
+      "designation": "ABNT NBR 7199",
+      "subject": "Vidros na construção civil — Projeto, execução e aplicações",
+      "validation_status": "pending_validation",
+      "notes": "Considerar quando houver vidro abrangido pelo escopo."
+    }
+  ],
+  "categories": [
+    {
+      "id": "BAN-01",
+      "name": "Condições gerais e limpeza",
+      "criterion_ids": [
+        "BAN-001",
+        "BAN-002",
+        "BAN-003",
+        "BAN-004",
+        "BAN-005"
+      ]
+    },
+    {
+      "id": "BAN-02",
+      "name": "Paredes e divisórias",
+      "criterion_ids": [
+        "BAN-006",
+        "BAN-007",
+        "BAN-008",
+        "BAN-009",
+        "BAN-010",
+        "BAN-011",
+        "BAN-012"
+      ]
+    },
+    {
+      "id": "BAN-03",
+      "name": "Teto e forro",
+      "criterion_ids": [
+        "BAN-013",
+        "BAN-014",
+        "BAN-015",
+        "BAN-016",
+        "BAN-017",
+        "BAN-018"
+      ]
+    },
+    {
+      "id": "BAN-04",
+      "name": "Revestimentos de piso e parede",
+      "criterion_ids": [
+        "BAN-019",
+        "BAN-020",
+        "BAN-021",
+        "BAN-022",
+        "BAN-023",
+        "BAN-024",
+        "BAN-025",
+        "BAN-026",
+        "BAN-027"
+      ]
+    },
+    {
+      "id": "BAN-05",
+      "name": "Rodapés e arremates",
+      "criterion_ids": [
+        "BAN-028",
+        "BAN-029",
+        "BAN-030",
+        "BAN-031",
+        "BAN-032"
+      ]
+    },
+    {
+      "id": "BAN-06",
+      "name": "Ralo e drenagem",
+      "criterion_ids": [
+        "BAN-033",
+        "BAN-034",
+        "BAN-035",
+        "BAN-036",
+        "BAN-037",
+        "BAN-038",
+        "BAN-039"
+      ]
+    },
+    {
+      "id": "BAN-07",
+      "name": "Bancada e lavatório",
+      "criterion_ids": [
+        "BAN-040",
+        "BAN-041",
+        "BAN-042",
+        "BAN-043",
+        "BAN-044",
+        "BAN-045",
+        "BAN-046",
+        "BAN-047",
+        "BAN-048"
+      ]
+    },
+    {
+      "id": "BAN-08",
+      "name": "Torneiras e metais",
+      "criterion_ids": [
+        "BAN-049",
+        "BAN-050",
+        "BAN-051",
+        "BAN-052",
+        "BAN-053",
+        "BAN-054",
+        "BAN-055"
+      ]
+    },
+    {
+      "id": "BAN-09",
+      "name": "Bacia sanitária",
+      "criterion_ids": [
+        "BAN-056",
+        "BAN-057",
+        "BAN-058",
+        "BAN-059",
+        "BAN-060",
+        "BAN-061",
+        "BAN-062",
+        "BAN-063",
+        "BAN-064"
+      ]
+    },
+    {
+      "id": "BAN-10",
+      "name": "Box e divisórias",
+      "criterion_ids": [
+        "BAN-065",
+        "BAN-066",
+        "BAN-067",
+        "BAN-068",
+        "BAN-069",
+        "BAN-070",
+        "BAN-071",
+        "BAN-072"
+      ]
+    },
+    {
+      "id": "BAN-11",
+      "name": "Instalações hidráulicas",
+      "criterion_ids": [
+        "BAN-073",
+        "BAN-074",
+        "BAN-075",
+        "BAN-076",
+        "BAN-077",
+        "BAN-078",
+        "BAN-079",
+        "BAN-080",
+        "BAN-081",
+        "BAN-082"
+      ]
+    },
+    {
+      "id": "BAN-12",
+      "name": "Chuveiro",
+      "criterion_ids": [
+        "BAN-083",
+        "BAN-084",
+        "BAN-085",
+        "BAN-086",
+        "BAN-087",
+        "BAN-088",
+        "BAN-089"
+      ]
+    },
+    {
+      "id": "BAN-13",
+      "name": "Instalações elétricas",
+      "criterion_ids": [
+        "BAN-090",
+        "BAN-091",
+        "BAN-092",
+        "BAN-093",
+        "BAN-094",
+        "BAN-095",
+        "BAN-096",
+        "BAN-097",
+        "BAN-098"
+      ]
+    },
+    {
+      "id": "BAN-14",
+      "name": "Ventilação e acessórios",
+      "criterion_ids": [
+        "BAN-099",
+        "BAN-100",
+        "BAN-101",
+        "BAN-102",
+        "BAN-103",
+        "BAN-104",
+        "BAN-105",
+        "BAN-106"
+      ]
+    },
+    {
+      "id": "BAN-15",
+      "name": "Dimensões e documentação",
+      "criterion_ids": [
+        "BAN-107",
+        "BAN-108",
+        "BAN-109",
+        "BAN-110",
+        "BAN-111",
+        "BAN-112"
+      ]
+    }
+  ],
+  "criteria": [
+    {
+      "id": "BAN-001",
+      "category_id": "BAN-01",
+      "category": "Condições gerais e limpeza",
+      "description": "Ausência de resíduos de obra, poeira excessiva ou restos de argamassa",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-002",
+      "category_id": "BAN-01",
+      "category": "Condições gerais e limpeza",
+      "description": "Ausência de manchas, respingos de tinta ou resíduos sobre louças e metais",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-003",
+      "category_id": "BAN-01",
+      "category": "Condições gerais e limpeza",
+      "description": "Componentes e pontos de inspeção acessíveis para verificação",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-004",
+      "category_id": "BAN-01",
+      "category": "Condições gerais e limpeza",
+      "description": "Ausência de odores anormais no ambiente",
+      "inspection_type": "Sensorial",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-005",
+      "category_id": "BAN-01",
+      "category": "Condições gerais e limpeza",
+      "description": "Ausência de sinais aparentes de umidade ou vazamento",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-006",
+      "category_id": "BAN-02",
+      "category": "Paredes e divisórias",
+      "description": "Ausência de trincas, fissuras ou rachaduras aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-007",
+      "category_id": "BAN-02",
+      "category": "Paredes e divisórias",
+      "description": "Regularidade superficial, sem ondulações ou irregularidades perceptíveis",
+      "inspection_type": "Visual/dimensional",
+      "recommended_instrument": "Régua de alumínio; nível",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-008",
+      "category_id": "BAN-02",
+      "category": "Paredes e divisórias",
+      "description": "Ausência de manchas, bolhas ou sinais aparentes de umidade",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-009",
+      "category_id": "BAN-02",
+      "category": "Paredes e divisórias",
+      "description": "Pintura ou acabamento sem falhas, quando aplicável",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-010",
+      "category_id": "BAN-02",
+      "category": "Paredes e divisórias",
+      "description": "Alinhamento e acabamento dos encontros entre paredes",
+      "inspection_type": "Visual/dimensional",
+      "recommended_instrument": "Esquadro; régua",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-011",
+      "category_id": "BAN-02",
+      "category": "Paredes e divisórias",
+      "description": "Vedação aparente nos encontros com bancada, esquadria ou outros componentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-012",
+      "category_id": "BAN-02",
+      "category": "Paredes e divisórias",
+      "description": "Tipo e acabamento de parede compatíveis com memorial descritivo/projeto disponível",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Memorial descritivo; projeto",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-013",
+      "category_id": "BAN-03",
+      "category": "Teto e forro",
+      "description": "Ausência de manchas de umidade ou infiltração aparente",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-014",
+      "category_id": "BAN-03",
+      "category": "Teto e forro",
+      "description": "Ausência de trincas, fissuras ou destacamentos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-015",
+      "category_id": "BAN-03",
+      "category": "Teto e forro",
+      "description": "Regularidade superficial, sem ondulações perceptíveis",
+      "inspection_type": "Visual/dimensional",
+      "recommended_instrument": "Régua de alumínio",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-016",
+      "category_id": "BAN-03",
+      "category": "Teto e forro",
+      "description": "Pintura ou acabamento sem falhas aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-017",
+      "category_id": "BAN-03",
+      "category": "Teto e forro",
+      "description": "Acabamento adequado nos encontros entre teto/forro e paredes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-018",
+      "category_id": "BAN-03",
+      "category": "Teto e forro",
+      "description": "Ponto de iluminação e acabamento aparente íntegros",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-019",
+      "category_id": "BAN-04",
+      "category": "Revestimentos de piso e parede",
+      "description": "Ausência de peças cerâmicas/porcelanatos trincadas, quebradas ou lascadas",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-020",
+      "category_id": "BAN-04",
+      "category": "Revestimentos de piso e parede",
+      "description": "Ausência de riscos, manchas ou danos superficiais relevantes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-021",
+      "category_id": "BAN-04",
+      "category": "Revestimentos de piso e parede",
+      "description": "Ausência de ressaltos ou diferenças de nível perceptíveis entre peças",
+      "inspection_type": "Visual/dimensional",
+      "recommended_instrument": "Régua; nível",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-022",
+      "category_id": "BAN-04",
+      "category": "Revestimentos de piso e parede",
+      "description": "Rejuntamento contínuo, sem falhas, lacunas ou deterioração aparente",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-023",
+      "category_id": "BAN-04",
+      "category": "Revestimentos de piso e parede",
+      "description": "Ausência de indícios de descolamento; percussão leve somente quando apropriada e autorizada",
+      "inspection_type": "Visual/sonoro",
+      "recommended_instrument": "Martelo de borracha",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-024",
+      "category_id": "BAN-04",
+      "category": "Revestimentos de piso e parede",
+      "description": "Acabamento adequado no encontro entre piso e parede",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-025",
+      "category_id": "BAN-04",
+      "category": "Revestimentos de piso e parede",
+      "description": "Caimento aparente direcionado ao ralo, quando aplicável",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Nível; água",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-026",
+      "category_id": "BAN-04",
+      "category": "Revestimentos de piso e parede",
+      "description": "Ausência de empoçamento em teste controlado com água, quando autorizado",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Balde; água",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-027",
+      "category_id": "BAN-04",
+      "category": "Revestimentos de piso e parede",
+      "description": "Tipo e padrão do revestimento compatíveis com memorial descritivo/projeto disponível",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Memorial descritivo",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-028",
+      "category_id": "BAN-05",
+      "category": "Rodapés e arremates",
+      "description": "Ausência de rodapés danificados, trincados ou quebrados",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-029",
+      "category_id": "BAN-05",
+      "category": "Rodapés e arremates",
+      "description": "Alinhamento e continuidade dos rodapés",
+      "inspection_type": "Visual/dimensional",
+      "recommended_instrument": "Régua",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-030",
+      "category_id": "BAN-05",
+      "category": "Rodapés e arremates",
+      "description": "Rejuntamento ou vedação dos rodapés sem falhas aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-031",
+      "category_id": "BAN-05",
+      "category": "Rodapés e arremates",
+      "description": "Acabamento adequado em cantos, encontros e terminações",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-032",
+      "category_id": "BAN-05",
+      "category": "Rodapés e arremates",
+      "description": "Material e acabamento compatíveis com memorial descritivo/projeto disponível",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Memorial descritivo",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-033",
+      "category_id": "BAN-06",
+      "category": "Ralo e drenagem",
+      "description": "Grelha íntegra, sem danos e com acabamento adequado",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-034",
+      "category_id": "BAN-06",
+      "category": "Ralo e drenagem",
+      "description": "Grelha corretamente posicionada e aparentemente fixada",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-035",
+      "category_id": "BAN-06",
+      "category": "Ralo e drenagem",
+      "description": "Ausência de obstruções aparentes no ralo",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-036",
+      "category_id": "BAN-06",
+      "category": "Ralo e drenagem",
+      "description": "Acabamento do revestimento no entorno do ralo",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-037",
+      "category_id": "BAN-06",
+      "category": "Ralo e drenagem",
+      "description": "Escoamento de água satisfatório em teste controlado, quando autorizado",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Balde; água",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-038",
+      "category_id": "BAN-06",
+      "category": "Ralo e drenagem",
+      "description": "Ausência de retorno de água ou esgoto durante a verificação",
+      "inspection_type": "Funcional/visual",
+      "recommended_instrument": "Água; lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-039",
+      "category_id": "BAN-06",
+      "category": "Ralo e drenagem",
+      "description": "Ausência de odores anormais provenientes do ralo",
+      "inspection_type": "Sensorial",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-040",
+      "category_id": "BAN-07",
+      "category": "Bancada e lavatório",
+      "description": "Ausência de trincas, lascas ou quebras na bancada e no lavatório",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-041",
+      "category_id": "BAN-07",
+      "category": "Bancada e lavatório",
+      "description": "Ausência de manchas e defeitos superficiais relevantes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-042",
+      "category_id": "BAN-07",
+      "category": "Bancada e lavatório",
+      "description": "Estabilidade e fixação aparentes da bancada e do lavatório",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Inspeção manual leve",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-043",
+      "category_id": "BAN-07",
+      "category": "Bancada e lavatório",
+      "description": "Nivelamento aparente e acabamento das bordas",
+      "inspection_type": "Visual/dimensional",
+      "recommended_instrument": "Nível",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-044",
+      "category_id": "BAN-07",
+      "category": "Bancada e lavatório",
+      "description": "Vedação entre cuba e bancada sem falhas aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-045",
+      "category_id": "BAN-07",
+      "category": "Bancada e lavatório",
+      "description": "Vedação entre bancada e parede sem falhas aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-046",
+      "category_id": "BAN-07",
+      "category": "Bancada e lavatório",
+      "description": "Escoamento adequado da cuba",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Água",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-047",
+      "category_id": "BAN-07",
+      "category": "Bancada e lavatório",
+      "description": "Ausência de vazamento nas conexões inferiores durante o uso",
+      "inspection_type": "Funcional/visual",
+      "recommended_instrument": "Lanterna; água",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-048",
+      "category_id": "BAN-07",
+      "category": "Bancada e lavatório",
+      "description": "Material, dimensões e acabamento compatíveis com memorial/projeto disponível",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Memorial descritivo",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-049",
+      "category_id": "BAN-08",
+      "category": "Torneiras e metais",
+      "description": "Ausência de riscos, manchas, oxidação ou danos no acabamento",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-050",
+      "category_id": "BAN-08",
+      "category": "Torneiras e metais",
+      "description": "Fixação e estabilidade aparentes dos metais",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Inspeção manual leve",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-051",
+      "category_id": "BAN-08",
+      "category": "Torneiras e metais",
+      "description": "Acionamento e fechamento adequados",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-052",
+      "category_id": "BAN-08",
+      "category": "Torneiras e metais",
+      "description": "Vazão e continuidade do fluxo de água satisfatórias",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-053",
+      "category_id": "BAN-08",
+      "category": "Torneiras e metais",
+      "description": "Ausência de vazamentos nas conexões aparentes durante o funcionamento",
+      "inspection_type": "Funcional/visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-054",
+      "category_id": "BAN-08",
+      "category": "Torneiras e metais",
+      "description": "Funcionamento de água quente/fria, quando previsto",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-055",
+      "category_id": "BAN-08",
+      "category": "Torneiras e metais",
+      "description": "Modelo e acabamento compatíveis com memorial descritivo/projeto disponível",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Memorial descritivo",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-056",
+      "category_id": "BAN-09",
+      "category": "Bacia sanitária",
+      "description": "Ausência de trincas, quebras ou danos na louça",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-057",
+      "category_id": "BAN-09",
+      "category": "Bacia sanitária",
+      "description": "Acabamento e superfície sem manchas ou defeitos relevantes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-058",
+      "category_id": "BAN-09",
+      "category": "Bacia sanitária",
+      "description": "Fixação e estabilidade aparentes da bacia sanitária",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Inspeção manual leve",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-059",
+      "category_id": "BAN-09",
+      "category": "Bacia sanitária",
+      "description": "Acabamento e vedação aparente na base da bacia",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-060",
+      "category_id": "BAN-09",
+      "category": "Bacia sanitária",
+      "description": "Acionamento do mecanismo de descarga",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-061",
+      "category_id": "BAN-09",
+      "category": "Bacia sanitária",
+      "description": "Enchimento da caixa acoplada e interrupção do fluxo após enchimento, quando aplicável",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-062",
+      "category_id": "BAN-09",
+      "category": "Bacia sanitária",
+      "description": "Ausência de vazamentos após acionamento da descarga",
+      "inspection_type": "Funcional/visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-063",
+      "category_id": "BAN-09",
+      "category": "Bacia sanitária",
+      "description": "Funcionamento e fixação do assento e da tampa",
+      "inspection_type": "Funcional/visual",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-064",
+      "category_id": "BAN-09",
+      "category": "Bacia sanitária",
+      "description": "Modelo e sistema compatíveis com memorial descritivo/projeto disponível",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Memorial descritivo",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-065",
+      "category_id": "BAN-10",
+      "category": "Box e divisórias",
+      "description": "Vidros sem trincas, lascas ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-066",
+      "category_id": "BAN-10",
+      "category": "Box e divisórias",
+      "description": "Perfis, ferragens e acessórios sem danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-067",
+      "category_id": "BAN-10",
+      "category": "Box e divisórias",
+      "description": "Fixação aparente dos perfis e componentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-068",
+      "category_id": "BAN-10",
+      "category": "Box e divisórias",
+      "description": "Abertura e fechamento das folhas sem travamentos anormais",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-069",
+      "category_id": "BAN-10",
+      "category": "Box e divisórias",
+      "description": "Funcionamento de puxadores, fechaduras ou travas, quando existentes",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-070",
+      "category_id": "BAN-10",
+      "category": "Box e divisórias",
+      "description": "Perfis de vedação e guarnições íntegros e corretamente posicionados",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-071",
+      "category_id": "BAN-10",
+      "category": "Box e divisórias",
+      "description": "Estabilidade aparente do conjunto, sem aplicação de força excessiva",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Inspeção manual leve",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-072",
+      "category_id": "BAN-10",
+      "category": "Box e divisórias",
+      "description": "Contenção e direcionamento da água em teste controlado, quando autorizado",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Água; balde",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-073",
+      "category_id": "BAN-11",
+      "category": "Instalações hidráulicas",
+      "description": "Tubulações e conexões aparentes sem danos ou deformações",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-074",
+      "category_id": "BAN-11",
+      "category": "Instalações hidráulicas",
+      "description": "Ausência de vazamentos nas conexões aparentes durante a verificação",
+      "inspection_type": "Funcional/visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-075",
+      "category_id": "BAN-11",
+      "category": "Instalações hidráulicas",
+      "description": "Sifão instalado e posicionado adequadamente",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-076",
+      "category_id": "BAN-11",
+      "category": "Instalações hidráulicas",
+      "description": "Ausência de vazamentos no sifão durante o uso",
+      "inspection_type": "Funcional/visual",
+      "recommended_instrument": "Lanterna; água",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-077",
+      "category_id": "BAN-11",
+      "category": "Instalações hidráulicas",
+      "description": "Flexíveis sem danos, ressecamento ou deformações aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-078",
+      "category_id": "BAN-11",
+      "category": "Instalações hidráulicas",
+      "description": "Flexíveis sem torções, dobras acentuadas ou tensão aparente",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-079",
+      "category_id": "BAN-11",
+      "category": "Instalações hidráulicas",
+      "description": "Acabamento e fixação aparentes dos registros",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-080",
+      "category_id": "BAN-11",
+      "category": "Instalações hidráulicas",
+      "description": "Abertura e fechamento dos registros",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-081",
+      "category_id": "BAN-11",
+      "category": "Instalações hidráulicas",
+      "description": "Funcionamento dos pontos de água previstos",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-082",
+      "category_id": "BAN-11",
+      "category": "Instalações hidráulicas",
+      "description": "Ausência de sinais aparentes de retorno ou vazamento de esgoto",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-083",
+      "category_id": "BAN-12",
+      "category": "Chuveiro",
+      "description": "Chuveiro íntegro, sem trincas ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-084",
+      "category_id": "BAN-12",
+      "category": "Chuveiro",
+      "description": "Fixação e acabamento aparentes do chuveiro",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-085",
+      "category_id": "BAN-12",
+      "category": "Chuveiro",
+      "description": "Ausência de vazamentos na conexão hidráulica durante o funcionamento",
+      "inspection_type": "Funcional/visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-086",
+      "category_id": "BAN-12",
+      "category": "Chuveiro",
+      "description": "Acionamento e funcionamento hidráulico do chuveiro",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-087",
+      "category_id": "BAN-12",
+      "category": "Chuveiro",
+      "description": "Vazão e distribuição de água satisfatórias",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-088",
+      "category_id": "BAN-12",
+      "category": "Chuveiro",
+      "description": "Funcionamento do controle de temperatura, quando aplicável e seguro",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-089",
+      "category_id": "BAN-12",
+      "category": "Chuveiro",
+      "description": "Modelo e características compatíveis com memorial descritivo/projeto disponível",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Memorial descritivo",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-090",
+      "category_id": "BAN-13",
+      "category": "Instalações elétricas",
+      "description": "Placas de tomadas e interruptores íntegras, sem trincas ou danos",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-091",
+      "category_id": "BAN-13",
+      "category": "Instalações elétricas",
+      "description": "Placas e mecanismos aparentemente bem fixados e acabados",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-092",
+      "category_id": "BAN-13",
+      "category": "Instalações elétricas",
+      "description": "Acionamento dos interruptores",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-093",
+      "category_id": "BAN-13",
+      "category": "Instalações elétricas",
+      "description": "Funcionamento dos pontos de iluminação",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-094",
+      "category_id": "BAN-13",
+      "category": "Instalações elétricas",
+      "description": "Verificação funcional das tomadas com instrumento apropriado, quando prevista no escopo",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Testador de tomadas adequado",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-095",
+      "category_id": "BAN-13",
+      "category": "Instalações elétricas",
+      "description": "Medição de tensão, quando prevista no escopo e executada por profissional habilitado",
+      "inspection_type": "Medição",
+      "recommended_instrument": "Multímetro adequado",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-096",
+      "category_id": "BAN-13",
+      "category": "Instalações elétricas",
+      "description": "Ponto elétrico do chuveiro compatível com projeto e equipamento, quando disponíveis",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Projeto; dados do equipamento",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-097",
+      "category_id": "BAN-13",
+      "category": "Instalações elétricas",
+      "description": "Identificação e características do circuito compatíveis com projeto disponível, quando verificável",
+      "inspection_type": "Documental/técnica",
+      "recommended_instrument": "Projeto elétrico",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-098",
+      "category_id": "BAN-13",
+      "category": "Instalações elétricas",
+      "description": "Ausência de condutores expostos ou componentes elétricos visivelmente danificados",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-099",
+      "category_id": "BAN-14",
+      "category": "Ventilação e acessórios",
+      "description": "Funcionamento do exaustor, quando existente",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-100",
+      "category_id": "BAN-14",
+      "category": "Ventilação e acessórios",
+      "description": "Ausência de ruídos ou vibrações anormais no exaustor",
+      "inspection_type": "Funcional/sensorial",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-101",
+      "category_id": "BAN-14",
+      "category": "Ventilação e acessórios",
+      "description": "Fixação aparente do exaustor",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-102",
+      "category_id": "BAN-14",
+      "category": "Ventilação e acessórios",
+      "description": "Espelho íntegro, sem trincas ou danos",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-103",
+      "category_id": "BAN-14",
+      "category": "Ventilação e acessórios",
+      "description": "Fixação dos acessórios (porta-toalha, papeleira, cabide etc.)",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Inspeção manual leve",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-104",
+      "category_id": "BAN-14",
+      "category": "Ventilação e acessórios",
+      "description": "Alinhamento e acabamento dos acessórios",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Nível; trena",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-105",
+      "category_id": "BAN-14",
+      "category": "Ventilação e acessórios",
+      "description": "Acabamento de nichos e prateleiras, quando existentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-106",
+      "category_id": "BAN-14",
+      "category": "Ventilação e acessórios",
+      "description": "Acessórios e equipamentos compatíveis com memorial descritivo/projeto disponível",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Memorial descritivo",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-107",
+      "category_id": "BAN-15",
+      "category": "Dimensões e documentação",
+      "description": "Dimensões do ambiente verificadas quando incluídas no escopo da vistoria",
+      "inspection_type": "Dimensional",
+      "recommended_instrument": "Trena",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-108",
+      "category_id": "BAN-15",
+      "category": "Dimensões e documentação",
+      "description": "Dimensões e posicionamento de vãos verificados quando incluídos no escopo",
+      "inspection_type": "Dimensional",
+      "recommended_instrument": "Trena",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-109",
+      "category_id": "BAN-15",
+      "category": "Dimensões e documentação",
+      "description": "Posicionamento dos pontos hidráulicos compatível com projeto disponível, quando verificável",
+      "inspection_type": "Dimensional/documental",
+      "recommended_instrument": "Trena; projeto",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-110",
+      "category_id": "BAN-15",
+      "category": "Dimensões e documentação",
+      "description": "Posicionamento dos pontos elétricos compatível com projeto disponível, quando verificável",
+      "inspection_type": "Dimensional/documental",
+      "recommended_instrument": "Trena; projeto",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-111",
+      "category_id": "BAN-15",
+      "category": "Dimensões e documentação",
+      "description": "Materiais e acabamentos instalados compatíveis com memorial descritivo disponível",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Memorial descritivo",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "BAN-112",
+      "category_id": "BAN-15",
+      "category": "Dimensões e documentação",
+      "description": "Equipamentos e acessórios entregues compatíveis com memorial descritivo disponível",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Memorial descritivo",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    }
+  ],
+  "property_configuration": {
+    "fields": [
+      {
+        "id": "bathroom_type",
+        "label": "Tipo de banheiro",
+        "type": "select",
+        "options": [
+          "Suíte",
+          "Social",
+          "Lavabo",
+          "Outro"
+        ]
+      },
+      {
+        "id": "wall_system",
+        "label": "Sistema construtivo das paredes",
+        "type": "multi_select",
+        "options": [
+          "Alvenaria convencional",
+          "Alvenaria estrutural",
+          "Concreto",
+          "Drywall",
+          "Outro"
+        ]
+      },
+      {
+        "id": "ceiling_type",
+        "label": "Tipo de teto/forro",
+        "type": "select",
+        "options": [
+          "Laje aparente",
+          "Gesso",
+          "Drywall",
+          "Outro"
+        ]
+      },
+      {
+        "id": "floor_finish",
+        "label": "Acabamento do piso",
+        "type": "select",
+        "options": [
+          "Porcelanato",
+          "Cerâmica",
+          "Pedra natural",
+          "Vinílico",
+          "Outro"
+        ]
+      },
+      {
+        "id": "wall_finish",
+        "label": "Acabamento das paredes",
+        "type": "multi_select",
+        "options": [
+          "Pintura",
+          "Cerâmica",
+          "Porcelanato",
+          "Pedra natural",
+          "Outro"
+        ]
+      },
+      {
+        "id": "baseboard_type",
+        "label": "Tipo de rodapé",
+        "type": "select",
+        "options": [
+          "Cerâmico",
+          "Porcelanato",
+          "MDF",
+          "PVC",
+          "Sem rodapé",
+          "Outro"
+        ]
+      },
+      {
+        "id": "countertop_material",
+        "label": "Material da bancada",
+        "type": "select",
+        "options": [
+          "Granito",
+          "Mármore",
+          "Quartzo/industrializado",
+          "Louça",
+          "Outro",
+          "Não possui"
+        ]
+      },
+      {
+        "id": "shower_screen",
+        "label": "Possui box/divisória?",
+        "type": "boolean"
+      },
+      {
+        "id": "exhaust_fan",
+        "label": "Possui exaustor?",
+        "type": "boolean"
+      },
+      {
+        "id": "electric_shower",
+        "label": "Tipo de chuveiro",
+        "type": "select",
+        "options": [
+          "Elétrico",
+          "Aquecimento central/gás",
+          "Outro",
+          "Não instalado"
+        ]
+      },
+      {
+        "id": "hot_water",
+        "label": "Possui água quente?",
+        "type": "boolean"
+      }
+    ],
+    "rule": "A configuração da unidade deve determinar quais critérios serão aplicáveis. Critérios condicionais podem ser desativados ou marcados como não aplicáveis, com justificativa."
+  },
+  "inspection_snapshot": {
+    "rule": "Ao iniciar uma vistoria, copiar os critérios aplicáveis para uma instância vinculada à unidade. Alterações futuras na biblioteca não devem modificar vistorias já iniciadas ou concluídas.",
+    "fields": [
+      "inspection_id",
+      "property_id",
+      "criterion_id",
+      "criterion_version",
+      "description_snapshot",
+      "status",
+      "notes",
+      "photos",
+      "priority",
+      "recommendation",
+      "verified_at",
+      "verified_by",
+      "origin"
+    ]
+  }
+}</script>
+<script>/* Utilitários, constantes e estado global da aplicação. */
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ST={CONFORME:['Conforme','ok'],NAO_CONFORME:['Não conforme','nc'],NAO_SE_APLICA:['Não se aplica','na'],NAO_VERIFICADO:['Não verificado','nv']};
+const NV=['Ausência de fornecimento de água','Ausência de energia elétrica','Acesso impedido','Equipamento não instalado ou indisponível','Teste não autorizado','Condição insegura','Outro'];
+const PRI=['Baixa','Média','Alta','Crítica'];
+let CAT,props=[],insps=[],cur,S={v:'home'},urls={},T;
+
+/* Camada IndexedDB (imóveis, vistorias e fotos) e salvamento automático. */
+// ---- IndexedDB (dados e fotos; nada em localStorage) ----
+const DB=(()=>{let d;const o=()=>d||(d=new Promise((ok,er)=>{const r=indexedDB.open('vistoria',1);r.onupgradeneeded=()=>['props','insps','photos'].forEach(s=>r.result.createObjectStore(s,{keyPath:'id'}));r.onsuccess=()=>ok(r.result);r.onerror=()=>er(r.error)}));
+const t=async(s,m,f)=>{const db=await o();return new Promise((ok,er)=>{const x=db.transaction(s,m),q=f(x.objectStore(s));x.oncomplete=()=>ok(q&&q.result);x.onerror=()=>er(x.error)})};
+return{all:s=>t(s,'readonly',x=>x.getAll()),put:(s,v)=>t(s,'readwrite',x=>x.put(v)),del:(s,k)=>t(s,'readwrite',x=>x.delete(k))}})();
+const toast=m=>{const e=$('#toast');e.textContent=m;e.style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.opacity=0,2200)};
+const save=()=>{clearTimeout(T);T=setTimeout(()=>DB.put('insps',cur).then(()=>toast('Salvo ✓')),250)};
+const uid=()=>crypto.randomUUID();
+
+/* Regras da vistoria: aplicabilidade sugerida, contagens de progresso e carregamento de dados/catálogo. */
+// ---- aplicabilidade SUGERIDA (a validar pelo engenheiro) ----
+const naReason=(n,c)=>(n>=65&&n<=72&&!c.box&&'Unidade sem box/divisória')||(n>=99&&n<=101&&!c.exaustor&&'Unidade sem exaustor')||(n>=83&&n<=89&&c.chuveiro=='Não instalado'&&'Chuveiro não instalado')||(n==96&&c.chuveiro!='Elétrico'&&'Chuveiro não é elétrico')||'';
+const cnt=i=>{const c={CONFORME:0,NAO_CONFORME:0,NAO_SE_APLICA:0,NAO_VERIFICADO:0,pe:0};i.items.forEach(x=>x.st?c[x.st]++:c.pe++);c.n=i.items.length;c.pct=Math.round((c.n-c.pe)/c.n*100);return c};
+const tag=s=>s?`<span class="tag ${ST[s][1]}">${ST[s][0]}</span>`:'<span class="tag pe">Pendente</span>';
+const pn=id=>props.find(p=>p.id==id)||{name:'(imóvel removido)'};
+const fld=(l,k,v,t='text')=>`<label>${l}</label><input type="${t}" data-p="${k}" value="${esc(v)}">`;
+async function load(){[props,insps]=await Promise.all([DB.all('props'),DB.all('insps')]);insps.sort((a,b)=>b.startedAt.localeCompare(a.startedAt))}
+async function loadCat(){CAT=JSON.parse(document.getElementById('catalogo').textContent)}
+
+/* Telas (HTML gerado por funções). */
+// ---- telas ----
+const V={
+home(){return`<div class="row"><button class="p" data-a="newp">+ Cadastrar imóvel</button></div>
+<h2>Imóveis</h2>${props.map(p=>`<div class="card"><h3>${esc(p.name||'Sem nome')} ${esc(p.unit)}</h3><div class="mut">${esc(p.developer)} ${esc(p.tower)} · ${esc(p.client)}</div>
+<div class="row"><button class="p" data-a="start" data-x="${p.id}">Iniciar vistoria</button><button data-a="editp" data-x="${p.id}">Editar</button></div></div>`).join('')||'<p class="mut">Nenhum imóvel. Cadastre o primeiro.</p>'}
+<h2>Vistorias</h2>${insps.map(i=>{const c=cnt(i);return`<div class="card"><h3>${esc(pn(i.pid).name)} ${esc(pn(i.pid).unit)}</h3><div class="mut">${i.status.replace('_',' ').toLowerCase()} · ${c.pct}% · ${new Date(i.startedAt).toLocaleDateString('pt-BR')}</div><div class="bar"><i style="width:${c.pct}%"></i></div>
+<div class="row"><button class="p" data-a="open" data-x="${i.id}">Abrir</button><button data-a="rel" data-x="${i.id}">Relatório</button></div></div>`}).join('')||'<p class="mut">Nenhuma vistoria iniciada.</p>'}
+<h2>Backup</h2><div class="row"><button data-a="exp">Exportar backup</button><button onclick="$('#imp').click()">Importar backup</button></div><input id="imp" type="file" accept=".json" hidden>
+<p class="mut">Os dados ficam neste navegador. Exporte o backup com frequência.</p>`},
+prop(){const p=S.p;return`<div class="card">${fld('Identificação / nome do empreendimento','name',p.name)}${fld('Construtora/incorporadora','developer',p.developer)}${fld('Endereço','address',p.address)}${fld('Unidade','unit',p.unit)}${fld('Torre/bloco','tower',p.tower)}${fld('Cliente/proprietário','client',p.client)}${fld('Data prevista','date',p.date,'date')}<label>Observações</label><textarea data-p="notes">${esc(p.notes)}</textarea>
+<div class="row"><button class="p" data-a="savep">Salvar</button>${props.some(x=>x.id==p.id)?'<button class="d" data-a="delp">Excluir</button>':''}</div></div>`},
+start(){return`<div class="card"><h3>${esc(pn(S.pid).name)} ${esc(pn(S.pid).unit)}</h3>${fld('Responsável pela inspeção','insp','')}
+<label>Configuração do banheiro</label><label class="chk"><input type="checkbox" id="c_box" checked>Possui box/divisória</label><label class="chk"><input type="checkbox" id="c_ex" checked>Possui exaustor</label>
+<label>Tipo de chuveiro</label><select id="c_ch"><option>Elétrico</option><option>Aquecimento central/gás</option><option>Outro</option><option>Não instalado</option></select>
+<p class="mut">Critérios que não se aplicam entram como "Não se aplica" com justificativa (regras sugeridas, a validar).</p><div class="row"><button class="p" data-a="go">Iniciar vistoria</button></div></div>`},
+insp(){const c=cnt(cur);return`<div class="card"><div class="ctr"><div><b>${c.CONFORME}</b>conformes</div><div><b>${c.NAO_CONFORME}</b>não conf.</div><div><b>${c.NAO_SE_APLICA}</b>não aplica</div><div><b>${c.NAO_VERIFICADO}</b>não verif.</div><div><b>${c.pe}</b>pendentes</div><div><b>${c.pct}%</b>concluído</div></div><div class="bar"><i style="width:${c.pct}%"></i></div></div>
+${CAT.categories.map(g=>{const it=cur.items.filter(x=>x.cat==g.id),d=it.filter(x=>x.st).length;return`<div class="card" data-a="cat" data-x="${g.id}" style="cursor:pointer"><h3>${esc(g.name)}</h3><span class="mut">${d}/${it.length} avaliados</span><div class="bar"><i style="width:${d/it.length*100}%"></i></div></div>`}).join('')}
+<div class="row"><button data-a="pause">${cur.status=='PAUSADA'?'Retomar':'Pausar'}</button><button data-a="rel" data-x="${cur.id}">Relatório</button><button class="p" data-a="fin" ${c.pe?'disabled':''}>Finalizar${c.pe?' (há pendentes)':''}</button></div>`},
+cat(){return CAT.criteria.filter(c=>c.category_id==S.c).map(c=>{const i=cur.items.findIndex(x=>x.id==c.id),x=cur.items[i];return item(x,i)}).join('')},
+rel(){const i=cur,c=cnt(i),p=pn(i.pid),sec=(t,f)=>{const l=i.items.filter(f);return l.length?`<h3>${t} (${l.length})</h3>`+l.map(x=>`<div class="card"><b>${x.id}</b> ${esc(x.d)}<br><span class="mut">${esc(x.catName)}</span><br>${tag(x.st)}${x.na?` <span class="mut">${esc(x.na)}</span>`:''}${x.nv?` <span class="mut">Motivo: ${esc(x.nv)}</span>`:''}${x.note?`<br>Obs.: ${esc(x.note)}`:''}${x.nc?`<br>Ocorrência: ${esc(x.nc.desc)}<br>Local: ${esc(x.nc.loc)} · Prioridade: ${esc(x.nc.pri)}<br>Recomendação: ${esc(x.nc.rec)}<br>${esc(x.nc.obs)}`:''}<div class="ph">${x.ph.map(f=>`<img src="${urls[f]}">`).join('')}</div></div>`).join(''):''};
+return`<div class="row noprint"><button class="p" data-a="print">Imprimir / salvar PDF</button></div><div class="card"><h2>Relatório de vistoria — Banheiro</h2>Imóvel: ${esc(p.name)} ${esc(p.unit)} ${esc(p.tower)}<br>Empreendimento/construtora: ${esc(p.developer)}<br>Endereço: ${esc(p.address)}<br>Cliente: ${esc(p.client)}<br>Data: ${new Date(i.startedAt).toLocaleDateString('pt-BR')} · Responsável: ${esc(i.insp)}<br>Catálogo ${esc(i.cat.id)} v${esc(i.cat.version)} (${esc(i.cat.status)})</div>
+<div class="card"><h3>Resumo</h3>Avaliados: ${c.n-c.pe} de ${c.n} · Conformes: ${c.CONFORME} · Não conformes: ${c.NAO_CONFORME} · Não se aplica: ${c.NAO_SE_APLICA} · Não verificados: ${c.NAO_VERIFICADO} · Pendentes: ${c.pe}</div>
+${sec('Não conformidades',x=>x.st=='NAO_CONFORME')}${sec('Itens não verificados (limitações da inspeção)',x=>x.st=='NAO_VERIFICADO')}${sec('Conformes com observação',x=>x.st=='CONFORME'&&x.note)}
+<div class="card"><h3>Observações gerais e limitações</h3><textarea data-g="notes">${esc(i.notes||'')}</textarea><p class="mut">Inspeção visual, funcional e documental não destrutiva; não substitui ensaios técnicos específicos. As referências normativas do catálogo estão pendentes de validação e não foram aplicadas como critério de conformidade.</p><br><br>______________________________<br>${esc(i.insp)} — Responsável técnico</div>`}};
+function item(x,i){const s=x.st?ST[x.st][1]:'';return`<div class="card it ${s}"><b>${x.id}</b> ${esc(x.d)}<div class="mut">${esc(x.tipo)}${x.inst?' · '+esc(x.inst):''}</div>${x.na&&x.st=='NAO_SE_APLICA'&&x.auto?`<div class="mut">Justificativa automática: ${esc(x.na)}</div>`:''}
+<div class="st">${Object.entries(ST).map(([k,v])=>`<button class="${v[1]} ${x.st==k?'on':''}" data-a="st" data-i="${i}" data-x="${k}">${v[0]}</button>`).join('')}</div>
+${x.st=='NAO_VERIFICADO'?`<label>Motivo</label><select data-i="${i}" data-k="nv"><option value="">Selecione…</option>${NV.map(n=>`<option ${x.nv==n?'selected':''}>${n}</option>`).join('')}</select>`:''}
+${x.st=='NAO_CONFORME'?`<div class="sub"><label>Descrição da ocorrência</label><textarea data-i="${i}" data-k="nc.desc">${esc(x.nc.desc)}</textarea><label>Localização exata</label><input data-i="${i}" data-k="nc.loc" value="${esc(x.nc.loc)}"><label>Prioridade</label><select data-i="${i}" data-k="nc.pri">${PRI.map(n=>`<option ${x.nc.pri==n?'selected':''}>${n}</option>`).join('')}</select><label>Recomendação técnica</label><textarea data-i="${i}" data-k="nc.rec">${esc(x.nc.rec)}</textarea><label>Observações adicionais</label><textarea data-i="${i}" data-k="nc.obs">${esc(x.nc.obs)}</textarea></div>`:''}
+<label>Observações</label><textarea data-i="${i}" data-k="note">${esc(x.note)}</textarea>
+<div class="ph">${x.ph.map(f=>`<div><img src="${urls[f]||''}"><b data-a="delph" data-i="${i}" data-x="${f}">×</b></div>`).join('')}</div>
+<div class="row"><label class="btn" style="text-align:center;line-height:46px;margin:0">📷 Foto<input type="file" accept="image/*" capture="environment" hidden data-ph="${i}"></label></div></div>`}
+
+/* Navegação, eventos, fotos, backup e inicialização. */
+// ---- render / navegação ----
+const TT={home:'Vistoria Técnica',prop:'Imóvel',start:'Nova vistoria',insp:'Vistoria',cat:'Critérios',rel:'Relatório'};
+async function render(){const y=scrollY;$('#ttl').textContent=S.v=='cat'?CAT.categories.find(g=>g.id==S.c).name:TT[S.v];$('#back').style.visibility=S.v=='home'?'hidden':'visible';
+  if(cur&&(S.v=='cat'||S.v=='rel'))for(const p of await DB.all('photos'))if(p.ins==cur.id&&!urls[p.id])urls[p.id]=URL.createObjectURL(p.blob);
+  $('#app').innerHTML=V[S.v]();scrollTo(0,y)}
+const go=(v,o={})=>{S={v,...o};render();scrollTo(0,0)};
+$('#back').onclick=()=>S.v=='cat'||S.v=='rel'&&cur&&S.from=='insp'?go('insp'):S.v=='rel'&&!S.from?go('home'):go(S.v=='cat'?'insp':'home');
+const shrink=f=>new Promise(r=>{const i=new Image();i.onload=()=>{const k=Math.min(1,1600/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);c.toBlob(b=>r(b),'image/jpeg',.8)};i.src=URL.createObjectURL(f)});
+async function onClick(e){const t=e.target.closest('[data-a]');if(!t)return;const a=t.dataset.a,x=t.dataset.x,i=t.dataset.i;
+ if(a=='newp')go('prop',{p:{id:uid(),name:'',developer:'',address:'',unit:'',tower:'',client:'',date:'',notes:''}});
+ if(a=='editp')go('prop',{p:{...props.find(p=>p.id==x)}});
+ if(a=='savep'){if(!(S.p.name||'').trim())return alert('Informe o nome do empreendimento.');await DB.put('props',S.p);await load();go('home');toast('Imóvel cadastrado ✓')}
+ if(a=='delp'){if(insps.some(v=>v.pid==S.p.id))return alert('Este imóvel possui vistorias e não pode ser excluído.');if(confirm('Excluir imóvel?')){await DB.del('props',S.p.id);await load();go('home')}}
+ if(a=='start')go('start',{pid:x});
+ if(a=='go'){if(!CAT)await loadCat();const c={box:$('#c_box').checked,exaustor:$('#c_ex').checked,chuveiro:$('#c_ch').value},m=CAT.metadata;
+  cur={id:uid(),pid:S.pid,status:'EM_ANDAMENTO',insp:$('[data-p=insp]').value,startedAt:new Date().toISOString(),notes:'',cfg:c,cat:{id:m.catalog_id,version:m.version,status:m.status},refs:CAT.reference_library,
+  items:CAT.criteria.filter(k=>k.active).map(k=>{const n=+k.id.slice(4),r=naReason(n,c);return{id:k.id,cat:k.category_id,catName:k.category,d:k.description,tipo:k.inspection_type,inst:k.recommended_instrument=='—'?'':k.recommended_instrument,origin:k.origin,st:r?'NAO_SE_APLICA':null,auto:!!r,na:r,note:'',nv:'',nc:null,ph:[]}})};
+  await DB.put('insps',cur);await load();go('insp');toast('Vistoria iniciada ✓')}
+ if(a=='open'){cur=insps.find(v=>v.id==x);go('insp')}
+ if(a=='cat')go('cat',{c:x});
+ if(a=='st'){const it=cur.items[i];it.st=x;it.auto=false;if(x=='NAO_CONFORME'&&!it.nc)it.nc={desc:'',loc:'',pri:'Média',rec:'',obs:''};it.at=new Date().toISOString();save();render()}
+ if(a=='delph'){const it=cur.items[i];it.ph=it.ph.filter(f=>f!=x);await DB.del('photos',x);save();render()}
+ if(a=='pause'){cur.status=cur.status=='PAUSADA'?'EM_ANDAMENTO':'PAUSADA';save();render()}
+ if(a=='fin'&&confirm('Finalizar a vistoria?')){cur.status='CONCLUIDA';cur.finishedAt=new Date().toISOString();await DB.put('insps',cur);await load();go('home')}
+ if(a=='rel'){cur=insps.find(v=>v.id==x)||cur;go('rel',{from:S.v=='insp'?'insp':''})}
+ if(a=='print')print();
+ if(a=='exp'){const ph=await DB.all('photos');for(const p of ph){p.data=await new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(p.blob)});delete p.blob}
+  const b=new Blob([JSON.stringify({props,insps,photos:ph})],{type:'application/json'}),l=document.createElement('a');l.href=URL.createObjectURL(b);l.download='backup-vistoria-'+new Date().toISOString().slice(0,10)+'.json';l.click()}}
+document.addEventListener('click',e=>onClick(e).catch(err=>alert('Erro: '+(err&&err.message||err))));
+addEventListener('unhandledrejection',e=>alert('Erro: '+(e.reason&&e.reason.message||e.reason)));
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset.p!==undefined&&S.p)S.p[t.dataset.p]=t.value;
+ if(t.dataset.g){cur.notes=t.value;save()}
+ if(t.dataset.k){const it=cur.items[t.dataset.i],k=t.dataset.k;if(k.startsWith('nc.'))it.nc[k.slice(3)]=t.value;else it[k]=t.value;save()}});
+document.addEventListener('change',async e=>{const t=e.target;
+ if(t.dataset.ph!==undefined&&t.files[0]){const b=await shrink(t.files[0]),id=uid();await DB.put('photos',{id,ins:cur.id,item:cur.items[t.dataset.ph].id,blob:b,at:new Date().toISOString()});urls[id]=URL.createObjectURL(b);cur.items[t.dataset.ph].ph.push(id);save();render()}
+ if(t.id=='imp'&&t.files[0]){const d=JSON.parse(await t.files[0].text());if(!confirm('Importar backup? Registros com o mesmo ID serão substituídos.'))return;
+  for(const p of d.props)await DB.put('props',p);for(const v of d.insps)await DB.put('insps',v);
+  for(const p of d.photos){p.blob=await (await fetch(p.data)).blob();delete p.data;await DB.put('photos',p)}await load();go('home');toast('Backup importado')}});
+const net=()=>$('#net').textContent=navigator.onLine?'online':'offline';addEventListener('online',net);addEventListener('offline',net);net();
+if('serviceWorker'in navigator)navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister())).catch(()=>{});
+if(window.caches)caches.keys().then(k=>k.forEach(x=>caches.delete(x))).catch(()=>{});
+navigator.storage&&navigator.storage.persist&&navigator.storage.persist();
+Promise.all([load(),loadCat()]).then(()=>go('home')).catch(e=>{$('#app').innerHTML='<div class="card">Não foi possível carregar o catálogo: '+esc(e.message)+'. Abra o app por um endereço http(s), não pelo arquivo local.</div>'});
+
+</script></body></html>
