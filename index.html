@@ -28,20 +28,31 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
 <script type="application/json" id="catalogo">{
   "metadata": {
     "catalog_id": "CAT-AMB-005-BANHEIRO",
-    "name": "Catálogo técnico de vistoria - Banheiro",
-    "version": "1.0.0",
+    "name": "Catálogo técnico de vistoria - Ambientes residenciais",
+    "version": "2.0.0",
     "language": "pt-BR",
     "created_on": "2026-11-04",
     "status": "draft_for_technical_validation",
-    "description": "Base inicial editável de critérios para vistoria de recebimento de apartamento. Deve ser adaptada à unidade, ao escopo contratado e aos documentos disponíveis.",
+    "description": "Biblioteca editável de critérios para vistoria de recebimento de apartamentos, abrangendo banheiro e demais ambientes residenciais.",
     "important_notes": [
       "Catálogo original estruturado a partir dos critérios desenvolvidos na conversa; não reproduz literalmente o material de referência enviado.",
       "Os critérios são sugestões de inspeção visual, funcional, dimensional ou documental e não constituem, isoladamente, laudo conclusivo sobre causa, responsabilidade, desempenho ou garantia.",
       "Testes com água e testes funcionais dependem de autorização, disponibilidade dos sistemas e condições seguras.",
       "Não desmontar componentes, abrir quadros, perfurar, remover revestimentos ou manipular condutores energizados durante a vistoria ordinária.",
       "Ensaios e medições elétricas devem ser definidos e executados por profissional habilitado, com instrumentos adequados e procedimento compatível.",
-      "Critérios normativos devem ser vinculados somente após validação da edição vigente, escopo e aplicabilidade ao empreendimento e ao item."
-    ]
+      "Critérios normativos devem ser vinculados somente após validação da edição vigente, escopo e aplicabilidade ao empreendimento e ao item.",
+      "O ambiente Quarto é um modelo replicável para cada dormitório, suíte ou quarto adicional da unidade.",
+      "O ambiente Outros ambientes é um modelo genérico e deve ser complementado conforme a finalidade e os componentes existentes.",
+      "Critérios de gás, guarda-corpos, acessibilidade, estanqueidade e instalações especiais exigem validação de escopo, documentação e procedimento específico.",
+      "Os critérios são pontos de verificação sugeridos; não constituem, isoladamente, conclusão sobre causa, responsabilidade, desempenho ou garantia."
+    ],
+    "updated_on": "2026-11-04",
+    "counts": {
+      "environments": 9,
+      "categories": 55,
+      "criteria": 315,
+      "new_criteria_added": 203
+    }
   },
   "inspection_statuses": [
     {
@@ -363,6 +374,529 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
         "BAN-111",
         "BAN-112"
       ]
+    },
+    {
+      "id": "SAL-01",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "name": "Condições gerais",
+      "criterion_ids": [
+        "SAL-001",
+        "SAL-002",
+        "SAL-003"
+      ]
+    },
+    {
+      "id": "SAL-02",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "name": "Paredes e teto",
+      "criterion_ids": [
+        "SAL-004",
+        "SAL-005",
+        "SAL-006",
+        "SAL-007",
+        "SAL-008"
+      ]
+    },
+    {
+      "id": "SAL-03",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "name": "Pisos e rodapés",
+      "criterion_ids": [
+        "SAL-009",
+        "SAL-010",
+        "SAL-011",
+        "SAL-012",
+        "SAL-013"
+      ]
+    },
+    {
+      "id": "SAL-04",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "name": "Portas e ferragens",
+      "criterion_ids": [
+        "SAL-014",
+        "SAL-015",
+        "SAL-016",
+        "SAL-017"
+      ]
+    },
+    {
+      "id": "SAL-05",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "name": "Janelas e esquadrias",
+      "criterion_ids": [
+        "SAL-018",
+        "SAL-019",
+        "SAL-020",
+        "SAL-021",
+        "SAL-022",
+        "SAL-023"
+      ]
+    },
+    {
+      "id": "SAL-06",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "name": "Instalações elétricas e comunicação",
+      "criterion_ids": [
+        "SAL-024",
+        "SAL-025",
+        "SAL-026",
+        "SAL-027",
+        "SAL-028"
+      ]
+    },
+    {
+      "id": "SAL-07",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "name": "Elementos complementares e dimensões",
+      "criterion_ids": [
+        "SAL-029",
+        "SAL-030",
+        "SAL-031"
+      ]
+    },
+    {
+      "id": "COZ-01",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "name": "Condições gerais",
+      "criterion_ids": [
+        "COZ-032",
+        "COZ-033",
+        "COZ-034"
+      ]
+    },
+    {
+      "id": "COZ-02",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "name": "Paredes, teto e revestimentos",
+      "criterion_ids": [
+        "COZ-035",
+        "COZ-036",
+        "COZ-037",
+        "COZ-038",
+        "COZ-039"
+      ]
+    },
+    {
+      "id": "COZ-03",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "name": "Piso e rodapés",
+      "criterion_ids": [
+        "COZ-040",
+        "COZ-041",
+        "COZ-042",
+        "COZ-043"
+      ]
+    },
+    {
+      "id": "COZ-04",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "name": "Bancadas, cubas e frontões",
+      "criterion_ids": [
+        "COZ-044",
+        "COZ-045",
+        "COZ-046",
+        "COZ-047",
+        "COZ-048",
+        "COZ-049",
+        "COZ-050",
+        "COZ-051"
+      ]
+    },
+    {
+      "id": "COZ-05",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "name": "Torneiras e instalações hidráulicas",
+      "criterion_ids": [
+        "COZ-052",
+        "COZ-053",
+        "COZ-054",
+        "COZ-055",
+        "COZ-056",
+        "COZ-057",
+        "COZ-058"
+      ]
+    },
+    {
+      "id": "COZ-06",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "name": "Instalações elétricas, gás e equipamentos",
+      "criterion_ids": [
+        "COZ-059",
+        "COZ-060",
+        "COZ-061",
+        "COZ-062",
+        "COZ-063",
+        "COZ-064",
+        "COZ-065"
+      ]
+    },
+    {
+      "id": "COZ-07",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "name": "Esquadrias, mobiliário e dimensões",
+      "criterion_ids": [
+        "COZ-066",
+        "COZ-067",
+        "COZ-068",
+        "COZ-069",
+        "COZ-070",
+        "COZ-071"
+      ]
+    },
+    {
+      "id": "QTO-01",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "name": "Condições gerais",
+      "criterion_ids": [
+        "QTO-072",
+        "QTO-073"
+      ]
+    },
+    {
+      "id": "QTO-02",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "name": "Paredes e teto",
+      "criterion_ids": [
+        "QTO-074",
+        "QTO-075",
+        "QTO-076",
+        "QTO-077",
+        "QTO-078"
+      ]
+    },
+    {
+      "id": "QTO-03",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "name": "Piso e rodapés",
+      "criterion_ids": [
+        "QTO-079",
+        "QTO-080",
+        "QTO-081",
+        "QTO-082",
+        "QTO-083"
+      ]
+    },
+    {
+      "id": "QTO-04",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "name": "Portas e ferragens",
+      "criterion_ids": [
+        "QTO-084",
+        "QTO-085",
+        "QTO-086",
+        "QTO-087"
+      ]
+    },
+    {
+      "id": "QTO-05",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "name": "Janelas e esquadrias",
+      "criterion_ids": [
+        "QTO-088",
+        "QTO-089",
+        "QTO-090",
+        "QTO-091",
+        "QTO-092",
+        "QTO-093"
+      ]
+    },
+    {
+      "id": "QTO-06",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "name": "Instalações elétricas e comunicação",
+      "criterion_ids": [
+        "QTO-094",
+        "QTO-095",
+        "QTO-096",
+        "QTO-097",
+        "QTO-098"
+      ]
+    },
+    {
+      "id": "QTO-07",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "name": "Armários, infraestrutura e dimensões",
+      "criterion_ids": [
+        "QTO-099",
+        "QTO-100",
+        "QTO-101",
+        "QTO-102",
+        "QTO-103"
+      ]
+    },
+    {
+      "id": "VAR-01",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "name": "Condições gerais e acabamentos",
+      "criterion_ids": [
+        "VAR-104",
+        "VAR-105",
+        "VAR-106",
+        "VAR-107",
+        "VAR-108",
+        "VAR-109",
+        "VAR-110"
+      ]
+    },
+    {
+      "id": "VAR-02",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "name": "Guarda-corpo e proteção",
+      "criterion_ids": [
+        "VAR-111",
+        "VAR-112",
+        "VAR-113",
+        "VAR-114",
+        "VAR-115"
+      ]
+    },
+    {
+      "id": "VAR-03",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "name": "Esquadrias e envidraçamento",
+      "criterion_ids": [
+        "VAR-116",
+        "VAR-117",
+        "VAR-118",
+        "VAR-119"
+      ]
+    },
+    {
+      "id": "VAR-04",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "name": "Drenagem e instalações",
+      "criterion_ids": [
+        "VAR-120",
+        "VAR-121",
+        "VAR-122",
+        "VAR-123",
+        "VAR-124",
+        "VAR-125"
+      ]
+    },
+    {
+      "id": "ASV-01",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "name": "Condições gerais e acabamentos",
+      "criterion_ids": [
+        "ASV-126",
+        "ASV-127",
+        "ASV-128",
+        "ASV-129"
+      ]
+    },
+    {
+      "id": "ASV-02",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "name": "Tanque, bancada e metais",
+      "criterion_ids": [
+        "ASV-130",
+        "ASV-131",
+        "ASV-132",
+        "ASV-133",
+        "ASV-134",
+        "ASV-135"
+      ]
+    },
+    {
+      "id": "ASV-03",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "name": "Pontos hidráulicos e drenagem",
+      "criterion_ids": [
+        "ASV-136",
+        "ASV-137",
+        "ASV-138",
+        "ASV-139",
+        "ASV-140",
+        "ASV-141"
+      ]
+    },
+    {
+      "id": "ASV-04",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "name": "Instalações elétricas e equipamentos",
+      "criterion_ids": [
+        "ASV-142",
+        "ASV-143",
+        "ASV-144",
+        "ASV-145",
+        "ASV-146",
+        "ASV-147"
+      ]
+    },
+    {
+      "id": "ASV-05",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "name": "Esquadrias, ventilação e dimensões",
+      "criterion_ids": [
+        "ASV-148",
+        "ASV-149",
+        "ASV-150"
+      ]
+    },
+    {
+      "id": "COR-01",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "name": "Paredes e condições gerais",
+      "criterion_ids": [
+        "COR-151",
+        "COR-152",
+        "COR-153",
+        "COR-154"
+      ]
+    },
+    {
+      "id": "COR-02",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "name": "Teto, piso e rodapés",
+      "criterion_ids": [
+        "COR-155",
+        "COR-156",
+        "COR-157",
+        "COR-158",
+        "COR-159"
+      ]
+    },
+    {
+      "id": "COR-03",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "name": "Portas e instalações",
+      "criterion_ids": [
+        "COR-160",
+        "COR-161",
+        "COR-162",
+        "COR-163",
+        "COR-164",
+        "COR-165",
+        "COR-166"
+      ]
+    },
+    {
+      "id": "LAV-01",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "name": "Condições gerais e acabamentos",
+      "criterion_ids": [
+        "LAV-167",
+        "LAV-168",
+        "LAV-169",
+        "LAV-170"
+      ]
+    },
+    {
+      "id": "LAV-02",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "name": "Bancada, cuba e metais",
+      "criterion_ids": [
+        "LAV-171",
+        "LAV-172",
+        "LAV-173",
+        "LAV-174",
+        "LAV-175",
+        "LAV-176",
+        "LAV-177"
+      ]
+    },
+    {
+      "id": "LAV-03",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "name": "Bacia sanitária e hidráulica",
+      "criterion_ids": [
+        "LAV-178",
+        "LAV-179",
+        "LAV-180",
+        "LAV-181",
+        "LAV-182",
+        "LAV-183"
+      ]
+    },
+    {
+      "id": "LAV-04",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "name": "Instalações elétricas, porta e acessórios",
+      "criterion_ids": [
+        "LAV-184",
+        "LAV-185",
+        "LAV-186",
+        "LAV-187",
+        "LAV-188",
+        "LAV-189",
+        "LAV-190"
+      ]
+    },
+    {
+      "id": "OUT-01",
+      "environment_id": "AMB-010",
+      "environment": "Outros ambientes / ambiente personalizado",
+      "name": "Condições gerais",
+      "criterion_ids": [
+        "OUT-191",
+        "OUT-192",
+        "OUT-193"
+      ]
+    },
+    {
+      "id": "OUT-02",
+      "environment_id": "AMB-010",
+      "environment": "Outros ambientes / ambiente personalizado",
+      "name": "Elementos construtivos e acabamentos",
+      "criterion_ids": [
+        "OUT-194",
+        "OUT-195",
+        "OUT-196",
+        "OUT-197",
+        "OUT-198"
+      ]
+    },
+    {
+      "id": "OUT-03",
+      "environment_id": "AMB-010",
+      "environment": "Outros ambientes / ambiente personalizado",
+      "name": "Instalações e critérios personalizados",
+      "criterion_ids": [
+        "OUT-199",
+        "OUT-200",
+        "OUT-201",
+        "OUT-202",
+        "OUT-203"
+      ]
     }
   ],
   "criteria": [
@@ -377,7 +911,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-002",
@@ -390,7 +926,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-003",
@@ -403,7 +941,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-004",
@@ -416,7 +956,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-005",
@@ -429,7 +971,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-006",
@@ -442,7 +986,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-007",
@@ -455,7 +1001,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-008",
@@ -468,7 +1016,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-009",
@@ -481,7 +1031,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-010",
@@ -494,7 +1046,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-011",
@@ -507,7 +1061,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-012",
@@ -520,7 +1076,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-013",
@@ -533,7 +1091,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-014",
@@ -546,7 +1106,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-015",
@@ -559,7 +1121,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-016",
@@ -572,7 +1136,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-017",
@@ -585,7 +1151,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-018",
@@ -598,7 +1166,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-019",
@@ -611,7 +1181,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-020",
@@ -624,7 +1196,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-021",
@@ -637,7 +1211,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-022",
@@ -650,7 +1226,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-023",
@@ -663,7 +1241,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-024",
@@ -676,7 +1256,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-025",
@@ -689,7 +1271,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-026",
@@ -702,7 +1286,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-027",
@@ -715,7 +1301,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-028",
@@ -728,7 +1316,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-029",
@@ -741,7 +1331,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-030",
@@ -754,7 +1346,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-031",
@@ -767,7 +1361,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-032",
@@ -780,7 +1376,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-033",
@@ -793,7 +1391,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-034",
@@ -806,7 +1406,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-035",
@@ -819,7 +1421,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-036",
@@ -832,7 +1436,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-037",
@@ -845,7 +1451,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-038",
@@ -858,7 +1466,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-039",
@@ -871,7 +1481,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-040",
@@ -884,7 +1496,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-041",
@@ -897,7 +1511,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-042",
@@ -910,7 +1526,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-043",
@@ -923,7 +1541,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-044",
@@ -936,7 +1556,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-045",
@@ -949,7 +1571,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-046",
@@ -962,7 +1586,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-047",
@@ -975,7 +1601,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-048",
@@ -988,7 +1616,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-049",
@@ -1001,7 +1631,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-050",
@@ -1014,7 +1646,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-051",
@@ -1027,7 +1661,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-052",
@@ -1040,7 +1676,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-053",
@@ -1053,7 +1691,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-054",
@@ -1066,7 +1706,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-055",
@@ -1079,7 +1721,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-056",
@@ -1092,7 +1736,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-057",
@@ -1105,7 +1751,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-058",
@@ -1118,7 +1766,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-059",
@@ -1131,7 +1781,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-060",
@@ -1144,7 +1796,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-061",
@@ -1157,7 +1811,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-062",
@@ -1170,7 +1826,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-063",
@@ -1183,7 +1841,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-064",
@@ -1196,7 +1856,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-065",
@@ -1209,7 +1871,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-066",
@@ -1222,7 +1886,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-067",
@@ -1235,7 +1901,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-068",
@@ -1248,7 +1916,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-069",
@@ -1261,7 +1931,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-070",
@@ -1274,7 +1946,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-071",
@@ -1287,7 +1961,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-072",
@@ -1300,7 +1976,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-073",
@@ -1313,7 +1991,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-074",
@@ -1326,7 +2006,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-075",
@@ -1339,7 +2021,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-076",
@@ -1352,7 +2036,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-077",
@@ -1365,7 +2051,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-078",
@@ -1378,7 +2066,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-079",
@@ -1391,7 +2081,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-080",
@@ -1404,7 +2096,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-081",
@@ -1417,7 +2111,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-082",
@@ -1430,7 +2126,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-083",
@@ -1443,7 +2141,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-084",
@@ -1456,7 +2156,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-085",
@@ -1469,7 +2171,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-086",
@@ -1482,7 +2186,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-087",
@@ -1495,7 +2201,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-088",
@@ -1508,7 +2216,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-089",
@@ -1521,7 +2231,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-090",
@@ -1534,7 +2246,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-091",
@@ -1547,7 +2261,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-092",
@@ -1560,7 +2276,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-093",
@@ -1573,7 +2291,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-094",
@@ -1586,7 +2306,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-095",
@@ -1599,7 +2321,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-096",
@@ -1612,7 +2336,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-097",
@@ -1625,7 +2351,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-098",
@@ -1638,7 +2366,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-099",
@@ -1651,7 +2381,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-100",
@@ -1664,7 +2396,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-101",
@@ -1677,7 +2411,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-102",
@@ -1690,7 +2426,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-103",
@@ -1703,7 +2441,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-104",
@@ -1716,7 +2456,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-105",
@@ -1729,7 +2471,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-106",
@@ -1742,7 +2486,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-107",
@@ -1755,7 +2501,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-108",
@@ -1768,7 +2516,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-109",
@@ -1781,7 +2531,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-110",
@@ -1794,7 +2546,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-111",
@@ -1807,7 +2561,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "origin": "LIBRARY",
       "reference_ids": [],
       "active": true,
-      "notes": ""
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
     },
     {
       "id": "BAN-112",
@@ -1816,6 +2572,3053 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "description": "Equipamentos e acessórios entregues compatíveis com memorial descritivo disponível",
       "inspection_type": "Documental/visual",
       "recommended_instrument": "Memorial descritivo",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": "",
+      "environment_id": "AMB-005",
+      "environment": "Banheiro"
+    },
+    {
+      "id": "SAL-001",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-01",
+      "category": "Condições gerais",
+      "description": "Ausência de resíduos de obra, poeira excessiva ou materiais remanescentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-002",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-01",
+      "category": "Condições gerais",
+      "description": "Ausência de manchas, respingos ou danos aparentes nos acabamentos",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-003",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-01",
+      "category": "Condições gerais",
+      "description": "Ausência de odores anormais ou sinais aparentes de umidade",
+      "inspection_type": "Visual/sensorial",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-004",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-02",
+      "category": "Paredes e teto",
+      "description": "Paredes sem trincas, fissuras, rachaduras ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-005",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-02",
+      "category": "Paredes e teto",
+      "description": "Superfícies sem ondulações ou irregularidades perceptíveis",
+      "inspection_type": "Visual/dimensional",
+      "recommended_instrument": "Régua de alumínio",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-006",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-02",
+      "category": "Paredes e teto",
+      "description": "Pintura ou revestimento sem bolhas, manchas, descascamentos ou falhas",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-007",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-02",
+      "category": "Paredes e teto",
+      "description": "Teto/forro sem manchas de umidade, trincas ou destacamentos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-008",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-02",
+      "category": "Paredes e teto",
+      "description": "Acabamento adequado nos cantos e encontros entre paredes e teto",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-009",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-03",
+      "category": "Pisos e rodapés",
+      "description": "Piso sem trincas, lascas, riscos ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-010",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-03",
+      "category": "Pisos e rodapés",
+      "description": "Ausência de ressaltos ou diferenças de nível perceptíveis",
+      "inspection_type": "Visual/dimensional",
+      "recommended_instrument": "Régua; nível",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-011",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-03",
+      "category": "Pisos e rodapés",
+      "description": "Rejuntes e juntas sem falhas aparentes, quando aplicável",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-012",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-03",
+      "category": "Pisos e rodapés",
+      "description": "Rodapés íntegros, alinhados e com arremates adequados",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-013",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-03",
+      "category": "Pisos e rodapés",
+      "description": "Transições de piso e soleiras com acabamento adequado",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-014",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-04",
+      "category": "Portas e ferragens",
+      "description": "Folhas, marcos e guarnições sem empenamentos ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-015",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-04",
+      "category": "Portas e ferragens",
+      "description": "Abertura e fechamento sem atrito ou travamento anormal",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-016",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-04",
+      "category": "Portas e ferragens",
+      "description": "Fechadura, maçaneta, trinco e dobradiças funcionando adequadamente",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-017",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-04",
+      "category": "Portas e ferragens",
+      "description": "Acabamento e pintura das portas sem falhas aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-018",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-05",
+      "category": "Janelas e esquadrias",
+      "description": "Perfis e folhas sem amassados ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-019",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-05",
+      "category": "Janelas e esquadrias",
+      "description": "Abertura, fechamento e travamento das folhas funcionando adequadamente",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-020",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-05",
+      "category": "Janelas e esquadrias",
+      "description": "Fechos, puxadores e ferragens firmes e operacionais",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-021",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-05",
+      "category": "Janelas e esquadrias",
+      "description": "Vidros sem trincas, lascas ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-022",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-05",
+      "category": "Janelas e esquadrias",
+      "description": "Elementos de vedação presentes e bem posicionados",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-023",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-05",
+      "category": "Janelas e esquadrias",
+      "description": "Peitoril e arremates sem danos aparentes, quando existentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-024",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-06",
+      "category": "Instalações elétricas e comunicação",
+      "description": "Placas de tomadas, interruptores e pontos de comunicação íntegras",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-025",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-06",
+      "category": "Instalações elétricas e comunicação",
+      "description": "Interruptores e pontos de iluminação funcionando",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-026",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-06",
+      "category": "Instalações elétricas e comunicação",
+      "description": "Tomadas verificadas com instrumento apropriado, quando previsto no escopo",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Testador de tomadas",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-027",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-06",
+      "category": "Instalações elétricas e comunicação",
+      "description": "Ausência de condutores expostos ou componentes visivelmente danificados",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-028",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-06",
+      "category": "Instalações elétricas e comunicação",
+      "description": "Pontos de TV, dados, telefone ou interfone compatíveis com projeto/memorial, quando disponíveis",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Projeto; memorial",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-029",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-07",
+      "category": "Elementos complementares e dimensões",
+      "description": "Interfone ou campainha funcionando, quando existente",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-030",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-07",
+      "category": "Elementos complementares e dimensões",
+      "description": "Pontos de iluminação e acessórios compatíveis com memorial, quando aplicável",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Memorial",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "SAL-031",
+      "environment_id": "AMB-001",
+      "environment": "Sala de estar",
+      "category_id": "SAL-07",
+      "category": "Elementos complementares e dimensões",
+      "description": "Dimensões do ambiente e vãos verificadas quando incluídas no escopo",
+      "inspection_type": "Dimensional",
+      "recommended_instrument": "Trena",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-032",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-01",
+      "category": "Condições gerais",
+      "description": "Ambiente entregue sem resíduos de obra ou materiais remanescentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-033",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-01",
+      "category": "Condições gerais",
+      "description": "Ausência de manchas, danos ou sinais aparentes de umidade",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-034",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-01",
+      "category": "Condições gerais",
+      "description": "Acesso aos pontos hidráulicos, elétricos e registros desobstruído",
+      "inspection_type": "Visual",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-035",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-02",
+      "category": "Paredes, teto e revestimentos",
+      "description": "Paredes sem trincas, fissuras, bolhas, descascamentos ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-036",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-02",
+      "category": "Paredes, teto e revestimentos",
+      "description": "Pintura e revestimentos sem falhas ou peças quebradas",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-037",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-02",
+      "category": "Paredes, teto e revestimentos",
+      "description": "Rejuntes e juntas sem falhas ou lacunas aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-038",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-02",
+      "category": "Paredes, teto e revestimentos",
+      "description": "Teto/forro sem manchas de umidade, trincas ou destacamentos",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-039",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-02",
+      "category": "Paredes, teto e revestimentos",
+      "description": "Encontros entre revestimentos, bancada e parede com acabamento adequado",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-040",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-03",
+      "category": "Piso e rodapés",
+      "description": "Piso sem trincas, lascas, riscos ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-041",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-03",
+      "category": "Piso e rodapés",
+      "description": "Ausência de ressaltos ou diferenças de nível perceptíveis",
+      "inspection_type": "Visual/dimensional",
+      "recommended_instrument": "Régua; nível",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-042",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-03",
+      "category": "Piso e rodapés",
+      "description": "Rejuntamento contínuo e sem falhas aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-043",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-03",
+      "category": "Piso e rodapés",
+      "description": "Rodapés e soleiras íntegros, alinhados e bem acabados",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-044",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-04",
+      "category": "Bancadas, cubas e frontões",
+      "description": "Bancada sem trincas, lascas, quebras ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-045",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-04",
+      "category": "Bancadas, cubas e frontões",
+      "description": "Superfície sem manchas ou defeitos relevantes de acabamento",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-046",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-04",
+      "category": "Bancadas, cubas e frontões",
+      "description": "Bancada aparentemente nivelada, estável e bem apoiada/fixada",
+      "inspection_type": "Visual/dimensional",
+      "recommended_instrument": "Nível",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-047",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-04",
+      "category": "Bancadas, cubas e frontões",
+      "description": "Bordas, cantos, recortes e emendas com acabamento adequado",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-048",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-04",
+      "category": "Bancadas, cubas e frontões",
+      "description": "Vedação entre bancada, frontão, parede e cuba sem falhas aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-049",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-04",
+      "category": "Bancadas, cubas e frontões",
+      "description": "Cuba íntegra e sem danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-050",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-04",
+      "category": "Bancadas, cubas e frontões",
+      "description": "Escoamento da cuba satisfatório",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Água",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-051",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-04",
+      "category": "Bancadas, cubas e frontões",
+      "description": "Ausência de vazamentos nas conexões inferiores durante o uso",
+      "inspection_type": "Funcional/visual",
+      "recommended_instrument": "Lanterna; água",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-052",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-05",
+      "category": "Torneiras e instalações hidráulicas",
+      "description": "Torneira/misturador íntegro, com acionamento e fechamento adequados",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-053",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-05",
+      "category": "Torneiras e instalações hidráulicas",
+      "description": "Vazão e continuidade do fluxo satisfatórias",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-054",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-05",
+      "category": "Torneiras e instalações hidráulicas",
+      "description": "Funcionamento de água quente/fria, quando previsto",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-055",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-05",
+      "category": "Torneiras e instalações hidráulicas",
+      "description": "Ausência de vazamentos nas conexões aparentes durante o uso",
+      "inspection_type": "Funcional/visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-056",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-05",
+      "category": "Torneiras e instalações hidráulicas",
+      "description": "Sifão instalado adequadamente e sem vazamentos aparentes",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Lanterna; água",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-057",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-05",
+      "category": "Torneiras e instalações hidráulicas",
+      "description": "Flexíveis sem torções, dobras acentuadas ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-058",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-05",
+      "category": "Torneiras e instalações hidráulicas",
+      "description": "Registros acessíveis e com acionamento adequado",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-059",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-06",
+      "category": "Instalações elétricas, gás e equipamentos",
+      "description": "Tomadas, interruptores e placas íntegras e bem fixadas",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-060",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-06",
+      "category": "Instalações elétricas, gás e equipamentos",
+      "description": "Interruptores e pontos de iluminação funcionando",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-061",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-06",
+      "category": "Instalações elétricas, gás e equipamentos",
+      "description": "Tomadas verificadas com instrumento apropriado, quando previsto no escopo",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Testador de tomadas",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-062",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-06",
+      "category": "Instalações elétricas, gás e equipamentos",
+      "description": "Pontos elétricos para equipamentos compatíveis com projeto disponível",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Projeto elétrico",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-063",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-06",
+      "category": "Instalações elétricas, gás e equipamentos",
+      "description": "Ausência de condutores expostos ou componentes visivelmente danificados",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-064",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-06",
+      "category": "Instalações elétricas, gás e equipamentos",
+      "description": "Ponto de gás, quando existente, com identificação e acabamento aparente íntegro",
+      "inspection_type": "Visual/documental",
+      "recommended_instrument": "Projeto; lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-065",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-06",
+      "category": "Instalações elétricas, gás e equipamentos",
+      "description": "Teste de estanqueidade de gás somente por procedimento específico e profissional habilitado",
+      "inspection_type": "Procedimento/segurança",
+      "recommended_instrument": "Equipamento apropriado",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-066",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-07",
+      "category": "Esquadrias, mobiliário e dimensões",
+      "description": "Portas e janelas sem danos e com funcionamento adequado",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-067",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-07",
+      "category": "Esquadrias, mobiliário e dimensões",
+      "description": "Vidros sem trincas, lascas ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-068",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-07",
+      "category": "Esquadrias, mobiliário e dimensões",
+      "description": "Armários fixos sem danos aparentes, quando incluídos no escopo",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-069",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-07",
+      "category": "Esquadrias, mobiliário e dimensões",
+      "description": "Portas, gavetas, dobradiças e corrediças funcionando, quando existentes",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-070",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-07",
+      "category": "Esquadrias, mobiliário e dimensões",
+      "description": "Fixação aparente e alinhamento do mobiliário fixo",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Nível",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COZ-071",
+      "environment_id": "AMB-002",
+      "environment": "Cozinha",
+      "category_id": "COZ-07",
+      "category": "Esquadrias, mobiliário e dimensões",
+      "description": "Dimensões e posicionamento de pontos verificados quando incluídos no escopo",
+      "inspection_type": "Dimensional",
+      "recommended_instrument": "Trena; projeto",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-072",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-01",
+      "category": "Condições gerais",
+      "description": "Ambiente entregue sem resíduos de obra ou materiais remanescentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-073",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-01",
+      "category": "Condições gerais",
+      "description": "Ausência de manchas, danos, odores anormais ou sinais aparentes de umidade",
+      "inspection_type": "Visual/sensorial",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-074",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-02",
+      "category": "Paredes e teto",
+      "description": "Paredes sem trincas, fissuras, rachaduras ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-075",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-02",
+      "category": "Paredes e teto",
+      "description": "Superfícies sem ondulações ou irregularidades perceptíveis",
+      "inspection_type": "Visual/dimensional",
+      "recommended_instrument": "Régua",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-076",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-02",
+      "category": "Paredes e teto",
+      "description": "Pintura/revestimento sem bolhas, manchas, descascamentos ou falhas",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-077",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-02",
+      "category": "Paredes e teto",
+      "description": "Teto/forro sem manchas, trincas, fissuras ou destacamentos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-078",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-02",
+      "category": "Paredes e teto",
+      "description": "Acabamento adequado nos cantos e encontros entre paredes e teto",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-079",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-03",
+      "category": "Piso e rodapés",
+      "description": "Piso sem trincas, lascas, riscos ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-080",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-03",
+      "category": "Piso e rodapés",
+      "description": "Ausência de ressaltos ou diferenças de nível perceptíveis",
+      "inspection_type": "Visual/dimensional",
+      "recommended_instrument": "Régua; nível",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-081",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-03",
+      "category": "Piso e rodapés",
+      "description": "Revestimento sem indícios aparentes de descolamento, quando verificável sem dano",
+      "inspection_type": "Visual/sonoro",
+      "recommended_instrument": "Martelo de borracha",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-082",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-03",
+      "category": "Piso e rodapés",
+      "description": "Rodapés íntegros, alinhados e sem falhas aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-083",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-03",
+      "category": "Piso e rodapés",
+      "description": "Transições e soleiras com acabamento adequado",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-084",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-04",
+      "category": "Portas e ferragens",
+      "description": "Folha, marco e guarnições sem empenamentos ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-085",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-04",
+      "category": "Portas e ferragens",
+      "description": "Abertura e fechamento sem atrito ou travamento anormal",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-086",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-04",
+      "category": "Portas e ferragens",
+      "description": "Fechadura, maçaneta, trinco e dobradiças funcionando adequadamente",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-087",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-04",
+      "category": "Portas e ferragens",
+      "description": "Acabamento e pintura da porta sem falhas aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-088",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-05",
+      "category": "Janelas e esquadrias",
+      "description": "Perfis e folhas sem amassados ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-089",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-05",
+      "category": "Janelas e esquadrias",
+      "description": "Abertura, fechamento e travamento funcionando adequadamente",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-090",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-05",
+      "category": "Janelas e esquadrias",
+      "description": "Ferragens, puxadores e fechos firmes e operacionais",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-091",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-05",
+      "category": "Janelas e esquadrias",
+      "description": "Vidros sem trincas, lascas ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-092",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-05",
+      "category": "Janelas e esquadrias",
+      "description": "Elementos de vedação presentes e bem posicionados",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-093",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-05",
+      "category": "Janelas e esquadrias",
+      "description": "Peitoril e arremates sem danos aparentes, quando existentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-094",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-06",
+      "category": "Instalações elétricas e comunicação",
+      "description": "Placas de tomadas e interruptores íntegras e bem fixadas",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-095",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-06",
+      "category": "Instalações elétricas e comunicação",
+      "description": "Interruptores e iluminação funcionando",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-096",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-06",
+      "category": "Instalações elétricas e comunicação",
+      "description": "Tomadas verificadas com instrumento apropriado, quando previsto no escopo",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Testador de tomadas",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-097",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-06",
+      "category": "Instalações elétricas e comunicação",
+      "description": "Pontos de TV/dados/comunicação compatíveis com projeto, quando disponível",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Projeto",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-098",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-06",
+      "category": "Instalações elétricas e comunicação",
+      "description": "Ausência de condutores expostos ou componentes visivelmente danificados",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-099",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-07",
+      "category": "Armários, infraestrutura e dimensões",
+      "description": "Armários ou mobiliário fixo sem danos, quando incluídos no escopo",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-100",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-07",
+      "category": "Armários, infraestrutura e dimensões",
+      "description": "Portas, gavetas e ferragens funcionando, quando existentes",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-101",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-07",
+      "category": "Armários, infraestrutura e dimensões",
+      "description": "Fixação e alinhamento aparentes do mobiliário",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Nível",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-102",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-07",
+      "category": "Armários, infraestrutura e dimensões",
+      "description": "Infraestrutura de ar-condicionado/dreno compatível com projeto, quando existente",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Projeto",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "QTO-103",
+      "environment_id": "AMB-003",
+      "environment": "Quarto (modelo replicável)",
+      "category_id": "QTO-07",
+      "category": "Armários, infraestrutura e dimensões",
+      "description": "Dimensões do ambiente, vãos e pontos verificadas quando incluídas no escopo",
+      "inspection_type": "Dimensional",
+      "recommended_instrument": "Trena",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-104",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-01",
+      "category": "Condições gerais e acabamentos",
+      "description": "Ambiente entregue sem resíduos de obra ou materiais remanescentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-105",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-01",
+      "category": "Condições gerais e acabamentos",
+      "description": "Piso sem trincas, peças quebradas, lascas ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-106",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-01",
+      "category": "Condições gerais e acabamentos",
+      "description": "Rejuntes e juntas sem falhas aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-107",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-01",
+      "category": "Condições gerais e acabamentos",
+      "description": "Caimento aparente direcionado aos pontos de drenagem, quando aplicável",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Nível",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-108",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-01",
+      "category": "Condições gerais e acabamentos",
+      "description": "Ausência de empoçamento em teste controlado, quando autorizado",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Água; balde",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-109",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-01",
+      "category": "Condições gerais e acabamentos",
+      "description": "Paredes e teto sem fissuras, manchas de umidade ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-110",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-01",
+      "category": "Condições gerais e acabamentos",
+      "description": "Rodapés, soleiras e arremates íntegros",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-111",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-02",
+      "category": "Guarda-corpo e proteção",
+      "description": "Guarda-corpo sem danos, deformações ou corrosão aparente",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-112",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-02",
+      "category": "Guarda-corpo e proteção",
+      "description": "Fixações e ligações aparentes sem sinais de soltura ou deterioração",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-113",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-02",
+      "category": "Guarda-corpo e proteção",
+      "description": "Vidros do guarda-corpo sem trincas, lascas ou danos, quando existentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-114",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-02",
+      "category": "Guarda-corpo e proteção",
+      "description": "Características dimensionais confrontadas com projeto/documentação aplicável, quando no escopo",
+      "inspection_type": "Dimensional/documental",
+      "recommended_instrument": "Trena; projeto",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-115",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-02",
+      "category": "Guarda-corpo e proteção",
+      "description": "Não aplicar esforços excessivos ou ensaios improvisados no guarda-corpo",
+      "inspection_type": "Procedimento/segurança",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-116",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-03",
+      "category": "Esquadrias e envidraçamento",
+      "description": "Portas e esquadrias sem danos e com abertura/fechamento adequados",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-117",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-03",
+      "category": "Esquadrias e envidraçamento",
+      "description": "Vidros sem trincas, lascas ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-118",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-03",
+      "category": "Esquadrias e envidraçamento",
+      "description": "Perfis, ferragens e elementos de vedação íntegros",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-119",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-03",
+      "category": "Esquadrias e envidraçamento",
+      "description": "Arremates e vedação aparente nos encontros com piso e paredes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-120",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-04",
+      "category": "Drenagem e instalações",
+      "description": "Ralo/grelha íntegro, posicionado e aparentemente fixado",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-121",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-04",
+      "category": "Drenagem e instalações",
+      "description": "Ausência de obstruções aparentes no ralo",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-122",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-04",
+      "category": "Drenagem e instalações",
+      "description": "Escoamento satisfatório em teste controlado, quando autorizado",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Água; balde",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-123",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-04",
+      "category": "Drenagem e instalações",
+      "description": "Pontos hidráulicos sem vazamentos aparentes, quando existentes",
+      "inspection_type": "Funcional/visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-124",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-04",
+      "category": "Drenagem e instalações",
+      "description": "Tomadas e iluminação íntegras e funcionais, quando existentes",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Instrumento apropriado",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "VAR-125",
+      "environment_id": "AMB-006",
+      "environment": "Varanda",
+      "category_id": "VAR-04",
+      "category": "Drenagem e instalações",
+      "description": "Materiais e componentes compatíveis com memorial/projeto disponível",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Memorial; projeto",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-126",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-01",
+      "category": "Condições gerais e acabamentos",
+      "description": "Ambiente entregue sem resíduos de obra ou materiais remanescentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-127",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-01",
+      "category": "Condições gerais e acabamentos",
+      "description": "Paredes e teto sem trincas, manchas de umidade ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-128",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-01",
+      "category": "Condições gerais e acabamentos",
+      "description": "Piso e revestimentos sem trincas, quebras ou falhas aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-129",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-01",
+      "category": "Condições gerais e acabamentos",
+      "description": "Rejuntes, rodapés e arremates sem falhas aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-130",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-02",
+      "category": "Tanque, bancada e metais",
+      "description": "Tanque íntegro, sem trincas, lascas ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-131",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-02",
+      "category": "Tanque, bancada e metais",
+      "description": "Tanque/bancada aparentemente estável e bem fixado",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Inspeção manual leve",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-132",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-02",
+      "category": "Tanque, bancada e metais",
+      "description": "Torneira com acionamento, fechamento e vazão adequados",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-133",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-02",
+      "category": "Tanque, bancada e metais",
+      "description": "Ausência de vazamentos nas conexões aparentes durante o uso",
+      "inspection_type": "Funcional/visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-134",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-02",
+      "category": "Tanque, bancada e metais",
+      "description": "Sifão instalado adequadamente e sem vazamentos",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Lanterna; água",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-135",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-02",
+      "category": "Tanque, bancada e metais",
+      "description": "Vedação entre tanque/bancada e parede sem falhas aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-136",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-03",
+      "category": "Pontos hidráulicos e drenagem",
+      "description": "Pontos de água previstos presentes e acessíveis",
+      "inspection_type": "Visual/documental",
+      "recommended_instrument": "Projeto hidráulico",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-137",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-03",
+      "category": "Pontos hidráulicos e drenagem",
+      "description": "Registros íntegros, acessíveis e com acionamento adequado",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-138",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-03",
+      "category": "Pontos hidráulicos e drenagem",
+      "description": "Ponto de máquina de lavar sem vazamento aparente",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-139",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-03",
+      "category": "Pontos hidráulicos e drenagem",
+      "description": "Ralo e grelha íntegros e sem obstrução aparente",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-140",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-03",
+      "category": "Pontos hidráulicos e drenagem",
+      "description": "Escoamento satisfatório em teste controlado, quando autorizado",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Água; balde",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-141",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-03",
+      "category": "Pontos hidráulicos e drenagem",
+      "description": "Ausência de retorno de água/esgoto ou odores anormais",
+      "inspection_type": "Visual/sensorial",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-142",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-04",
+      "category": "Instalações elétricas e equipamentos",
+      "description": "Tomadas, interruptores e placas íntegras e bem fixadas",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-143",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-04",
+      "category": "Instalações elétricas e equipamentos",
+      "description": "Tomadas verificadas com instrumento apropriado, quando previsto no escopo",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Testador de tomadas",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-144",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-04",
+      "category": "Instalações elétricas e equipamentos",
+      "description": "Iluminação funcionando",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-145",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-04",
+      "category": "Instalações elétricas e equipamentos",
+      "description": "Pontos elétricos para máquina de lavar/secadora compatíveis com projeto disponível",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Projeto elétrico",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-146",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-04",
+      "category": "Instalações elétricas e equipamentos",
+      "description": "Ausência de condutores expostos ou componentes visivelmente danificados",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-147",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-04",
+      "category": "Instalações elétricas e equipamentos",
+      "description": "Equipamentos e acessórios compatíveis com memorial, quando aplicável",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Memorial",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-148",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-05",
+      "category": "Esquadrias, ventilação e dimensões",
+      "description": "Portas e janelas sem danos e com funcionamento adequado",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-149",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-05",
+      "category": "Esquadrias, ventilação e dimensões",
+      "description": "Elementos de ventilação/exaustão funcionando, quando existentes",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "ASV-150",
+      "environment_id": "AMB-007",
+      "environment": "Área de serviço/lavanderia",
+      "category_id": "ASV-05",
+      "category": "Esquadrias, ventilação e dimensões",
+      "description": "Dimensões e posicionamento de pontos verificados quando incluídos no escopo",
+      "inspection_type": "Dimensional",
+      "recommended_instrument": "Trena; projeto",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COR-151",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "category_id": "COR-01",
+      "category": "Paredes e condições gerais",
+      "description": "Circulação livre de resíduos de obra e materiais remanescentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COR-152",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "category_id": "COR-01",
+      "category": "Paredes e condições gerais",
+      "description": "Paredes sem trincas, fissuras, manchas ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COR-153",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "category_id": "COR-01",
+      "category": "Paredes e condições gerais",
+      "description": "Pintura/revestimentos sem falhas, bolhas ou descascamentos",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COR-154",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "category_id": "COR-01",
+      "category": "Paredes e condições gerais",
+      "description": "Cantos, quinas e encontros com acabamento adequado",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COR-155",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "category_id": "COR-02",
+      "category": "Teto, piso e rodapés",
+      "description": "Teto/forro sem manchas, fissuras ou destacamentos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COR-156",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "category_id": "COR-02",
+      "category": "Teto, piso e rodapés",
+      "description": "Piso sem trincas, lascas, riscos ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COR-157",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "category_id": "COR-02",
+      "category": "Teto, piso e rodapés",
+      "description": "Regularidade e ausência de ressaltos perceptíveis no piso",
+      "inspection_type": "Visual/dimensional",
+      "recommended_instrument": "Régua; nível",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COR-158",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "category_id": "COR-02",
+      "category": "Teto, piso e rodapés",
+      "description": "Rodapés íntegros, alinhados e com acabamento adequado",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COR-159",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "category_id": "COR-02",
+      "category": "Teto, piso e rodapés",
+      "description": "Transições e soleiras com acabamento adequado",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COR-160",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "category_id": "COR-03",
+      "category": "Portas e instalações",
+      "description": "Portas e marcos sem danos ou empenamentos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COR-161",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "category_id": "COR-03",
+      "category": "Portas e instalações",
+      "description": "Abertura, fechamento e ferragens funcionando adequadamente",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COR-162",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "category_id": "COR-03",
+      "category": "Portas e instalações",
+      "description": "Iluminação funcionando adequadamente",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COR-163",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "category_id": "COR-03",
+      "category": "Portas e instalações",
+      "description": "Interruptores, tomadas e placas íntegros e bem fixados",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COR-164",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "category_id": "COR-03",
+      "category": "Portas e instalações",
+      "description": "Tomadas verificadas com instrumento apropriado, quando previsto no escopo",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Testador de tomadas",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COR-165",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "category_id": "COR-03",
+      "category": "Portas e instalações",
+      "description": "Ausência de condutores expostos ou componentes visivelmente danificados",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "COR-166",
+      "environment_id": "AMB-008",
+      "environment": "Corredor e circulação",
+      "category_id": "COR-03",
+      "category": "Portas e instalações",
+      "description": "Larguras e dimensões verificadas quando incluídas no escopo e confrontadas com documentação aplicável",
+      "inspection_type": "Dimensional/documental",
+      "recommended_instrument": "Trena; projeto",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-167",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-01",
+      "category": "Condições gerais e acabamentos",
+      "description": "Ambiente entregue sem resíduos de obra ou materiais remanescentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-168",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-01",
+      "category": "Condições gerais e acabamentos",
+      "description": "Paredes e teto sem trincas, fissuras, manchas de umidade ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-169",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-01",
+      "category": "Condições gerais e acabamentos",
+      "description": "Pintura/revestimentos sem falhas ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-170",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-01",
+      "category": "Condições gerais e acabamentos",
+      "description": "Piso, rejuntes e rodapés sem trincas, quebras ou falhas aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-171",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-02",
+      "category": "Bancada, cuba e metais",
+      "description": "Bancada e cuba sem trincas, lascas ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-172",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-02",
+      "category": "Bancada, cuba e metais",
+      "description": "Bancada aparentemente nivelada, estável e bem fixada",
+      "inspection_type": "Visual/dimensional",
+      "recommended_instrument": "Nível",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-173",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-02",
+      "category": "Bancada, cuba e metais",
+      "description": "Vedação entre cuba, bancada e parede sem falhas aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-174",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-02",
+      "category": "Bancada, cuba e metais",
+      "description": "Torneira com acionamento, fechamento e vazão adequados",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-175",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-02",
+      "category": "Bancada, cuba e metais",
+      "description": "Ausência de vazamentos em torneira, flexíveis e conexões aparentes",
+      "inspection_type": "Funcional/visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-176",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-02",
+      "category": "Bancada, cuba e metais",
+      "description": "Sifão instalado adequadamente e sem vazamentos",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Lanterna; água",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-177",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-02",
+      "category": "Bancada, cuba e metais",
+      "description": "Escoamento da cuba satisfatório",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Água",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-178",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-03",
+      "category": "Bacia sanitária e hidráulica",
+      "description": "Bacia sanitária sem trincas, quebras ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-179",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-03",
+      "category": "Bacia sanitária e hidráulica",
+      "description": "Fixação e estabilidade aparentes da bacia",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Inspeção manual leve",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-180",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-03",
+      "category": "Bacia sanitária e hidráulica",
+      "description": "Acionamento e funcionamento da descarga",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-181",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-03",
+      "category": "Bacia sanitária e hidráulica",
+      "description": "Ausência de vazamentos após acionamento da descarga",
+      "inspection_type": "Funcional/visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-182",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-03",
+      "category": "Bacia sanitária e hidráulica",
+      "description": "Registros acessíveis e com acionamento adequado, quando existentes",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-183",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-03",
+      "category": "Bacia sanitária e hidráulica",
+      "description": "Ralo/grelha íntegro e sem obstrução aparente, quando existente",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-184",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-04",
+      "category": "Instalações elétricas, porta e acessórios",
+      "description": "Interruptores, tomadas e placas íntegros e bem fixados",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-185",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-04",
+      "category": "Instalações elétricas, porta e acessórios",
+      "description": "Iluminação funcionando adequadamente",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-186",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-04",
+      "category": "Instalações elétricas, porta e acessórios",
+      "description": "Tomadas verificadas com instrumento apropriado, quando previstas no escopo",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Testador de tomadas",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-187",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-04",
+      "category": "Instalações elétricas, porta e acessórios",
+      "description": "Porta, fechadura, maçaneta e ferragens funcionando adequadamente",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-188",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-04",
+      "category": "Instalações elétricas, porta e acessórios",
+      "description": "Espelho e acessórios fixados e sem danos aparentes",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-189",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-04",
+      "category": "Instalações elétricas, porta e acessórios",
+      "description": "Ventilação/exaustão funcionando, quando existente",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "LAV-190",
+      "environment_id": "AMB-009",
+      "environment": "Lavabo",
+      "category_id": "LAV-04",
+      "category": "Instalações elétricas, porta e acessórios",
+      "description": "Materiais e equipamentos compatíveis com memorial disponível",
+      "inspection_type": "Documental/visual",
+      "recommended_instrument": "Memorial",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "OUT-191",
+      "environment_id": "AMB-010",
+      "environment": "Outros ambientes / ambiente personalizado",
+      "category_id": "OUT-01",
+      "category": "Condições gerais",
+      "description": "Ambiente identificado e incluído no escopo da vistoria",
+      "inspection_type": "Documental",
+      "recommended_instrument": "Cadastro do imóvel",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "OUT-192",
+      "environment_id": "AMB-010",
+      "environment": "Outros ambientes / ambiente personalizado",
+      "category_id": "OUT-01",
+      "category": "Condições gerais",
+      "description": "Ausência de resíduos de obra ou materiais remanescentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "OUT-193",
+      "environment_id": "AMB-010",
+      "environment": "Outros ambientes / ambiente personalizado",
+      "category_id": "OUT-01",
+      "category": "Condições gerais",
+      "description": "Ausência de manchas, danos ou sinais aparentes de umidade",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "OUT-194",
+      "environment_id": "AMB-010",
+      "environment": "Outros ambientes / ambiente personalizado",
+      "category_id": "OUT-02",
+      "category": "Elementos construtivos e acabamentos",
+      "description": "Paredes/divisórias sem trincas, fissuras ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "OUT-195",
+      "environment_id": "AMB-010",
+      "environment": "Outros ambientes / ambiente personalizado",
+      "category_id": "OUT-02",
+      "category": "Elementos construtivos e acabamentos",
+      "description": "Teto/forro sem manchas, trincas ou destacamentos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "OUT-196",
+      "environment_id": "AMB-010",
+      "environment": "Outros ambientes / ambiente personalizado",
+      "category_id": "OUT-02",
+      "category": "Elementos construtivos e acabamentos",
+      "description": "Pisos e revestimentos sem trincas, quebras ou danos aparentes",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "OUT-197",
+      "environment_id": "AMB-010",
+      "environment": "Outros ambientes / ambiente personalizado",
+      "category_id": "OUT-02",
+      "category": "Elementos construtivos e acabamentos",
+      "description": "Rodapés, soleiras e arremates íntegros e bem acabados",
+      "inspection_type": "Visual",
+      "recommended_instrument": "Lanterna",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "OUT-198",
+      "environment_id": "AMB-010",
+      "environment": "Outros ambientes / ambiente personalizado",
+      "category_id": "OUT-02",
+      "category": "Elementos construtivos e acabamentos",
+      "description": "Portas, janelas e ferragens com funcionamento adequado, quando existentes",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "—",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "OUT-199",
+      "environment_id": "AMB-010",
+      "environment": "Outros ambientes / ambiente personalizado",
+      "category_id": "OUT-03",
+      "category": "Instalações e critérios personalizados",
+      "description": "Pontos elétricos e iluminação íntegros e funcionais, quando existentes",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Instrumento apropriado",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "OUT-200",
+      "environment_id": "AMB-010",
+      "environment": "Outros ambientes / ambiente personalizado",
+      "category_id": "OUT-03",
+      "category": "Instalações e critérios personalizados",
+      "description": "Pontos hidráulicos e drenagem sem vazamentos aparentes, quando existentes",
+      "inspection_type": "Visual/funcional",
+      "recommended_instrument": "Lanterna; água",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "OUT-201",
+      "environment_id": "AMB-010",
+      "environment": "Outros ambientes / ambiente personalizado",
+      "category_id": "OUT-03",
+      "category": "Instalações e critérios personalizados",
+      "description": "Equipamentos e acessórios funcionando, quando existentes e dentro do escopo",
+      "inspection_type": "Funcional",
+      "recommended_instrument": "Conforme equipamento",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "OUT-202",
+      "environment_id": "AMB-010",
+      "environment": "Outros ambientes / ambiente personalizado",
+      "category_id": "OUT-03",
+      "category": "Instalações e critérios personalizados",
+      "description": "Materiais, dimensões e equipamentos confrontados com documentos disponíveis, quando aplicável",
+      "inspection_type": "Documental/dimensional",
+      "recommended_instrument": "Memorial; projeto; trena",
+      "applicability": "conditional",
+      "origin": "LIBRARY",
+      "reference_ids": [],
+      "active": true,
+      "notes": ""
+    },
+    {
+      "id": "OUT-203",
+      "environment_id": "AMB-010",
+      "environment": "Outros ambientes / ambiente personalizado",
+      "category_id": "OUT-03",
+      "category": "Instalações e critérios personalizados",
+      "description": "Critério específico cadastrado pelo usuário para este ambiente",
+      "inspection_type": "Configurável",
+      "recommended_instrument": "Conforme critério",
       "applicability": "conditional",
       "origin": "LIBRARY",
       "reference_ids": [],
@@ -1955,18 +5758,83 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
       "verified_by",
       "origin"
     ]
-  }
+  },
+  "environment_catalog": [
+    {
+      "id": "AMB-005",
+      "name": "Banheiro",
+      "code_prefix": "BAN",
+      "template": true,
+      "notes": "Catálogo detalhado disponível na versão inicial."
+    },
+    {
+      "id": "AMB-001",
+      "name": "Sala de estar",
+      "code_prefix": "SAL",
+      "template": false,
+      "notes": "Modelo replicável/configurável; confirmar aplicabilidade conforme a unidade."
+    },
+    {
+      "id": "AMB-002",
+      "name": "Cozinha",
+      "code_prefix": "COZ",
+      "template": false,
+      "notes": "Modelo replicável/configurável; confirmar aplicabilidade conforme a unidade."
+    },
+    {
+      "id": "AMB-003",
+      "name": "Quarto (modelo replicável)",
+      "code_prefix": "QTO",
+      "template": true,
+      "notes": "Modelo replicável/configurável; confirmar aplicabilidade conforme a unidade."
+    },
+    {
+      "id": "AMB-006",
+      "name": "Varanda",
+      "code_prefix": "VAR",
+      "template": false,
+      "notes": "Modelo replicável/configurável; confirmar aplicabilidade conforme a unidade."
+    },
+    {
+      "id": "AMB-007",
+      "name": "Área de serviço/lavanderia",
+      "code_prefix": "ASV",
+      "template": false,
+      "notes": "Modelo replicável/configurável; confirmar aplicabilidade conforme a unidade."
+    },
+    {
+      "id": "AMB-008",
+      "name": "Corredor e circulação",
+      "code_prefix": "COR",
+      "template": false,
+      "notes": "Modelo replicável/configurável; confirmar aplicabilidade conforme a unidade."
+    },
+    {
+      "id": "AMB-009",
+      "name": "Lavabo",
+      "code_prefix": "LAV",
+      "template": false,
+      "notes": "Modelo replicável/configurável; confirmar aplicabilidade conforme a unidade."
+    },
+    {
+      "id": "AMB-010",
+      "name": "Outros ambientes / ambiente personalizado",
+      "code_prefix": "OUT",
+      "template": false,
+      "notes": "Modelo replicável/configurável; confirmar aplicabilidade conforme a unidade."
+    }
+  ]
 }</script>
 <script>/* Utilitários, constantes e estado global da aplicação. */
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const ST={CONFORME:['Conforme','ok'],NAO_CONFORME:['Não conforme','nc'],NAO_SE_APLICA:['Não se aplica','na'],NAO_VERIFICADO:['Não verificado','nv']};
 const NV=['Ausência de fornecimento de água','Ausência de energia elétrica','Acesso impedido','Equipamento não instalado ou indisponível','Teste não autorizado','Condição insegura','Outro'];
 const PRI=['Baixa','Média','Alta','Crítica'];
-let CAT,props=[],insps=[],cur,S={v:'home'},urls={},T;
+let CAT,envs=[],props=[],insps=[],cur,S={v:'home'},urls={},T;
 
 /* Camada IndexedDB (imóveis, vistorias e fotos) e salvamento automático. */
 // ---- IndexedDB (dados e fotos; nada em localStorage) ----
-const DB=(()=>{let d;const o=()=>d||(d=new Promise((ok,er)=>{const r=indexedDB.open('vistoria',1);r.onupgradeneeded=()=>['props','insps','photos'].forEach(s=>r.result.createObjectStore(s,{keyPath:'id'}));r.onsuccess=()=>ok(r.result);r.onerror=()=>er(r.error)}));
+const DB=(()=>{let d;const o=()=>d||(d=new Promise((ok,er)=>{const r=indexedDB.open('vistoria',2);r.onupgradeneeded=()=>['props','insps','photos','envs'].forEach(s=>{if(!r.result.objectStoreNames.contains(s))r.result.createObjectStore(s,{keyPath:'id'})});r.onsuccess=()=>ok(r.result);r.onerror=()=>er(r.error)}));
 const t=async(s,m,f)=>{const db=await o();return new Promise((ok,er)=>{const x=db.transaction(s,m),q=f(x.objectStore(s));x.oncomplete=()=>ok(q&&q.result);x.onerror=()=>er(x.error)})};
 return{all:s=>t(s,'readonly',x=>x.getAll()),put:(s,v)=>t(s,'readwrite',x=>x.put(v)),del:(s,k)=>t(s,'readwrite',x=>x.delete(k))}})();
 const toast=m=>{const e=$('#toast');e.textContent=m;e.style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.opacity=0,2200)};
@@ -1980,7 +5848,7 @@ const cnt=i=>{const c={CONFORME:0,NAO_CONFORME:0,NAO_SE_APLICA:0,NAO_VERIFICADO:
 const tag=s=>s?`<span class="tag ${ST[s][1]}">${ST[s][0]}</span>`:'<span class="tag pe">Pendente</span>';
 const pn=id=>props.find(p=>p.id==id)||{name:'(imóvel removido)'};
 const fld=(l,k,v,t='text')=>`<label>${l}</label><input type="${t}" data-p="${k}" value="${esc(v)}">`;
-async function load(){[props,insps]=await Promise.all([DB.all('props'),DB.all('insps')]);insps.sort((a,b)=>b.startedAt.localeCompare(a.startedAt))}
+async function load(){[props,insps,envs]=await Promise.all([DB.all('props'),DB.all('insps'),DB.all('envs')]);insps.sort((a,b)=>b.startedAt.localeCompare(a.startedAt))}
 async function loadCat(){CAT=JSON.parse(document.getElementById('catalogo').textContent)}
 
 /* Telas (HTML gerado por funções). */
@@ -1988,23 +5856,20 @@ async function loadCat(){CAT=JSON.parse(document.getElementById('catalogo').text
 const V={
 home(){return`<div class="row"><button class="p" data-a="newp">+ Cadastrar imóvel</button></div>
 <h2>Imóveis</h2>${props.map(p=>`<div class="card"><h3>${esc(p.name||'Sem nome')} ${esc(p.unit)}</h3><div class="mut">${esc(p.developer)} ${esc(p.tower)} · ${esc(p.client)}</div>
-<div class="row"><button class="p" data-a="start" data-x="${p.id}">Iniciar vistoria</button><button data-a="editp" data-x="${p.id}">Editar</button></div></div>`).join('')||'<p class="mut">Nenhum imóvel. Cadastre o primeiro.</p>'}
+<div class="row"><button class="p" data-a="start" data-x="${p.id}">Iniciar vistoria</button><button data-a="editp" data-x="${p.id}">Editar</button><button data-a="envs" data-x="${p.id}">Ambientes</button></div></div>`).join('')||'<p class="mut">Nenhum imóvel. Cadastre o primeiro.</p>'}
 <h2>Vistorias</h2>${insps.map(i=>{const c=cnt(i);return`<div class="card"><h3>${esc(pn(i.pid).name)} ${esc(pn(i.pid).unit)}</h3><div class="mut">${i.status.replace('_',' ').toLowerCase()} · ${c.pct}% · ${new Date(i.startedAt).toLocaleDateString('pt-BR')}</div><div class="bar"><i style="width:${c.pct}%"></i></div>
 <div class="row"><button class="p" data-a="open" data-x="${i.id}">Abrir</button><button data-a="rel" data-x="${i.id}">Relatório</button></div></div>`}).join('')||'<p class="mut">Nenhuma vistoria iniciada.</p>'}
 <h2>Backup</h2><div class="row"><button data-a="exp">Exportar backup</button><button onclick="$('#imp').click()">Importar backup</button></div><input id="imp" type="file" accept=".json" hidden>
 <p class="mut">Os dados ficam neste navegador. Exporte o backup com frequência.</p>`},
 prop(){const p=S.p;return`<div class="card">${fld('Identificação / nome do empreendimento','name',p.name)}${fld('Construtora/incorporadora','developer',p.developer)}${fld('Endereço','address',p.address)}${fld('Unidade','unit',p.unit)}${fld('Torre/bloco','tower',p.tower)}${fld('Cliente/proprietário','client',p.client)}${fld('Data prevista','date',p.date,'date')}<label>Observações</label><textarea data-p="notes">${esc(p.notes)}</textarea>
 <div class="row"><button class="p" data-a="savep">Salvar</button>${props.some(x=>x.id==p.id)?'<button class="d" data-a="delp">Excluir</button>':''}</div></div>`},
-start(){return`<div class="card"><h3>${esc(pn(S.pid).name)} ${esc(pn(S.pid).unit)}</h3>${fld('Responsável pela inspeção','insp','')}
-<label>Configuração do banheiro</label><label class="chk"><input type="checkbox" id="c_box" checked>Possui box/divisória</label><label class="chk"><input type="checkbox" id="c_ex" checked>Possui exaustor</label>
-<label>Tipo de chuveiro</label><select id="c_ch"><option>Elétrico</option><option>Aquecimento central/gás</option><option>Outro</option><option>Não instalado</option></select>
-<p class="mut">Critérios que não se aplicam entram como "Não se aplica" com justificativa (regras sugeridas, a validar).</p><div class="row"><button class="p" data-a="go">Iniciar vistoria</button></div></div>`},
+start(){const l=envsOf(S.pid);return`<div class="card"><h3>${esc(pn(S.pid).name)} ${esc(pn(S.pid).unit)}</h3>${fld('Responsável pela inspeção','insp','')}<label>Ambientes a vistoriar</label>${l.map(e=>HASCAT(e.type)?`<label class="chk"><input type="checkbox" data-env="${e.id}" checked>${esc(e.name)}</label>`:`<div class="mut">${esc(e.name)} — sem checklist cadastrado</div>`).join('')||'<p class="mut">Configure os ambientes do imóvel antes de iniciar.</p>'}<p class="mut">Critérios que não se aplicam à configuração do ambiente entram como "Não se aplica" com justificativa (regras sugeridas, a validar).</p><div class="row"><button class="p" data-a="go">Iniciar vistoria</button><button data-a="envs" data-x="${S.pid}">Configurar ambientes</button></div></div>`},
 insp(){const c=cnt(cur);return`<div class="card"><div class="ctr"><div><b>${c.CONFORME}</b>conformes</div><div><b>${c.NAO_CONFORME}</b>não conf.</div><div><b>${c.NAO_SE_APLICA}</b>não aplica</div><div><b>${c.NAO_VERIFICADO}</b>não verif.</div><div><b>${c.pe}</b>pendentes</div><div><b>${c.pct}%</b>concluído</div></div><div class="bar"><i style="width:${c.pct}%"></i></div></div>
-${CAT.categories.map(g=>{const it=cur.items.filter(x=>x.cat==g.id),d=it.filter(x=>x.st).length;return`<div class="card" data-a="cat" data-x="${g.id}" style="cursor:pointer"><h3>${esc(g.name)}</h3><span class="mut">${d}/${it.length} avaliados</span><div class="bar"><i style="width:${d/it.length*100}%"></i></div></div>`}).join('')}
+${(cur.envs||[{id:'',name:'Banheiro'}]).map(e=>`<h3>${esc(e.name)}</h3>`+CAT.categories.filter(g=>cur.items.some(x=>x.cat==g.id&&(x.env||'')==(e.id||''))).map(g=>{const it=cur.items.filter(x=>x.cat==g.id&&(x.env||'')==(e.id||'')),d=it.filter(x=>x.st).length;return`<div class="card" data-a="cat" data-x="${g.id}" data-e="${e.id||''}" style="cursor:pointer"><h3>${esc(g.name)}</h3><span class="mut">${d}/${it.length} avaliados</span><div class="bar"><i style="width:${d/it.length*100}%"></i></div></div>`}).join('')).join('')}
 <div class="row"><button data-a="pause">${cur.status=='PAUSADA'?'Retomar':'Pausar'}</button><button data-a="rel" data-x="${cur.id}">Relatório</button><button class="p" data-a="fin" ${c.pe?'disabled':''}>Finalizar${c.pe?' (há pendentes)':''}</button></div>`},
-cat(){return CAT.criteria.filter(c=>c.category_id==S.c).map(c=>{const i=cur.items.findIndex(x=>x.id==c.id),x=cur.items[i];return item(x,i)}).join('')},
-rel(){const i=cur,c=cnt(i),p=pn(i.pid),sec=(t,f)=>{const l=i.items.filter(f);return l.length?`<h3>${t} (${l.length})</h3>`+l.map(x=>`<div class="card"><b>${x.id}</b> ${esc(x.d)}<br><span class="mut">${esc(x.catName)}</span><br>${tag(x.st)}${x.na?` <span class="mut">${esc(x.na)}</span>`:''}${x.nv?` <span class="mut">Motivo: ${esc(x.nv)}</span>`:''}${x.note?`<br>Obs.: ${esc(x.note)}`:''}${x.nc?`<br>Ocorrência: ${esc(x.nc.desc)}<br>Local: ${esc(x.nc.loc)} · Prioridade: ${esc(x.nc.pri)}<br>Recomendação: ${esc(x.nc.rec)}<br>${esc(x.nc.obs)}`:''}<div class="ph">${x.ph.map(f=>`<img src="${urls[f]}">`).join('')}</div></div>`).join(''):''};
-return`<div class="row noprint"><button class="p" data-a="print">Imprimir / salvar PDF</button></div><div class="card"><h2>Relatório de vistoria — Banheiro</h2>Imóvel: ${esc(p.name)} ${esc(p.unit)} ${esc(p.tower)}<br>Empreendimento/construtora: ${esc(p.developer)}<br>Endereço: ${esc(p.address)}<br>Cliente: ${esc(p.client)}<br>Data: ${new Date(i.startedAt).toLocaleDateString('pt-BR')} · Responsável: ${esc(i.insp)}<br>Catálogo ${esc(i.cat.id)} v${esc(i.cat.version)} (${esc(i.cat.status)})</div>
+cat(){return cur.items.map((x,i)=>x.cat==S.c&&(x.env||'')==(S.e||'')?item(x,i):'').join('')},
+rel(){const i=cur,c=cnt(i),p=pn(i.pid),sec=(t,f)=>{const l=i.items.filter(f);return l.length?`<h3>${t} (${l.length})</h3>`+l.map(x=>`<div class="card"><b>${x.id}</b> ${esc(x.d)}<br><span class="mut">${esc(x.en?x.en+" › ":"")}${esc(x.catName)}</span><br>${tag(x.st)}${x.na?` <span class="mut">${esc(x.na)}</span>`:''}${x.nv?` <span class="mut">Motivo: ${esc(x.nv)}</span>`:''}${x.note?`<br>Obs.: ${esc(x.note)}`:''}${x.nc?`<br>Ocorrência: ${esc(x.nc.desc)}<br>Local: ${esc(x.nc.loc)} · Prioridade: ${esc(x.nc.pri)}<br>Recomendação: ${esc(x.nc.rec)}<br>${esc(x.nc.obs)}`:''}<div class="ph">${x.ph.map(f=>`<img src="${urls[f]}">`).join('')}</div></div>`).join(''):''};
+return`<div class="row noprint"><button class="p" data-a="print">Imprimir / salvar PDF</button></div><div class="card"><h2>Relatório de vistoria</h2>Imóvel: ${esc(p.name)} ${esc(p.unit)} ${esc(p.tower)}<br>Empreendimento/construtora: ${esc(p.developer)}<br>Endereço: ${esc(p.address)}<br>Cliente: ${esc(p.client)}<br>Data: ${new Date(i.startedAt).toLocaleDateString('pt-BR')} · Responsável: ${esc(i.insp)}<br>Catálogo ${esc(i.cat.id)} v${esc(i.cat.version)} (${esc(i.cat.status)})<br>Ambientes: ${(i.envs||[{name:"Banheiro"}]).map(e=>esc(e.name)).join(", ")}</div>
 <div class="card"><h3>Resumo</h3>Avaliados: ${c.n-c.pe} de ${c.n} · Conformes: ${c.CONFORME} · Não conformes: ${c.NAO_CONFORME} · Não se aplica: ${c.NAO_SE_APLICA} · Não verificados: ${c.NAO_VERIFICADO} · Pendentes: ${c.pe}</div>
 ${sec('Não conformidades',x=>x.st=='NAO_CONFORME')}${sec('Itens não verificados (limitações da inspeção)',x=>x.st=='NAO_VERIFICADO')}${sec('Conformes com observação',x=>x.st=='CONFORME'&&x.note)}
 <div class="card"><h3>Observações gerais e limitações</h3><textarea data-g="notes">${esc(i.notes||'')}</textarea><p class="mut">Inspeção visual, funcional e documental não destrutiva; não substitui ensaios técnicos específicos. As referências normativas do catálogo estão pendentes de validação e não foram aplicadas como critério de conformidade.</p><br><br>______________________________<br>${esc(i.insp)} — Responsável técnico</div>`}};
@@ -2016,27 +5881,52 @@ ${x.st=='NAO_CONFORME'?`<div class="sub"><label>Descrição da ocorrência</labe
 <div class="ph">${x.ph.map(f=>`<div><img src="${urls[f]||''}"><b data-a="delph" data-i="${i}" data-x="${f}">×</b></div>`).join('')}</div>
 <div class="row"><label class="btn" style="text-align:center;line-height:46px;margin:0">📷 Foto<input type="file" accept="image/*" capture="environment" hidden data-ph="${i}"></label></div></div>`}
 
+/* Ambientes do imóvel: tipos, materiais, configuração e ações (adicionar, editar, duplicar, excluir). */
+const ENV_TYPES=['Sala de estar','Cozinha','Quarto','Banheiro','Varanda','Área de serviço','Corredor/circulação','Lavabo','Outros'];
+const ENV_DEFAULTS=[['Sala de estar','Sala de estar'],['Cozinha','Cozinha'],['Quarto 1','Quarto'],['Quarto 2','Quarto'],['Banheiro','Banheiro'],['Varanda','Varanda'],['Área de serviço','Área de serviço'],['Corredor/circulação','Corredor/circulação'],['Lavabo','Lavabo']];
+const MATS=[['paredes','Paredes',['Alvenaria convencional','Alvenaria estrutural','Concreto','Drywall']],['piso','Piso',['Porcelanato','Cerâmica','Laminado','Vinílico','Pedra natural']],['rodape','Rodapé',['MDF','PVC','Cerâmica','Porcelanato','Outros']],['esquadrias','Esquadrias',['Alumínio','Aço','PVC','Madeira']],['forro','Forro',['Laje aparente','Gesso','Drywall']]];
+// tipo de ambiente -> id do ambiente no catálogo v2 (environment_catalog)
+const ENV_CAT={'Sala de estar':'AMB-001','Cozinha':'AMB-002','Quarto':'AMB-003','Banheiro':'AMB-005','Varanda':'AMB-006','Área de serviço':'AMB-007','Corredor/circulação':'AMB-008','Lavabo':'AMB-009','Outros':'AMB-010'};
+const HASCAT=t=>!!ENV_CAT[t];
+const nCrit=t=>CAT?CAT.criteria.filter(c=>c.environment_id==ENV_CAT[t]).length:0;
+const sel=(l,k,o,v)=>`<label>${l}</label><select data-p="${k}"><option value="">Não informado</option>${o.map(x=>`<option ${v==x?'selected':''}>${x}</option>`).join('')}</select>`;
+const envsOf=pid=>envs.filter(e=>e.pid==pid).sort((a,b)=>a.order-b.order);
+const envUsed=id=>insps.some(i=>(i.envs||[]).some(e=>e.id==id));
+Object.assign(V,{
+envs(){const l=envsOf(S.pid);return`<div class="card"><h3>${esc(pn(S.pid).name)} ${esc(pn(S.pid).unit)}</h3><span class="mut">Defina os ambientes da unidade e os materiais de cada um.</span><div class="row"><button class="p" data-a="newenv">+ Adicionar ambiente</button>${l.length?'':'<button data-a="defenvs">Criar ambientes padrão</button>'}</div></div>`+l.map(e=>`<div class="card"><h3>${esc(e.name)}</h3><div class="mut">${esc(e.type)} · ${MATS.map(m=>e[m[0]]).filter(Boolean).join(', ')||'materiais não informados'}</div><div>${HASCAT(e.type)?`<span class="tag ok">Checklist: ${nCrit(e.type)} critérios</span>`:'<span class="tag pe">Sem checklist cadastrado</span>'}</div><div class="row"><button data-a="editenv" data-x="${e.id}">Editar</button><button data-a="dupenv" data-x="${e.id}">Duplicar</button><button class="d" data-a="delenv" data-x="${e.id}">Excluir</button></div></div>`).join('')},
+env(){const e=S.p;return`<div class="card">${fld('Nome do ambiente','name',e.name)}<label>Tipo</label><select data-p="type">${ENV_TYPES.map(t=>`<option ${e.type==t?'selected':''}>${t}</option>`).join('')}</select>${MATS.map(m=>sel(m[1],m[0],m[2],e[m[0]])).join('')}`+(e.type=='Banheiro'?`${sel('Possui box/divisória','box',['Sim','Não'],e.box)}${sel('Possui exaustor','exaustor',['Sim','Não'],e.exaustor)}${sel('Tipo de chuveiro','chuveiro',['Elétrico','Aquecimento central/gás','Outro','Não instalado'],e.chuveiro)}`:'')+`<div class="row"><button class="p" data-a="saveenv">Salvar</button></div></div>`}});
+document.addEventListener('change',e=>{const t=e.target;if(S.v=='env'&&t.dataset.p=='type'){S.p.type=t.value;render()}});
+async function envClick(a,x){
+ if(a=='envs'){go('envs',{pid:x});return true}
+ if(a=='defenvs'){let n=envsOf(S.pid).length;for(const [name,type] of ENV_DEFAULTS)await DB.put('envs',{id:uid(),pid:S.pid,name,type,order:n++,});await load();render();toast('Ambientes criados ✓');return true}
+ if(a=='newenv'){go('env',{pid:S.pid,p:{id:uid(),pid:S.pid,name:'',type:'Outros',order:envsOf(S.pid).length}});return true}
+ if(a=='editenv'){go('env',{pid:S.pid,p:{...envs.find(e=>e.id==x)}});return true}
+ if(a=='saveenv'){if(!(S.p.name||'').trim()){alert('Informe o nome do ambiente.');return true}await DB.put('envs',S.p);await load();go('envs',{pid:S.pid});toast('Ambiente salvo ✓');return true}
+ if(a=='dupenv'){const e=envs.find(v=>v.id==x);await DB.put('envs',{...e,id:uid(),name:e.name+' (cópia)',order:envsOf(e.pid).length});await load();render();toast('Ambiente duplicado ✓');return true}
+ if(a=='delenv'){if(envUsed(x)){alert('Este ambiente já foi usado em uma vistoria e não pode ser excluído.');return true}if(confirm('Excluir ambiente?')){await DB.del('envs',x);await load();render()}return true}
+ return false}
+
 /* Navegação, eventos, fotos, backup e inicialização. */
 // ---- render / navegação ----
-const TT={home:'Vistoria Técnica',prop:'Imóvel',start:'Nova vistoria',insp:'Vistoria',cat:'Critérios',rel:'Relatório'};
+const TT={home:'Vistoria Técnica',prop:'Imóvel',start:'Nova vistoria',insp:'Vistoria',cat:'Critérios',rel:'Relatório',envs:'Ambientes',env:'Ambiente'};
 async function render(){const y=scrollY;$('#ttl').textContent=S.v=='cat'?CAT.categories.find(g=>g.id==S.c).name:TT[S.v];$('#back').style.visibility=S.v=='home'?'hidden':'visible';
   if(cur&&(S.v=='cat'||S.v=='rel'))for(const p of await DB.all('photos'))if(p.ins==cur.id&&!urls[p.id])urls[p.id]=URL.createObjectURL(p.blob);
   $('#app').innerHTML=V[S.v]();scrollTo(0,y)}
 const go=(v,o={})=>{S={v,...o};render();scrollTo(0,0)};
-$('#back').onclick=()=>S.v=='cat'||S.v=='rel'&&cur&&S.from=='insp'?go('insp'):S.v=='rel'&&!S.from?go('home'):go(S.v=='cat'?'insp':'home');
+$('#back').onclick=()=>{if(S.v=='env')return go('envs',{pid:S.pid});if(S.v=='cat')return go('insp');if(S.v=='rel')return go(S.from=='insp'?'insp':'home');go('home')};
 const shrink=f=>new Promise(r=>{const i=new Image();i.onload=()=>{const k=Math.min(1,1600/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);c.toBlob(b=>r(b),'image/jpeg',.8)};i.src=URL.createObjectURL(f)});
-async function onClick(e){const t=e.target.closest('[data-a]');if(!t)return;const a=t.dataset.a,x=t.dataset.x,i=t.dataset.i;
+async function onClick(e){const t=e.target.closest('[data-a]');if(!t)return;const a=t.dataset.a,x=t.dataset.x,i=t.dataset.i;if(await envClick(a,x))return;
  if(a=='newp')go('prop',{p:{id:uid(),name:'',developer:'',address:'',unit:'',tower:'',client:'',date:'',notes:''}});
  if(a=='editp')go('prop',{p:{...props.find(p=>p.id==x)}});
  if(a=='savep'){if(!(S.p.name||'').trim())return alert('Informe o nome do empreendimento.');await DB.put('props',S.p);await load();go('home');toast('Imóvel cadastrado ✓')}
  if(a=='delp'){if(insps.some(v=>v.pid==S.p.id))return alert('Este imóvel possui vistorias e não pode ser excluído.');if(confirm('Excluir imóvel?')){await DB.del('props',S.p.id);await load();go('home')}}
  if(a=='start')go('start',{pid:x});
- if(a=='go'){if(!CAT)await loadCat();const c={box:$('#c_box').checked,exaustor:$('#c_ex').checked,chuveiro:$('#c_ch').value},m=CAT.metadata;
-  cur={id:uid(),pid:S.pid,status:'EM_ANDAMENTO',insp:$('[data-p=insp]').value,startedAt:new Date().toISOString(),notes:'',cfg:c,cat:{id:m.catalog_id,version:m.version,status:m.status},refs:CAT.reference_library,
-  items:CAT.criteria.filter(k=>k.active).map(k=>{const n=+k.id.slice(4),r=naReason(n,c);return{id:k.id,cat:k.category_id,catName:k.category,d:k.description,tipo:k.inspection_type,inst:k.recommended_instrument=='—'?'':k.recommended_instrument,origin:k.origin,st:r?'NAO_SE_APLICA':null,auto:!!r,na:r,note:'',nv:'',nc:null,ph:[]}})};
+ if(a=='go'){if(!CAT)await loadCat();const sl=[...document.querySelectorAll('[data-env]:checked')].map(c=>envs.find(e=>e.id==c.dataset.env));if(!sl.length)return alert('Selecione ao menos um ambiente com checklist.');const m=CAT.metadata;
+  cur={id:uid(),pid:S.pid,status:'EM_ANDAMENTO',insp:$('[data-p=insp]').value,startedAt:new Date().toISOString(),notes:'',envs:sl.map(e=>({...e})),cat:{id:m.catalog_id,version:m.version,status:m.status},refs:CAT.reference_library,
+  items:sl.flatMap(e=>{const c={box:e.box!='Não',exaustor:e.exaustor!='Não',chuveiro:e.chuveiro||'Elétrico'};return CAT.criteria.filter(k=>k.active&&k.environment_id==ENV_CAT[e.type]).map(k=>{const n=+k.id.slice(4),r=e.type=='Banheiro'&&k.id.startsWith('BAN')?naReason(n,c):'';return{id:k.id,env:e.id,en:e.name,cat:k.category_id,catName:k.category,d:k.description,tipo:k.inspection_type,inst:k.recommended_instrument=='—'?'':k.recommended_instrument,origin:k.origin,st:r?'NAO_SE_APLICA':null,auto:!!r,na:r,note:'',nv:'',nc:null,ph:[]}})})};
   await DB.put('insps',cur);await load();go('insp');toast('Vistoria iniciada ✓')}
  if(a=='open'){cur=insps.find(v=>v.id==x);go('insp')}
- if(a=='cat')go('cat',{c:x});
+ if(a=='cat')go('cat',{c:x,e:t.dataset.e||''});
  if(a=='st'){const it=cur.items[i];it.st=x;it.auto=false;if(x=='NAO_CONFORME'&&!it.nc)it.nc={desc:'',loc:'',pri:'Média',rec:'',obs:''};it.at=new Date().toISOString();save();render()}
  if(a=='delph'){const it=cur.items[i];it.ph=it.ph.filter(f=>f!=x);await DB.del('photos',x);save();render()}
  if(a=='pause'){cur.status=cur.status=='PAUSADA'?'EM_ANDAMENTO':'PAUSADA';save();render()}
@@ -2044,7 +5934,7 @@ async function onClick(e){const t=e.target.closest('[data-a]');if(!t)return;cons
  if(a=='rel'){cur=insps.find(v=>v.id==x)||cur;go('rel',{from:S.v=='insp'?'insp':''})}
  if(a=='print')print();
  if(a=='exp'){const ph=await DB.all('photos');for(const p of ph){p.data=await new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(p.blob)});delete p.blob}
-  const b=new Blob([JSON.stringify({props,insps,photos:ph})],{type:'application/json'}),l=document.createElement('a');l.href=URL.createObjectURL(b);l.download='backup-vistoria-'+new Date().toISOString().slice(0,10)+'.json';l.click()}}
+  const b=new Blob([JSON.stringify({props,envs,insps,photos:ph})],{type:'application/json'}),l=document.createElement('a');l.href=URL.createObjectURL(b);l.download='backup-vistoria-'+new Date().toISOString().slice(0,10)+'.json';l.click()}}
 document.addEventListener('click',e=>onClick(e).catch(err=>alert('Erro: '+(err&&err.message||err))));
 addEventListener('unhandledrejection',e=>alert('Erro: '+(e.reason&&e.reason.message||e.reason)));
 document.addEventListener('input',e=>{const t=e.target;if(t.dataset.p!==undefined&&S.p)S.p[t.dataset.p]=t.value;
@@ -2053,7 +5943,7 @@ document.addEventListener('input',e=>{const t=e.target;if(t.dataset.p!==undefine
 document.addEventListener('change',async e=>{const t=e.target;
  if(t.dataset.ph!==undefined&&t.files[0]){const b=await shrink(t.files[0]),id=uid();await DB.put('photos',{id,ins:cur.id,item:cur.items[t.dataset.ph].id,blob:b,at:new Date().toISOString()});urls[id]=URL.createObjectURL(b);cur.items[t.dataset.ph].ph.push(id);save();render()}
  if(t.id=='imp'&&t.files[0]){const d=JSON.parse(await t.files[0].text());if(!confirm('Importar backup? Registros com o mesmo ID serão substituídos.'))return;
-  for(const p of d.props)await DB.put('props',p);for(const v of d.insps)await DB.put('insps',v);
+  for(const p of d.props)await DB.put('props',p);for(const v of d.insps)await DB.put('insps',v);for(const v of d.envs||[])await DB.put('envs',v);
   for(const p of d.photos){p.blob=await (await fetch(p.data)).blob();delete p.data;await DB.put('photos',p)}await load();go('home');toast('Backup importado')}});
 const net=()=>$('#net').textContent=navigator.onLine?'online':'offline';addEventListener('online',net);addEventListener('offline',net);net();
 if('serviceWorker'in navigator)navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister())).catch(()=>{});
