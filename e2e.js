@@ -1,0 +1,173 @@
+// Testes de integração no navegador (Playwright). Uso: node tests/e2e.js <cenario> | all   (URL via env URL)
+const {chromium}=require('/home/claude/.npm-global/lib/node_modules/playwright');
+const fs=require('fs');const URL=process.env.URL||'http://localhost:8777/index.html';
+let FAIL=0;const ok=(c,m)=>{console.log((c?'  OK   ':'  FALHA ')+m);if(!c)FAIL++};
+async function mk(b,ctx){const c=ctx||await b.newContext({viewport:{width:390,height:800},acceptDownloads:true});const p=await c.newPage();p.errs=[];p.dlg=[];p.answers=[];
+ p.on('pageerror',e=>p.errs.push(e.message));p.on('console',m=>m.type()=='error'&&p.errs.push(m.text()));
+ p.on('dialog',d=>{p.dlg.push(d.message());const a=(d.type()=='confirm'&&p.answers.length)?p.answers.shift():true;a?d.accept():d.dismiss()});
+ await p.goto(URL);await p.waitForSelector('[data-a=newp]');return p}
+const prop=async(p,n)=>{await p.click('[data-a=newp]');await p.fill('[data-p=name]',n);await p.click('[data-a=savep]');await p.waitForSelector('[data-a=start]')};
+const addEnv=async(p,pid,name,type,cfg={})=>{await p.evaluate(x=>go('envs',{pid:x}),pid);await p.click('[data-a=newenv]');await p.fill('[data-p=name]',name);await p.selectOption('select[data-p=type]',type);for(const [k,v] of Object.entries(cfg))await p.selectOption(`[data-p=${k}]`,v);await p.click('[data-a=saveenv]');await p.waitForSelector('[data-a=newenv]')};
+const pidOf=p=>p.evaluate(()=>props[props.length-1].id);
+async function startIns(p,pid,names,who){await p.evaluate(x=>go('start',{pid:x}),pid);await p.fill('[data-p=insp]',who);
+ await p.evaluate(n=>document.querySelectorAll('[data-env]').forEach(c=>{c.checked=n.includes(c.closest('label').textContent.trim())}),names);await p.click('[data-a=go]');await p.waitForSelector('.ctr');return p.evaluate(()=>cur.id)}
+const idb=(p,s)=>p.evaluate(s=>DB.all(s),s);
+const card=(p,ik)=>p.locator(`.it[data-ik="${ik}"]`);
+const openCat=async(p,i)=>{const t=await p.evaluate(i=>{const x=cur.items[i];return{cat:x.cat,env:x.env,ik:x.env+'|'+x.id}},i);await p.evaluate(()=>go('insp'));await p.click(`[data-a=cat][data-x=${t.cat}][data-e="${t.env}"]`);await p.waitForSelector('.it');return t.ik};
+const setSt=async(p,i,st)=>{const ik=await openCat(p,i);await card(p,ik).locator(`[data-a=st][data-x=${st}]`).click();return ik};
+
+const S={};
+S.finalizacao=async b=>{const p=await mk(b);await prop(p,'P-FIN');const pid=await pidOf(p);await addEnv(p,pid,'Corredor','Corredor/circulação');const id=await startIns(p,pid,['Corredor'],'Eng');
+ const n=await p.evaluate(()=>{cur.items.slice(4).forEach(x=>x.st='CONFORME');return cur.items.length});console.log('  itens:',n);
+ const i0=await setSt(p,0,'NAO_CONFORME'),i1=await setSt(p,1,'NAO_VERIFICADO'),i2=await setSt(p,2,'NAO_SE_APLICA'),i3=await setSt(p,3,'NAO_VERIFICADO');
+ await card(p,i3).locator('[data-k=nv]').selectOption('Outro');
+ p.dlg.length=0;await p.evaluate(()=>go('insp'));await p.click('[data-a=fin]');await p.waitForTimeout(300);const m=p.dlg[0]||'';
+ ok(/Não é possível finalizar/.test(m),'finalização bloqueada com campos incompletos');
+ ok(/sem descrição/.test(m)&&/sem localização/.test(m),'NC sem descrição/localização apontado');ok(/não verificado sem motivo/.test(m),'NV sem motivo apontado');ok(/não se aplica sem justificativa/.test(m),'N/A sem justificativa apontado');ok(/Outro/.test(m),'motivo "Outro" sem observação apontado');
+ ok((await idb(p,'insps'))[0].status=='EM_ANDAMENTO','situação permanece EM_ANDAMENTO');
+ await openCat(p,0);await card(p,i0).locator('[data-k="nc.desc"]').fill('Mancha');await card(p,i0).locator('[data-k="nc.loc"]').fill('Parede norte');
+ await openCat(p,1);await card(p,i1).locator('[data-k=nv]').selectOption('Acesso impedido');
+ await openCat(p,2);await card(p,i2).locator('[data-k=na]').fill('Item não existe na unidade');
+ await openCat(p,3);await card(p,i3).locator('[data-k=note]').fill('Porta trancada');
+ await p.evaluate(()=>go('insp'));p.dlg.length=0;await p.click('[data-a=fin]');await p.waitForTimeout(500);
+ ok((await idb(p,'insps'))[0].status=='CONCLUIDA','finalizada após correção ('+p.dlg.length+' diálogo[s])');ok(/sem fotografia/.test(p.dlg[0]||''),'aviso (não bloqueante) de não conforme sem fotografia na confirmação final');
+ await p.evaluate(()=>go('insp'));await openCat(p,0).catch(()=>{});await p.evaluate(()=>go('cat',{c:cur.items[0].cat,e:cur.items[0].env}));await p.waitForSelector('.it');
+ await card(p,i0).locator('[data-a=st][data-x=CONFORME]').click();await p.waitForTimeout(300);
+ ok((await idb(p,'insps'))[0].items[0].st=='NAO_CONFORME','vistoria concluída não aceita edição');
+ await p.evaluate(()=>go('insp'));p.dlg.length=0;await p.click('[data-a=reopen]');await p.waitForTimeout(400);const r=(await idb(p,'insps'))[0];
+ ok(r.status=='EM_ANDAMENTO'&&r.reopened.length==1,'reabertura registrada');ok(p.errs.length==0,'sem erros de JavaScript '+JSON.stringify(p.errs))};
+S.aplicabilidade=async b=>{const p=await mk(b);await prop(p,'P-APL');const pid=await pidOf(p);await addEnv(p,pid,'B1','Banheiro');
+ let id=await startIns(p,pid,['B1'],'Eng');ok(/não informada|Configuração não informada/i.test(p.dlg[0]||''),'aviso de configuração não informada');
+ let r=await p.evaluate(()=>{const g=(a,b)=>cur.items.filter(x=>{const n=+x.id.slice(4);return n>=a&&n<=b});const f=[g(65,72),g(83,89),g(99,101),g(96,96)].flat();return{n:f.length,pend:f.filter(x=>!x.st).length,auto:cur.items.filter(x=>x.auto).length,miss:f.filter(x=>x.cfgMissing.length).length}});
+ ok(r.n==19&&r.pend==19&&r.auto==0,'sem dados: 19 critérios dependentes ficam PENDENTES, nenhum N/A automático ('+JSON.stringify(r)+')');ok(r.miss==19,'pendência marca qual configuração falta');
+ await addEnv(p,pid,'B2','Banheiro',{box:'Não',exaustor:'Sim',chuveiro:'Elétrico'});id=await startIns(p,pid,['B2'],'Eng2');
+ r=await p.evaluate(()=>({auto:cur.items.filter(x=>x.auto).map(x=>x.id),na:cur.items.filter(x=>x.st=='NAO_SE_APLICA').length}));ok(r.auto.length==8&&r.auto[0]=='BAN-065'&&r.na==8,'com box="Não" informado: 8 N/A sugeridos (065–072)');
+ await p.evaluate(()=>{cur.items.forEach(x=>{if(!x.auto)x.st='CONFORME'})});p.dlg.length=0;await p.evaluate(()=>go('insp'));await p.click('[data-a=fin]');await p.waitForTimeout(300);
+ ok(/automático ainda não confirmado/.test(p.dlg[0]||''),'N/A automático exige confirmação do engenheiro');
+ const ik=await setSt(p,await p.evaluate(()=>cur.items.findIndex(x=>x.id=='BAN-065')),'NAO_SE_APLICA');ok(!(await p.evaluate(()=>cur.items.find(x=>x.id=='BAN-065').auto)),'tocar em "Não se aplica" confirma a sugestão');ok(p.errs.length==0,'sem erros de JavaScript')};
+S.concorrencia=async b=>{const ctx=await b.newContext({viewport:{width:390,height:800}});let p=await mk(b,ctx);await prop(p,'P-CON');const pid=await pidOf(p);await addEnv(p,pid,'Corredor','Corredor/circulação');
+ const A=await startIns(p,pid,['Corredor'],'A');await p.evaluate(()=>go('home'));const B=await startIns(p,pid,['Corredor'],'B');
+ // digita em A e troca IMEDIATAMENTE para B, digita e volta
+ await p.evaluate(x=>{cur=INS.get(x);go('insp')},A);let ik=await openCat(p,0);await card(p,ik).locator('[data-k=note]').fill('nota-A');
+ await p.click('#back');await p.click('#back');await p.evaluate(x=>{cur=INS.get(x);go('insp')},B);ik=await openCat(p,0);await card(p,ik).locator('[data-k=note]').fill('nota-B');await p.click('#back');await p.click('#back');
+ let d=await idb(p,'insps');const a=d.find(x=>x.id==A),bb=d.find(x=>x.id==B);ok(a.items[0].note=='nota-A'&&bb.items[0].note=='nota-B','cada nota gravada na vistoria correta após troca imediata');
+ // cliques rápidos de status em sequência
+ await p.evaluate(x=>{cur=INS.get(x);go('insp')},A);ik=await openCat(p,1);const c=card(p,ik);for(const s of ['CONFORME','NAO_CONFORME','NAO_VERIFICADO','NAO_SE_APLICA','CONFORME'])await c.locator(`[data-a=st][data-x=${s}]`).click({noWaitAfter:true});
+ await p.waitForTimeout(500);d=await idb(p,'insps');ok(d.find(x=>x.id==A).items[1].st=='CONFORME','estado final = último clique em sequência rápida');ok(d.find(x=>x.id==B).items[1].st==null,'vistoria B não foi afetada');
+ // digitação seguida de recarga imediata e de fechamento da página
+ await p.evaluate(()=>go('cat',{c:cur.items[2].cat,e:cur.items[2].env}));await p.waitForSelector('.it');ik=await p.evaluate(()=>cur.items[2].env+'|'+cur.items[2].id);await card(p,ik).locator('[data-k=note]').pressSequentially('digitando-sem-pausa',{delay:0});await p.reload();
+ d=await idb(await (async()=>{await p.waitForSelector('[data-a=newp]');return p})(),'insps');ok(d.find(x=>x.id==A).items[2].note=='digitando-sem-pausa','recarregar a página logo após digitar não perde a edição');
+ await p.evaluate(x=>{cur=INS.get(x);go('cat',{c:cur.items[3].cat,e:cur.items[3].env})},A);await p.waitForSelector('.it');ik=await p.evaluate(()=>cur.items[3].env+'|'+cur.items[3].id);await card(p,ik).locator('[data-k=note]').fill('fechando-aba');await p.close({runBeforeUnload:true});
+ await new Promise(r=>setTimeout(r,500));p=await mk(b,ctx);d=await idb(p,'insps');ok(d.find(x=>x.id==A).items[3].note=='fechando-aba','fechar a aba logo após digitar não perde a edição');ok(p.errs.length==0,'sem erros de JavaScript '+JSON.stringify(p.errs))};
+S.fotos=async b=>{const p=await mk(b);await prop(p,'P-FOTO');const pid=await pidOf(p);await addEnv(p,pid,'Q1','Quarto');await addEnv(p,pid,'Q2','Quarto');const A=await startIns(p,pid,['Q1','Q2'],'Eng');
+ const t=await p.evaluate(()=>{const e=cur.envs.map(e=>e.id);const i1=cur.items.findIndex(x=>x.env==e[0]),i2=cur.items.findIndex(x=>x.env==e[1]&&x.id==cur.items[i1].id);return{i1,i2,id:cur.items[i1].id,e1:e[0],e2:e[1]}});ok(t.i2>0&&t.i1!=t.i2,'dois quartos compartilham o mesmo código de critério ('+t.id+')');
+ let ik=await openCat(p,t.i1);await card(p,ik).locator('[data-ph]').setInputFiles('/tmp/foto1.jpg');await p.waitForTimeout(800);
+ let r=await p.evaluate(t=>({a:cur.items[t.i1].ph.length,b:cur.items[t.i2].ph.length}),t);ok(r.a==1&&r.b==0,'foto vinculada somente ao critério do Quarto 1');
+ const ph=await p.evaluate(async()=>{const r=(await DB.all('photos'))[0];return{ins:r.ins,itemKey:r.itemKey,size:r.blob.size,type:r.blob.type}});ok(ph.ins==A&&ph.itemKey==t.e1+'|'+t.id&&ph.size>0&&ph.size<1500000&&ph.type=='image/jpeg','registro da foto: vistoria, critério e ambiente corretos; imagem reduzida ('+ph.size+' B, '+ph.type+')');
+ // foto + navegação imediata
+ await card(p,ik).locator('[data-ph]').setInputFiles('/tmp/foto2.png');await p.evaluate(()=>go('home'));await p.waitForTimeout(800);r=await p.evaluate(t=>({a:cur.items[t.i1].ph.length,b:cur.items[t.i2].ph.length,n:0}),t);ok(r.a==2&&r.b==0,'foto adicionada e navegação imediata: vínculo preservado');
+ const d=(await idb(p,'insps'))[0];ok(d.items[t.i1].ph.length==2&&(await idb(p,'photos')).length==2,'IndexedDB: 2 fotos e 2 vínculos');
+ await p.reload();await p.waitForSelector('[data-a=newp]');await p.evaluate(x=>{cur=INS.get(x);go('rel')},A);await p.waitForTimeout(600);ok(await p.locator('.ph img').count()==0,'relatório sem fotos nesta vistoria (itens conformes/pendentes não listam fotos)');
+ await p.evaluate(x=>{cur=INS.get(x);const it=cur.items[0];go('home')},A);
+ await p.evaluate(t=>{cur.items[t.i1].st='NAO_CONFORME';cur.items[t.i1].nc={desc:'d',loc:'l',pri:'Média',rec:'',obs:''};return save(cur,true)},t);await p.evaluate(()=>go('rel'));await p.waitForTimeout(600);ok(await p.locator('.ph img').count()==2,'relatório mostra as 2 fotos do item não conforme');
+ await p.evaluate(t=>go('cat',{c:cur.items[t.i1].cat,e:cur.items[t.i1].env}),t);await p.waitForSelector('.it');await card(p,t.e1+'|'+t.id).locator('[data-a=delph]').first().click();await p.waitForTimeout(500);
+ ok((await idb(p,'photos')).length==1&&(await p.evaluate(t=>cur.items[t.i1].ph.length,t))==1,'remover foto desfaz vínculo e apaga o arquivo');ok(p.errs.length==0,'sem erros de JavaScript '+JSON.stringify(p.errs))};
+S.backup=async b=>{const p=await mk(b);await prop(p,'P-BKP');const pid=await pidOf(p);await addEnv(p,pid,'Corredor','Corredor/circulação');const A=await startIns(p,pid,['Corredor'],'Eng');
+ const ik=await openCat(p,0);await card(p,ik).locator('[data-ph]').setInputFiles('/tmp/foto1.jpg');await p.waitForTimeout(700);await p.evaluate(()=>{cur.items[0].st='NAO_CONFORME';cur.items[0].nc={desc:'d',loc:'l',pri:'Alta',rec:'r',obs:''};return save(cur,true)});await p.evaluate(()=>go('home'));
+ const [dl]=await Promise.all([p.waitForEvent('download'),p.click('[data-a=exp]')]);await dl.saveAs('/tmp/bk_ok.json');const bk=JSON.parse(fs.readFileSync('/tmp/bk_ok.json','utf8'));
+ ok(bk.app=='vistoria-correia'&&bk.formatVersion==3&&bk.counts.insps==1&&bk.counts.photos==1,'exportação identificada e com contagens '+JSON.stringify(bk.counts));
+ const snap=async q=>JSON.stringify([(await idb(q,'props')).length,(await idb(q,'envs')).length,(await idb(q,'insps')).map(x=>x.id+x.items.length),(await idb(q,'photos')).length]);const before=await snap(p);
+ const cases={'lixo.json':'isto não é json','semcampos.json':JSON.stringify({app:'vistoria-correia'}),'outroapp.json':JSON.stringify({...bk,app:'x'}),'futuro.json':JSON.stringify({...bk,formatVersion:99}),
+  'status.json':JSON.stringify({...bk,insps:[{...bk.insps[0],status:'ZZ'}]}),'foto.json':JSON.stringify({...bk,photos:[{...bk.photos[0],data:'abc'}]}),'duplicado.json':JSON.stringify({...bk,props:[...bk.props,...bk.props]})};
+ for(const [n,c] of Object.entries(cases)){fs.writeFileSync('/tmp/'+n,c);p.dlg.length=0;await p.setInputFiles('#imp','/tmp/'+n);await p.waitForTimeout(500);ok(/REJEITADO/.test(p.dlg[0]||'')&&/Nenhum dado foi alterado/.test(p.dlg[0]||''),'backup inválido rejeitado com mensagem clara: '+n)}
+ ok((await snap(p))==before,'dados existentes intactos após 7 importações inválidas');
+ p.dlg.length=0;await p.setInputFiles('#imp','/tmp/bk_ok.json');await p.waitForTimeout(500);ok(/Nada a importar/.test(p.dlg[0]||''),'reimportar o mesmo backup: "Nada a importar"');ok((await snap(p))==before,'reimportação idêntica não duplica nada');
+ const diff={...bk,props:[{...bk.props[0],name:'ALTERADO NO BACKUP'}]};fs.writeFileSync('/tmp/bk_dif.json',JSON.stringify(diff));
+ p.dlg.length=0;p.answers=[true,false];await p.setInputFiles('#imp','/tmp/bk_dif.json');await p.waitForTimeout(700);ok(p.dlg.length==2&&/DIFERENTES: 1/.test(p.dlg[0])&&!/FALHOU/.test(p.dlg.join()),'conflito detectado e informado ('+p.dlg.length+' diálogos)');ok((await idb(p,'props'))[0].name=='P-BKP','"manter dados atuais" preserva o registro local');
+ p.dlg.length=0;p.answers=[true,true];const dp=p.waitForEvent('download',{timeout:5000}).catch(()=>null);await p.setInputFiles('#imp','/tmp/bk_dif.json');const pre=await dp;await p.waitForTimeout(700);ok(!!pre&&/antes-da-importacao/.test(pre.suggestedFilename()),'"substituir" baixa antes um backup do estado atual');ok((await idb(p,'props'))[0].name=='ALTERADO NO BACKUP','substituição aplicada somente após confirmação');
+ const p2=await mk(b);p2.dlg.length=0;await p2.setInputFiles('#imp','/tmp/bk_ok.json');await p2.waitForTimeout(1200);const i2=await idb(p2,'insps'),f2=await p2.evaluate(async()=>(await DB.all('photos')).map(r=>({id:r.id,size:r.blob.size})));
+ ok(i2.length==1&&f2.length==1&&f2[0].size>0&&i2[0].items[0].ph[0]==f2[0].id&&i2[0].items[0].nc.desc=='d','restauração em base vazia: vistoria, ocorrência, foto e vínculo íntegros');ok(p.errs.length==0&&p2.errs.length==0,'sem erros de JavaScript '+JSON.stringify([...p.errs,...p2.errs]))};
+
+const clone=o=>JSON.parse(JSON.stringify(o));
+async function baseBackup(b,nome,foto='/tmp/foto1.jpg'){const p=await mk(b);await prop(p,nome);const pid=await pidOf(p);await addEnv(p,pid,'Corredor','Corredor/circulação');const id=await startIns(p,pid,['Corredor'],'Eng');
+ const ik=await openCat(p,0);await card(p,ik).locator('[data-ph]').setInputFiles(foto);await p.waitForTimeout(700);
+ await p.evaluate(()=>{const x=cur.items[0];x.st='NAO_CONFORME';x.note='original';x.nc={desc:'d',loc:'l',pri:'Alta',rec:'r',obs:''};return save(cur,true)});await p.evaluate(()=>go('home'));
+ const [dl]=await Promise.all([p.waitForEvent('download'),p.click('[data-a=exp]')]);await dl.saveAs('/tmp/'+nome+'.json');return{p,id,bk:JSON.parse(fs.readFileSync('/tmp/'+nome+'.json','utf8'))}}
+const imp=async(p,path,answers=[])=>{p.dlg.length=0;p.answers=[...answers];await p.setInputFiles('#imp',path);await p.waitForTimeout(1500)};
+const photosInfo=p=>p.evaluate(async()=>(await DB.all('photos')).map(r=>({id:r.id,ins:r.ins,size:r.blob.size,type:r.blob.type})));
+const scan=p=>p.evaluate(()=>integrityScan());
+const zero=sc=>Object.values(sc).every(v=>v.length==0);
+
+S.seguranca=async b=>{const {p,bk}=await baseBackup(b,'sec_base');
+ const X1='<img src=x onerror="window.__x=1">',X2='<script>window.__x=2</script>',X3='" onmouseover="window.__x=3" x="',X4='<svg onload=window.__x=4>';
+ const m=clone(bk);m.props[0].name=X1+'Imovel';m.props[0].developer=X2;m.props[0].client=X3;m.props[0].address=X4;m.envs[0].name=X1;m.insps[0].insp=X4;m.insps[0].prop={...m.props[0]};m.insps[0].notes=X2;
+ const it=m.insps[0].items;it[0].note=X1;it[0].nc={desc:X2,loc:X3,pri:'Alta',rec:X4,obs:X1};it[1].st='NAO_VERIFICADO';it[1].nv=X2;it[1].na=X3;it[1].d=X1;it[1].catName=X4;it[1].en=X1;it[1].tipo=X3;it[1].inst=X2;it[1].note=X4;
+ m.insps.forEach(i=>i.items.forEach(x=>{x.en=X1}));
+ const f='/tmp/arq"><img src=x onerror=window.__x=7>.json';fs.writeFileSync(f,JSON.stringify(m));
+ const q=await mk(b);await imp(q,f,[true]);const n=(await idb(q,'insps')).length;ok(n==1,'backup com HTML/JavaScript nos TEXTOS foi importado (texto livre é permitido); nome de arquivo malicioso ignorado');
+ const id=await q.evaluate(()=>[...INS.keys()][0]);
+ const chk=async nome=>{await q.waitForTimeout(350);const r=await q.evaluate(()=>({x:window.__x,inj:document.querySelectorAll('#app img[src="x"],#app script,#app svg,#app [onerror],#app [onload],#app [onmouseover]').length,txt:document.querySelector('#app').innerText}));ok(r.x===undefined&&r.inj==0,'tela "'+nome+'": nada executado nem injetado como elemento');return r};
+ let r=await chk('início');ok(r.txt.includes('<img src=x'),'o texto aparece literalmente como texto na tela inicial');
+ await q.evaluate(()=>go('envs',{pid:props[0].id}));await chk('ambientes');
+ await q.evaluate(()=>go('start',{pid:props[0].id}));await chk('nova vistoria');
+ await q.evaluate(x=>{cur=INS.get(x);go('insp')},id);await chk('vistoria');
+ for(const k of [0,1]){await q.evaluate(k=>go('cat',{c:cur.items[k].cat,e:cur.items[k].env}),k);await chk('critério '+k)}
+ await q.evaluate(()=>go('rel'));r=await chk('relatório');ok(r.txt.includes('<script>window.__x=2</script>'),'relatório exibe o conteúdo como texto');
+ const ids=[['props',d=>{d.props[0].id='x"><img src=x onerror=window.__x=6>'}],['insps',d=>{d.insps[0].id='<b>x</b>'}],['critério',d=>{d.insps[0].items[0].id='A"B'}],['foto',d=>{d.photos[0].id="f'1"}],['ambiente',d=>{d.envs[0].id='e 1'}],['categoria',d=>{d.insps[0].items[0].cat='c"d'}],['ref. foto',d=>{d.insps[0].items[0].ph=['a"b']}],['ambiente do critério',d=>{d.insps[0].items[0].env='<x>'}]];
+ const q2=await mk(b);const before=JSON.stringify([(await idb(q2,'props')).length,(await idb(q2,'insps')).length]);
+ for(const [nome,fn] of ids){const d=clone(bk);fn(d);fs.writeFileSync('/tmp/id_'+nome.replace(/\W/g,'_')+'.json',JSON.stringify(d));await imp(q2,'/tmp/id_'+nome.replace(/\W/g,'_')+'.json');ok(/REJEITADO/.test(q2.dlg[0]||'')&&/inválid/.test(q2.dlg[0]||''),'identificador com caracteres especiais rejeitado ('+nome+')')}
+ ok(JSON.stringify([(await idb(q2,'props')).length,(await idb(q2,'insps')).length])==before&&(await q2.evaluate(()=>window.__x))===undefined,'nada foi gravado e nenhum script executou');ok(q.errs.length==0&&q2.errs.length==0,'sem erros/violações de CSP no console '+JSON.stringify([...q.errs,...q2.errs]))};
+S.backup2=async b=>{const {p:A,id,bk}=await baseBackup(b,'b2_orig');
+ const B=await mk(b);await imp(B,'/tmp/b2_orig.json',[true]);let ph=await photosInfo(B);ok((await idb(B,'insps')).length==1&&ph.length==1,'importação em navegador sem dados: 1 vistoria e 1 foto');
+ await imp(B,'/tmp/b2_orig.json');ok(/Nada a importar/.test(B.dlg[0]||'')&&(await photosInfo(B)).length==1,'importar o mesmo backup de novo: "Nada a importar" (foto idêntica por conteúdo)');
+ const mod=clone(bk);mod.photos[0].data='data:image/png;base64,'+fs.readFileSync('/tmp/foto2.png').toString('base64');delete mod.photos[0].fp;mod.insps[0].items[0].note='alterada';fs.writeFileSync('/tmp/b2_mod.json',JSON.stringify(mod));
+ const sz0=ph[0].size;await imp(B,'/tmp/b2_mod.json',[true,false]);ok(/DIFERENTES: 2/.test(B.dlg[0]||''),'mesmo ID de foto com conteúdo diferente é detectado como conflito (não como idêntico)');
+ ph=await photosInfo(B);ok(ph[0].size==sz0&&ph[0].type=='image/jpeg'&&(await idb(B,'insps'))[0].items[0].note=='original','"manter dados atuais": foto e vistoria locais preservadas');
+ B.dlg.length=0;const dl=B.waitForEvent('download',{timeout:6000}).catch(()=>null);await imp(B,'/tmp/b2_mod.json',[true,true]);ok(!!(await dl),'substituição baixa antes um backup preventivo');
+ ph=await photosInfo(B);ok(ph.length==1&&ph[0].type=='image/png'&&ph[0].id==bk.photos[0].id&&(await idb(B,'insps'))[0].items[0].note=='alterada','substituição trocou o CONTEÚDO da foto e atualizou a vistoria');ok(zero(await scan(B)),'sem órfãs/referências quebradas após substituir');
+ const m2=clone(bk);m2.photos[0].id='nova-foto-1';m2.insps[0].items[0].ph=['nova-foto-1'];m2.insps[0].items[0].note='trocada';fs.writeFileSync('/tmp/b2_troca.json',JSON.stringify(m2));
+ await imp(B,'/tmp/b2_troca.json',[true,true]);ph=await photosInfo(B);ok(ph.length==1&&ph[0].id=='nova-foto-1','substituição removeu a foto antiga que deixou de ser usada (nenhuma órfã)');ok(zero(await scan(B))&&(await idb(B,'insps'))[0].items[0].ph.join()=='nova-foto-1','vínculos íntegros após trocar de foto');
+ const m3=clone(bk);m3.insps[0].items[0].ph.push('fantasma');m3.photos.push({...bk.photos[0],id:'orfa-1'});m3.insps[0].items[0].note='x3';fs.writeFileSync('/tmp/b2_av.json',JSON.stringify(m3));
+ await imp(B,'/tmp/b2_av.json',[true,true]);ok(/Avisos/.test(B.dlg[0]||'')&&/órfã/.test(B.dlg[0])&&/não existe/.test(B.dlg[0]),'avisos (referência fantasma e foto órfã) apresentados antes da confirmação');
+ ph=await photosInfo(B);const it0=(await idb(B,'insps'))[0].items[0];ok(!ph.some(x=>x.id=='orfa-1')&&!it0.ph.includes('fantasma')&&zero(await scan(B)),'foto órfã não importada e referência fantasma descartada');
+ const m4=clone(bk);m4.photos[0].ins='nao-existe';fs.writeFileSync('/tmp/b2_semins.json',JSON.stringify(m4));await imp(B,'/tmp/b2_semins.json');ok(/REJEITADO/.test(B.dlg[0])&&/vistoria inexistente/.test(B.dlg[0]),'foto sem vínculo com vistoria existente: rejeitado');
+ const m5=clone(bk);{const dd=m5.photos[0].data,k=dd.indexOf(',')+800,ch=dd[k]=='A'?'B':'A';m5.photos[0].data=dd.slice(0,k)+ch+dd.slice(k+1);ok(m5.photos[0].data!==dd&&m5.photos[0].data.length==dd.length,'(preparo) uma única letra do conteúdo da imagem foi alterada');}fs.writeFileSync('/tmp/b2_corr.json',JSON.stringify(m5));await imp(B,'/tmp/b2_corr.json');ok(/REJEITADO/.test(B.dlg[0]),'imagem adulterada (assinatura não confere) ou inválida: rejeitado');
+ for(const [n,fn] of [['incompativel',d=>{d.formatVersion=99}],['outroapp',d=>{d.app='outro'}],['incompleto',d=>{delete d.insps}],['status',d=>{d.insps[0].items[0].st='ZZ'}]]){const d=clone(bk);fn(d);fs.writeFileSync('/tmp/b2_'+n+'.json',JSON.stringify(d));await imp(B,'/tmp/b2_'+n+'.json');ok(/REJEITADO/.test(B.dlg[0])&&/Nenhum dado foi alterado/.test(B.dlg[0]),'backup '+n+' rejeitado sem alterar dados')}
+ fs.writeFileSync('/tmp/b2_lixo.json','{{ não é json');await imp(B,'/tmp/b2_lixo.json');ok(/não é um JSON legível/.test(B.dlg[0]),'arquivo JSON inválido: mensagem clara');
+ const C=await mk(b);const before=JSON.stringify([(await idb(C,'props')).length,(await idb(C,'envs')).length,(await idb(C,'insps')).length,(await idb(C,'photos')).length]);
+ await C.evaluate(()=>{const o=IDBObjectStore.prototype.put;let n=0;IDBObjectStore.prototype.put=function(...a){if(++n==3)throw new Error('falha simulada na 3ª gravação');return o.apply(this,a)}});await imp(C,'/tmp/b2_orig.json',[true]);
+ ok(/FALHOU/.test(C.dlg[C.dlg.length-1]||'')&&JSON.stringify([(await idb(C,'props')).length,(await idb(C,'envs')).length,(await idb(C,'insps')).length,(await idb(C,'photos')).length])==before,'falha no meio da importação: nada foi gravado (operação atômica)');
+ ok(A.errs.length==0&&B.errs.length==0&&C.errs.length==0,'sem erros de JavaScript '+JSON.stringify([...A.errs,...B.errs,...C.errs]))};
+S.salvamento=async b=>{const ctx=await b.newContext({viewport:{width:390,height:800}});const p=await mk(b,ctx);await prop(p,'P-SAL');const pid=await pidOf(p);await addEnv(p,pid,'Corredor','Corredor/circulação');const id=await startIns(p,pid,['Corredor'],'Eng');
+ const ss=()=>p.locator('#ss').innerText(),note=async(q=p)=>(await idb(q,'insps')).find(x=>x.id==id).items[0].note;
+ ok(await ss()=='Salvo','indicador inicial: Salvo');let ik=await openCat(p,0);
+ await p.evaluate(()=>{window.__o=DB.putRev;DB.putRev=async i=>{await new Promise(r=>setTimeout(r,800));return window.__o(i)}});
+ await card(p,ik).locator('[data-k=note]').fill('texto-1');const s1=await ss();ok(/pendentes|Salvando/.test(s1)&&s1!='Salvo','logo após digitar o indicador é "'+s1+'" (nunca "Salvo")');
+ await p.waitForTimeout(450);const s2=await ss();ok(s2=='Salvando…'&&(await note())!='texto-1','durante a gravação: "'+s2+'" e o IndexedDB ainda não tem o texto');
+ await p.waitForTimeout(1300);ok(await ss()=='Salvo'&&(await note())=='texto-1','só depois da confirmação: "Salvo" e o texto está no IndexedDB');await p.evaluate(()=>{DB.putRev=window.__o});
+ await p.evaluate(()=>{window.__o2=DB.putRev;let n=0;DB.putRev=async i=>{if(++n<=2)throw new Error('falha simulada');return window.__o2(i)}});
+ await card(p,ik).locator('[data-k=note]').fill('texto-2');await p.waitForTimeout(700);ok(await ss()=='Erro ao salvar'&&await p.locator('#savewarn').isVisible(),'falha de gravação: indicador "Erro ao salvar" e aviso visível');
+ await p.waitForTimeout(10500);ok(await ss()=='Salvo'&&(await note())=='texto-2'&&!(await p.locator('#savewarn').isVisible()),'tentativas automáticas gravaram o texto; aviso removido; indicador "Salvo"');await p.evaluate(()=>{DB.putRev=window.__o2});
+ await ctx.setOffline(true);await card(p,ik).locator('[data-k=note]').fill('offline-1');await p.evaluate(()=>{Object.defineProperty(document,'hidden',{value:true,configurable:true});document.dispatchEvent(new Event('visibilitychange'))});await p.waitForTimeout(600);ok(await note()=='offline-1','sem internet e em segundo plano: edição salva localmente');await ctx.setOffline(false);await p.evaluate(()=>{Object.defineProperty(document,'hidden',{value:false,configurable:true})});
+ const p2=await mk(b,ctx);await p2.evaluate(x=>{cur=INS.get(x);go('insp')},id);const ik2=await openCat(p2,0);
+ await card(p,ik).locator('[data-k=note]').fill('aba1');await p.waitForTimeout(500);await card(p2,ik2).locator('[data-k=note]').fill('aba2');await p2.waitForTimeout(700);
+ ok(await note()=='aba1','aba desatualizada NÃO sobrescreve os dados mais novos');ok(await p2.locator('#conflictwarn').isVisible()&&/Conflito/.test(await p2.locator('#ss').innerText()),'aba desatualizada mostra aviso de conflito e indicador');
+ await card(p,ik).locator('[data-k=note]').fill('aba1-b');await p.waitForTimeout(500);ok(await note()=='aba1-b'&&await ss()=='Salvo','a aba atualizada continua gravando normalmente');
+ await p2.evaluate(()=>{document.querySelector('[data-a=st]')});await p2.reload();await p2.waitForSelector('[data-a=newp]');ok((await note(p2))=='aba1-b','recarregar a aba desatualizada traz os dados mais novos');
+ const ctx2=await b.newContext({viewport:{width:390,height:800}});const w=await mk(b,ctx2);await prop(w,'P-WAL');const pw=await pidOf(w);await addEnv(w,pw,'Corredor','Corredor/circulação');const wid=await startIns(w,pw,['Corredor'],'Eng');const ikw=await openCat(w,0);
+ await w.evaluate(()=>{DB.putRev=()=>new Promise(()=>{})});await card(w,ikw).locator('[data-k=note]').fill('sobreviveu');await w.waitForTimeout(400);await w.evaluate(()=>dispatchEvent(new Event('pagehide')));
+ ok(await w.evaluate(()=>!!localStorage.getItem('vistoria-wal')),'ao sair da página, o diário de emergência recebe a edição ainda não confirmada');await w.close();
+ const w2=await mk(b,ctx2);const nn=(await idb(w2,'insps')).find(x=>x.id==wid).items[0].note;ok(nn=='sobreviveu','edição não gravada na sessão anterior foi RECUPERADA do diário');ok(await w2.evaluate(()=>!localStorage.getItem('vistoria-wal')),'diário limpo após a recuperação');
+ ok([p,p2,w,w2].every(x=>x.errs.length==0),'sem erros de JavaScript '+JSON.stringify([...p.errs,...p2.errs,...w2.errs]))};
+S.regressao=async b=>{const p=await mk(b);await prop(p,'P-REG');await p.click('[data-a=editp]');await p.fill('[data-p=client]','Cliente X');await p.fill('[data-p=unit]','101');await p.click('[data-a=savep]');await p.waitForSelector('[data-a=start]');
+ ok(/P-REG 101/.test(await p.innerText('#app'))&&/Cliente X/.test(await p.innerText('#app')),'cadastro e edição de imóvel/cliente');const pid=await pidOf(p);
+ await p.evaluate(x=>go('envs',{pid:x}),pid);await p.click('[data-a=defenvs]');await p.waitForSelector('text=Quarto 2');await p.click('[data-a=dupenv] >> nth=2');await p.waitForSelector('text=Quarto 1 (cópia)');await p.click('[data-a=delenv] >> nth=9');await p.waitForTimeout(300);ok((await p.$$('[data-a=editenv]')).length==9,'ambientes: criar padrão, duplicar e excluir');
+ const id=await startIns(p,pid,['Banheiro','Corredor/circulação'],'Eng');const cn=await p.evaluate(()=>cur.items.length);ok(cn==128,'vistoria criada com os critérios dos ambientes escolhidos ('+cn+')');
+ let ik=await setSt(p,0,'CONFORME');await card(p,ik).locator('[data-k=note]').fill('obs');await card(p,ik).locator('[data-ph]').setInputFiles('/tmp/foto2.png');await p.waitForTimeout(700);
+ await p.click('#back');await p.click('[data-a=pause]');await p.waitForTimeout(300);ok((await idb(p,'insps'))[0].status=='PAUSADA','pausar');await p.click('[data-a=pause]');await p.waitForTimeout(300);ok((await idb(p,'insps'))[0].status=='EM_ANDAMENTO','retomar');
+ const it=(await idb(p,'insps'))[0].items[0];ok(it.st=='CONFORME'&&it.note=='obs'&&it.ph.length==1,'status, observação e foto registrados');
+ await p.click('[data-a=rel]');await p.waitForTimeout(500);ok(/Relatório de vistoria/.test(await p.innerText('#app'))&&/Resumo/.test(await p.innerText('#app')),'relatório gerado');
+ await p.emulateMedia({media:'print'});ok(!(await p.locator('header').isVisible()),'impressão: cabeçalho do app oculto');const pdf=await p.pdf({format:'A4'});ok(pdf.slice(0,4).toString()=='%PDF'&&pdf.length>2000,'PDF gerado pelo navegador ('+pdf.length+' B)');await p.emulateMedia({media:'screen'});
+ await p.evaluate(()=>go('home'));await p.click('[data-a=editp]');p.dlg.length=0;await p.click('[data-a=delp]');await p.waitForTimeout(300);ok(/possui vistorias/.test(p.dlg[0]||''),'imóvel com vistoria não pode ser excluído');
+ const [dl]=await Promise.all([p.waitForEvent('download'),p.evaluate(()=>go('home')).then(()=>p.click('[data-a=exp]'))]);ok(/^backup-vistoria-.*\.json$/.test(dl.suggestedFilename()),'exportação de backup');ok(p.errs.length==0,'sem erros de JavaScript '+JSON.stringify(p.errs))};
+(async()=>{const b=await chromium.launch(),w=process.argv[2]||'all';for(const k of Object.keys(S)){if(w!='all'&&w!=k)continue;console.log('== '+k);try{await S[k](b)}catch(e){FAIL++;console.log('  FALHA (exceção): '+e.message.split('\n')[0])}}console.log(FAIL?'RESULTADO: '+FAIL+' falha(s)':'RESULTADO: tudo OK');await b.close()})();

@@ -1,4 +1,4 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Vistoria Técnica de Imóveis</title>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src blob: data:; connect-src data: blob:; base-uri 'none'; form-action 'none'; object-src 'none'"><title>Vistoria Técnica de Imóveis</title>
 <style>:root{--b:#1f3a4d;--bg:#f4f5f6;--t:#1d2329;--m:#5d6873;--l:#d9dde1;--ok:#2e7d4f;--nc:#c0392b;--na:#6b7280;--nv:#b7791f}
 *{box-sizing:border-box}body{margin:0;font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--t)}
 header{position:sticky;top:0;z-index:5;background:var(--b);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;align-items:center;gap:10px}
@@ -27,7 +27,9 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
 .how-b{min-height:40px;font-size:14px;padding:0 12px}
 .how{background:#eef3f6;border-left:4px solid var(--b);border-radius:6px;padding:4px 12px;margin-top:8px;font-size:14px}.how p{margin:8px 0}.how ul{margin:4px 0 8px;padding-left:20px}
 @media print{.how,.how-b{display:none!important}}
-</style></head><body><header><button id="back" class="noprint" aria-label="Voltar">‹</button><h1 id="ttl">Vistoria</h1><span class="s" id="net"></span></header><main id="app"></main><div id="toast"></div>
+
+.ss-ok{opacity:.85}.ss-run{color:#ffe08a}.ss-err{color:#ffb3a7;font-weight:700}header .s{white-space:nowrap}
+</style></head><body><header><button id="back" class="noprint" aria-label="Voltar">‹</button><h1 id="ttl">Vistoria</h1><span class="s" id="ss"></span><span class="s" id="net"></span></header><main id="app"></main><div id="toast"></div>
 <script type="application/json" id="catalogo">{
   "metadata": {
     "catalog_id": "CAT-AMB-005-BANHEIRO",
@@ -5829,29 +5831,178 @@ label{display:block;font-size:14px;color:var(--m);margin:10px 0 3px}input,select
   ]
 }</script>
 <script>/* Utilitários, constantes e estado global da aplicação. */
-const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ST={CONFORME:['Conforme','ok'],NAO_CONFORME:['Não conforme','nc'],NAO_SE_APLICA:['Não se aplica','na'],NAO_VERIFICADO:['Não verificado','nv']};
 const NV=['Ausência de fornecimento de água','Ausência de energia elétrica','Acesso impedido','Equipamento não instalado ou indisponível','Teste não autorizado','Condição insegura','Outro'];
 const PRI=['Baixa','Média','Alta','Crítica'];
 let CAT,envs=[],props=[],insps=[],cur,S={v:'home'},urls={},T;
 
-/* Camada IndexedDB (imóveis, vistorias e fotos) e salvamento automático. */
-// ---- IndexedDB (dados e fotos; nada em localStorage) ----
+/* Regras puras (sem DOM): chave de item, aplicabilidade, validação de finalização e de backup.
+   Podem ser testadas fora do navegador (ver tests/). */
+const ikey=x=>(x.env||'')+'|'+x.id;
+const known=v=>v!==undefined&&v!==null&&String(v).trim()!=='';
+// Campos de configuração de que cada critério do BANHEIRO depende. Valor desconhecido NUNCA é presumido.
+const cfgNeeds=n=>n>=65&&n<=72?['box']:n>=99&&n<=101?['exaustor']:(n>=83&&n<=89)||n==96?['chuveiro']:[];
+const CFG_LABEL={box:'box/divisória',exaustor:'exaustor',chuveiro:'tipo de chuveiro'};
+const cfgOf=e=>({box:known(e.box)?e.box=='Sim':undefined,exaustor:known(e.exaustor)?e.exaustor=='Sim':undefined,chuveiro:known(e.chuveiro)?e.chuveiro:undefined});
+const cfgMissing=(n,c)=>cfgNeeds(n).filter(f=>c[f]===undefined);
+// Regras SUGERIDAS (a validar). Só disparam com informação explícita; sem informação, retornam ''.
+const naReason=(n,c)=>(n>=65&&n<=72&&c.box===false&&'Unidade sem box/divisória')||(n>=99&&n<=101&&c.exaustor===false&&'Unidade sem exaustor')||(n>=83&&n<=89&&c.chuveiro=='Não instalado'&&'Chuveiro não instalado')||(n==96&&c.chuveiro!==undefined&&c.chuveiro!='Elétrico'&&'Chuveiro não é elétrico')||'';
+const blank=s=>!String(s??'').trim();
+const STATUS=['CONFORME','NAO_CONFORME','NAO_SE_APLICA','NAO_VERIFICADO'];
+const itemLabel=x=>`${x.en?x.en+' › ':''}${x.id}`;
+// Retorna {errors:[], warnings:[]}. errors impedem a finalização.
+function validateInspection(ins){
+  const errors=[],warnings=[];
+  const add=(l,x,m)=>l.push(`${itemLabel(x)}: ${m}`);
+  for(const x of ins.items||[]){
+    if(!x.st){add(errors,x,'pendente de avaliação');continue}
+    if(x.st=='NAO_CONFORME'){
+      if(!x.nc||blank(x.nc.desc))add(errors,x,'não conforme sem descrição da ocorrência');
+      if(!x.nc||blank(x.nc.loc))add(errors,x,'não conforme sem localização exata');
+      if(!(x.ph||[]).length)add(warnings,x,'não conforme sem fotografia');
+    }
+    if(x.st=='NAO_VERIFICADO'){
+      if(blank(x.nv))add(errors,x,'não verificado sem motivo');
+      else if(x.nv=='Outro'&&blank(x.note))add(errors,x,'motivo "Outro" exige descrição em Observações');
+    }
+    if(x.st=='NAO_SE_APLICA'){
+      if(blank(x.na))add(errors,x,'não se aplica sem justificativa');
+      if(x.auto)add(errors,x,'"Não se aplica" automático ainda não confirmado');
+    }
+  }
+  return{errors,warnings};
+}
+const fmtList=(l,n=8)=>l.slice(0,n).map(s=>'• '+s).join('\n')+(l.length>n?`\n… e mais ${l.length-n}`:'');
+// ---- backup ----
+const BACKUP_APP='vistoria-correia',BACKUP_FORMAT=3;
+const isObj=v=>v&&typeof v=='object'&&!Array.isArray(v);
+// Identificadores aceitos: letras, números e . _ : - (nunca aspas, espaços, < > ou barras). Protege atributos HTML e chaves.
+const SAFE_ID=/^[A-Za-z0-9._:-]{1,100}$/,okId=v=>typeof v=='string'&&SAFE_ID.test(v);
+const sh=v=>{const t=String(v);return t.length>40?t.slice(0,40)+'…':t};
+const strOpt=v=>v===undefined||v===null||typeof v=='string';
+const IMG_RX=/^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+\/]+={0,2}$/,MAX_IMG=15e6;
+const PRI_OK=['Baixa','Média','Alta','Crítica'];
+const FIELDS_P=['name','developer','address','unit','tower','client','date','notes'];
+// assinatura "tamanho:hash"; algoritmos diferentes (sha256 x fallback) comparam só o tamanho
+const fpEq=(a,b)=>{if(!a||!b)return false;const[x,hx='']=a.split(':'),[y,hy='']=b.split(':');return x===y&&(hx.startsWith('fnv')!==hy.startsWith('fnv')||hx===hy)};
+// d: arquivo; local:{props,envs,insps,photoIds:Set,photoIns:Map}; fp:{backup:Map,local:Map} (assinaturas das imagens).
+// Retorna {errors (bloqueiam), warnings (exigem confirmação), counts, legacy}
+function validateBackup(d,local,fp){
+  const errors=[],warnings=[];
+  local=local||{};local.props=local.props||[];local.envs=local.envs||[];local.insps=local.insps||[];local.photoIds=local.photoIds||new Set();local.photoIns=local.photoIns||new Map();
+  if(!isObj(d))return{errors:['O arquivo não é um backup válido (o conteúdo não é um objeto JSON).'],warnings,counts:{}};
+  if(d.app!==undefined&&d.app!==BACKUP_APP)errors.push(`Arquivo de outro sistema ("${sh(d.app)}").`);
+  if(d.formatVersion!==undefined&&!(Number.isInteger(d.formatVersion)&&d.formatVersion>=1&&d.formatVersion<=BACKUP_FORMAT))errors.push(`Versão de backup incompatível (${sh(d.formatVersion)}); a suportada é até ${BACKUP_FORMAT}.`);
+  const legacy=d.formatVersion===undefined;if(legacy)warnings.push('Backup antigo (sem identificação de versão); validado apenas pelo conteúdo.');
+  for(const k of ['props','insps','photos'])if(!Array.isArray(d[k]))errors.push(`Campo obrigatório ausente ou inválido: ${k}.`);
+  if(d.envs!==undefined&&!Array.isArray(d.envs))errors.push('Campo "envs" inválido.');
+  if(errors.length)return{errors,warnings,counts:{}};
+  const envs=d.envs||[],ids={};
+  const chk=(k,arr)=>{const st=new Set();arr.forEach((r,n)=>{if(!isObj(r))errors.push(`${k}[${n}]: registro inválido (não é objeto).`);else if(!okId(r.id))errors.push(`${k}[${n}]: identificador inválido ou ausente (${sh(r.id)}). Use apenas letras, números e . _ : -`);else if(st.has(r.id))errors.push(`${k}: identificador duplicado (${sh(r.id)}).`);else st.add(r.id)});ids[k]=st};
+  chk('props',d.props);chk('envs',envs);chk('insps',d.insps);chk('photos',d.photos);
+  if(errors.length)return{errors,warnings,counts:{}};
+  if(isObj(d.counts)){const m={props:d.props.length,envs:envs.length,insps:d.insps.length,photos:d.photos.length};for(const k in m)if(d.counts[k]!==undefined&&d.counts[k]!==m[k])warnings.push(`Contagem declarada de ${k} (${sh(d.counts[k])}) difere do conteúdo (${m[k]}).`)}
+  const allProps=new Set([...ids.props,...local.props.map(p=>p.id)]);
+  for(const p of d.props)for(const f of FIELDS_P)if(!strOpt(p[f]))errors.push(`Imóvel ${sh(p.id)}: o campo "${f}" deve ser texto.`);
+  for(const e of envs){if(!okId(e.pid))errors.push(`Ambiente ${sh(e.id)}: imóvel (pid) inválido ou ausente.`);else if(!allProps.has(e.pid))errors.push(`Ambiente ${sh(e.id)}: refere-se a imóvel inexistente (${sh(e.pid)}).`);
+    if(typeof e.name!='string'||!e.name.trim())errors.push(`Ambiente ${sh(e.id)}: nome ausente.`);if(!strOpt(e.type))errors.push(`Ambiente ${sh(e.id)}: tipo inválido.`)}
+  const phMap=new Map(d.photos.map(p=>[p.id,p])),refBy=new Map();
+  for(const i of d.insps){
+    const I=`Vistoria ${sh(i.id)}`;
+    if(!Array.isArray(i.items)){errors.push(`${I}: lista de critérios ausente.`);continue}
+    if(!['EM_ANDAMENTO','PAUSADA','CONCLUIDA'].includes(i.status))errors.push(`${I}: situação inválida (${sh(i.status)}).`);
+    if(typeof i.startedAt!='string'||isNaN(Date.parse(i.startedAt)))errors.push(`${I}: data de início inválida.`);
+    if(i.status=='CONCLUIDA'&&(typeof i.finishedAt!='string'||isNaN(Date.parse(i.finishedAt))))warnings.push(`${I}: concluída sem data de conclusão válida.`);
+    if(i.pid!==undefined&&!okId(i.pid))errors.push(`${I}: identificador de imóvel inválido (${sh(i.pid)}).`);
+    else if(!allProps.has(i.pid)){if(isObj(i.prop))warnings.push(`${I}: imóvel não encontrado; será usado o registro do imóvel gravado na vistoria.`);else errors.push(`${I}: refere-se a imóvel inexistente (${sh(i.pid)}).`)}
+    for(const f of ['insp','notes','limitations'])if(!strOpt(i[f]))errors.push(`${I}: o campo "${f}" deve ser texto.`);
+    if(i.rev!==undefined&&!(Number.isInteger(i.rev)&&i.rev>=0))errors.push(`${I}: número de revisão inválido.`);
+    let envSet=null;
+    if(i.envs!==undefined){if(!Array.isArray(i.envs))errors.push(`${I}: lista de ambientes inválida.`);else{envSet=new Set();for(const e of i.envs){if(!isObj(e)||!okId(e.id))errors.push(`${I}: ambiente com identificador inválido (${sh(e&&e.id)}).`);else envSet.add(e.id)}}}
+    const seen=new Set();
+    for(const x of i.items){
+      if(!isObj(x)){errors.push(`${I}: critério inválido (não é objeto).`);continue}
+      if(!okId(x.id)){errors.push(`${I}: critério com código inválido ou ausente (${sh(x.id)}).`);continue}
+      const X=`${I}, ${x.id}`;
+      if(x.env!==undefined&&x.env!==''&&!okId(x.env))errors.push(`${X}: identificador de ambiente inválido (${sh(x.env)}).`);
+      else if(envSet&&x.env&&!envSet.has(x.env))errors.push(`${X}: critério de ambiente inexistente na vistoria (${sh(x.env)}).`);
+      if(x.cat!==undefined&&!okId(x.cat))errors.push(`${X}: categoria com identificador inválido (${sh(x.cat)}).`);
+      const k=ikey(x);if(seen.has(k))errors.push(`${I}: critério repetido (${sh(k)}).`);seen.add(k);
+      if(x.st!==undefined&&x.st!==null&&!STATUS.includes(x.st))errors.push(`${X}: resultado inválido (${sh(x.st)}).`);
+      for(const f of ['note','na','nv','d','tipo','inst','catName','en'])if(!strOpt(x[f]))errors.push(`${X}: o campo "${f}" deve ser texto.`);
+      if(x.st=='NAO_CONFORME'&&!isObj(x.nc))warnings.push(`${X}: não conforme sem registro da ocorrência.`);
+      if(x.nc!==undefined&&x.nc!==null){if(!isObj(x.nc))errors.push(`${X}: registro de ocorrência inválido.`);else{for(const f of ['desc','loc','pri','rec','obs'])if(!strOpt(x.nc[f]))errors.push(`${X}: ocorrência com campo "${f}" inválido.`);if(x.nc.pri&&!PRI_OK.includes(x.nc.pri))warnings.push(`${X}: prioridade desconhecida (${sh(x.nc.pri)}).`)}}
+      if(!Array.isArray(x.ph)){errors.push(`${X}: lista de fotos inválida.`);continue}
+      for(const f of x.ph){
+        if(!okId(f)){errors.push(`${X}: identificador de foto inválido (${sh(f)}).`);continue}
+        const p=phMap.get(f);
+        if(p){if(p.ins!==i.id)errors.push(`${X}: foto ${sh(f)} pertence a outra vistoria (${sh(p.ins)}).`);(refBy.get(i.id)||refBy.set(i.id,new Set()).get(i.id)).add(f)}
+        else if(local.photoIds.has(f)){if(local.photoIns.get(f)!==i.id)warnings.push(`${X}: foto ${sh(f)} existe localmente em outra vistoria.`)}
+        else warnings.push(`${X}: referencia a foto ${sh(f)} que não existe; a referência será descartada na importação.`)}
+    }
+  }
+  for(const p of d.photos){
+    const P=`Foto ${sh(p.id)}`;
+    if(typeof p.data!='string'||!IMG_RX.test(p.data))errors.push(`${P}: dados de imagem ausentes ou em formato inválido.`);
+    else if(p.data.length*0.75>MAX_IMG)errors.push(`${P}: imagem excede o tamanho máximo permitido.`);
+    if(!okId(p.ins))errors.push(`${P}: sem vínculo válido com uma vistoria.`);
+    else if(!ids.insps.has(p.ins)&&!local.insps.some(i=>i.id==p.ins))errors.push(`${P}: vinculada a vistoria inexistente (${sh(p.ins)}).`);
+    if(p.itemKey!==undefined&&typeof p.itemKey!='string')errors.push(`${P}: vínculo com critério inválido.`);
+    const lo=local.photoIns.get(p.id);if(lo!==undefined&&lo!==p.ins)errors.push(`${P}: o mesmo identificador já existe neste aparelho em outra vistoria.`);
+    if(ids.insps.has(p.ins)&&!(refBy.get(p.ins)&&refBy.get(p.ins).has(p.id)))warnings.push(`${P}: não está vinculada a nenhum critério (órfã); não será importada.`);
+  }
+  const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+  const cmp=(arr,localArr)=>{const m=new Map(localArr.map(r=>[r.id,r]));let nw=0,eq=0;const df=[];for(const r of arr){const o=m.get(r.id);if(!o)nw++;else if(same(o,r))eq++;else df.push(r.id)}return{nw,eq,df}};
+  const ph={nw:0,eq:0,df:[]};
+  for(const p of d.photos){if(!local.photoIds.has(p.id))ph.nw++;else if(fp&&fp.backup&&fp.local&&fpEq(fp.backup.get(p.id),fp.local.get(p.id)))ph.eq++;else ph.df.push(p.id)}
+  return{errors,warnings,counts:{props:cmp(d.props,local.props),envs:cmp(envs,local.envs),insps:cmp(d.insps,local.insps),photos:ph},legacy};
+}
+
+/* Camada IndexedDB, registro único das vistorias em memória, fila de gravação,
+   controle de versão (rev) contra edição em outra aba, diário de emergência e indicador de estado do salvamento. */
 const DB=(()=>{let d;const o=()=>d||(d=new Promise((ok,er)=>{const r=indexedDB.open('vistoria',2);r.onupgradeneeded=()=>['props','insps','photos','envs'].forEach(s=>{if(!r.result.objectStoreNames.contains(s))r.result.createObjectStore(s,{keyPath:'id'})});r.onsuccess=()=>ok(r.result);r.onerror=()=>er(r.error)}));
-const t=async(s,m,f)=>{const db=await o();return new Promise((ok,er)=>{const x=db.transaction(s,m),q=f(x.objectStore(s));x.oncomplete=()=>ok(q&&q.result);x.onerror=()=>er(x.error)})};
-return{all:s=>t(s,'readonly',x=>x.getAll()),put:(s,v)=>t(s,'readwrite',x=>x.put(v)),del:(s,k)=>t(s,'readwrite',x=>x.delete(k))}})();
+const t=async(s,m,f)=>{const db=await o();return new Promise((ok,er)=>{const x=db.transaction(s,m),q=f(x.objectStore(s));x.oncomplete=()=>ok(q&&q.result);x.onerror=()=>er(x.error);x.onabort=()=>er(x.error||new Error('Gravação abortada'))})};
+// várias operações em UMA transação: ou grava tudo ou não grava nada (erro ao enfileirar => aborta tudo)
+const multi=async ops=>{const db=await o();return new Promise((ok,er)=>{const x=db.transaction([...new Set(ops.map(z=>z[0]))],'readwrite');x.oncomplete=()=>ok();x.onerror=()=>er(x.error);x.onabort=()=>er(x.error||new Error('Transação abortada'));
+  try{for(const [s,op,v] of ops)x.objectStore(s)[op](v)}catch(e){try{x.abort()}catch(_){}er(e)}})};
+// grava a vistoria somente se a versão (rev) no banco for a que esta aba conhece; senão, houve edição em outra aba
+const putRev=async ins=>{const db=await o();return new Promise((ok,er)=>{const x=db.transaction('insps','readwrite'),s=x.objectStore('insps'),g=s.get(ins.id);
+  g.onsuccess=()=>{const c=g.result;if(c&&(c.rev||0)!==(ins.rev||0)){const e=new Error('Vistoria alterada em outra aba ou janela.');e.conflict=true;try{x.abort()}catch(_){}return er(e)}
+    const n=(ins.rev||0)+1;s.put(Object.assign({},ins,{rev:n}));x.oncomplete=()=>{ins.rev=n;ok()}};
+  x.onerror=()=>er(x.error);x.onabort=()=>er(x.error||new Error('Transação abortada'))})};
+return{all:s=>t(s,'readonly',x=>x.getAll()),keys:s=>t(s,'readonly',x=>x.getAllKeys()),get:(s,k)=>t(s,'readonly',x=>x.get(k)),put:(s,v)=>t(s,'readwrite',x=>x.put(v)),del:(s,k)=>t(s,'readwrite',x=>x.delete(k)),multi,putRev}})();
 const toast=m=>{const e=$('#toast');e.textContent=m;e.style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.opacity=0,2200)};
-const save=()=>{clearTimeout(T);T=setTimeout(()=>DB.put('insps',cur).then(()=>toast('Salvo ✓')),250)};
 const uid=()=>crypto.randomUUID();
+// Registro único: existe UM objeto em memória por vistoria; toda edição acontece nele e é gravada a partir dele.
+const INS=new Map(),DIRTY=new Map(),UNSAVED=new Map(),FAILED=new Set(),CONFLICT=new Set();let CHAIN=Promise.resolve(),SAVE_ERR=false,INFLIGHT=0,RETRY=0,RECOVERED=0;
+const banner=(id,on,text,top,btn,fn)=>{let e=document.getElementById(id);if(!e){e=document.createElement('div');e.id=id;e.style.cssText='position:fixed;left:0;right:0;z-index:20;background:#c0392b;color:#fff;padding:8px 12px;font-size:14px;text-align:center;top:'+top;e.appendChild(document.createTextNode(text+' '));if(btn){const b=document.createElement('button');b.textContent=btn;b.style.cssText='min-height:32px;padding:0 10px;margin-left:6px';b.onclick=fn;e.appendChild(b)}document.body.appendChild(e)}e.style.display=on?'block':'none'};
+const warnSave=on=>banner('savewarn',on,'⚠ Erro ao salvar neste aparelho. Nova tentativa automática. Exporte um backup e não feche o app.','0','Tentar agora',()=>{FAILED.forEach(i=>DIRTY.set(i.id,i));flush()});
+const warnConflict=()=>banner('conflictwarn',CONFLICT.size>0,'⚠ Esta vistoria foi alterada em outra aba ou janela. Novas alterações NÃO estão sendo gravadas, para não sobrescrever as mais recentes.','36px','Recarregar',()=>location.reload());
+// Indicador de estado — reflete o estado real da fila e do IndexedDB (só mostra "Salvo" com tudo confirmado)
+function setSS(){const e=document.getElementById('ss');if(!e)return;const pend=DIRTY.size>0||!!save.t,st=SAVE_ERR?['Erro ao salvar','ss-err']:CONFLICT.size?['Conflito: recarregue','ss-err']:INFLIGHT?['Salvando…','ss-run']:pend?['Alterações pendentes','ss-run']:['Salvo','ss-ok'];e.textContent=st[0];e.className='s '+st[1]}
+const scheduleRetry=()=>{clearTimeout(RETRY);RETRY=setTimeout(()=>{FAILED.forEach(i=>DIRTY.set(i.id,i));flush()},4000)};
+// gravações em fila (uma por vez, em ordem); o objeto é lido no momento da gravação, então vale sempre o estado mais recente
+const persist=ins=>{INFLIGHT++;setSS();return CHAIN=CHAIN.then(()=>CONFLICT.has(ins.id)?null:DB.putRev(ins)).then(()=>{INFLIGHT--;FAILED.delete(ins);if(!DIRTY.has(ins.id)&&!CONFLICT.has(ins.id))UNSAVED.delete(ins.id);if(!FAILED.size&&SAVE_ERR){SAVE_ERR=false;warnSave(false)}setSS()},err=>{INFLIGHT--;if(err&&err.conflict){CONFLICT.add(ins.id);warnConflict()}else{FAILED.add(ins);SAVE_ERR=true;warnSave(true);scheduleRetry()}setSS()})};
+function flush(){clearTimeout(save.t);save.t=0;const l=[...DIRTY.values()];DIRTY.clear();const ps=l.map(persist);setSS();return Promise.all(ps).then(()=>CHAIN).then(()=>{if(l.length&&!SAVE_ERR&&!CONFLICT.size)toast('Salvo ✓');if(!UNSAVED.size&&!DIRTY.size&&!FAILED.size)walClear();setSS()})}
+// now=true: grava já (escolhas e botões); false: pequena espera para agrupar digitação
+function save(ins,now=false){if(!ins)return Promise.resolve();DIRTY.set(ins.id,ins);UNSAVED.set(ins.id,ins);clearTimeout(save.t);if(now){setSS();return flush()}save.t=setTimeout(flush,120);setSS();return Promise.resolve()}
+// Diário de emergência: ao sair da página, grava de forma SÍNCRONA o que ainda não foi confirmado no IndexedDB.
+// Na próxima abertura, se o banco ainda estiver na versão anterior, a edição é recuperada. Não substitui o IndexedDB.
+const WAL='vistoria-wal';
+const walWrite=()=>{if(!UNSAVED.size)return;try{localStorage.setItem(WAL,JSON.stringify([...UNSAVED.values()]))}catch(e){}};
+const walClear=()=>{try{localStorage.removeItem(WAL)}catch(e){}};
+async function walRecover(){let a=null;try{a=JSON.parse(localStorage.getItem(WAL)||'null')}catch(e){}if(!Array.isArray(a)||!a.length)return;let n=0;
+  try{for(const j of a){if(!isObj(j)||!okId(j.id)||!Array.isArray(j.items))continue;const r=await DB.get('insps',j.id);if(r&&(r.rev||0)!==(j.rev||0))continue;await DB.put('insps',Object.assign({},j,{rev:(j.rev||0)+1}));n++}walClear();RECOVERED=n}catch(e){}}
+// outra aba pode ter gravado versão mais nova: detecta ao voltar para a aplicação
+async function checkStale(){if(INFLIGHT||DIRTY.size)return;try{for(const r of await DB.all('insps')){const m=INS.get(r.id);if(m&&(r.rev||0)>(m.rev||0))CONFLICT.add(r.id)}}catch(e){}if(CONFLICT.size){warnConflict();setSS()}}
 
 /* Regras da vistoria: aplicabilidade sugerida, contagens de progresso e carregamento de dados/catálogo. */
-// ---- aplicabilidade SUGERIDA (a validar pelo engenheiro) ----
-const naReason=(n,c)=>(n>=65&&n<=72&&!c.box&&'Unidade sem box/divisória')||(n>=99&&n<=101&&!c.exaustor&&'Unidade sem exaustor')||(n>=83&&n<=89&&c.chuveiro=='Não instalado'&&'Chuveiro não instalado')||(n==96&&c.chuveiro!='Elétrico'&&'Chuveiro não é elétrico')||'';
-const cnt=i=>{const c={CONFORME:0,NAO_CONFORME:0,NAO_SE_APLICA:0,NAO_VERIFICADO:0,pe:0};i.items.forEach(x=>x.st?c[x.st]++:c.pe++);c.n=i.items.length;c.pct=Math.round((c.n-c.pe)/c.n*100);return c};
+const cnt=i=>{const c={CONFORME:0,NAO_CONFORME:0,NAO_SE_APLICA:0,NAO_VERIFICADO:0,pe:0};i.items.forEach(x=>x.st?c[x.st]++:c.pe++);c.n=i.items.length;c.pct=c.n?Math.round((c.n-c.pe)/c.n*100):0;return c};
 const tag=s=>s?`<span class="tag ${ST[s][1]}">${ST[s][0]}</span>`:'<span class="tag pe">Pendente</span>';
 const pn=id=>props.find(p=>p.id==id)||{name:'(imóvel removido)'};
 const fld=(l,k,v,t='text')=>`<label>${l}</label><input type="${t}" data-p="${k}" value="${esc(v)}">`;
-async function load(){[props,insps,envs]=await Promise.all([DB.all('props'),DB.all('insps'),DB.all('envs')]);insps.sort((a,b)=>b.startedAt.localeCompare(a.startedAt))}
+async function load(){const [p,i,e]=await Promise.all([DB.all('props'),DB.all('insps'),DB.all('envs')]);props=p;envs=e;for(const r of i)if(!INS.has(r.id))INS.set(r.id,r);insps=[...INS.values()].sort((a,b)=>b.startedAt.localeCompare(a.startedAt))}
 async function loadCat(){CAT=JSON.parse(document.getElementById('catalogo').textContent)}
 
 /* "Como inspecionar?": orientação exibida junto de cada critério durante a vistoria.
@@ -5879,36 +6030,36 @@ ${x.proc?`<p><b>Procedimento do catálogo</b><br>${esc(x.proc)}</p>`:''}
 <p><b>Como registrar</b></p><ul><li><b>Conforme:</b> item verificado e sem ocorrência; observações são opcionais.</li><li><b>Não conforme:</b> descreva a ocorrência, a localização exata e registre foto.</li><li><b>Não se aplica:</b> informe a justificativa.</li><li><b>Não verificado:</b> informe o motivo (por exemplo, sem água, sem energia ou acesso impedido).</li></ul>
 <p class="mut">Nenhuma referência normativa está vinculada a este critério; as referências do catálogo estão pendentes de validação.</p>
 <p class="mut">Orientação geral derivada do método e dos avisos do catálogo. Não é procedimento técnico específico deste critério nem substitui ensaios.</p></div>`}
-const howBtn=(x,i)=>`<div style="margin-top:8px"><button class="how-b" data-a="how" data-i="${i}">${OPEN[cur.id+':'+i]?'Ocultar orientação':'Como inspecionar?'}</button></div>${OPEN[cur.id+':'+i]?howTo(x):''}`;
+const howBtn=(x,i)=>`<div style="margin-top:8px"><button class="how-b" data-a="how" data-i="${i}">${OPEN[cur.id+':'+ikey(x)]?'Ocultar orientação':'Como inspecionar?'}</button></div>${OPEN[cur.id+':'+ikey(x)]?howTo(x):''}`;
 
 /* Telas (HTML gerado por funções). */
 // ---- telas ----
 const V={
 home(){return`<div class="row"><button class="p" data-a="newp">+ Cadastrar imóvel</button></div>
 <h2>Imóveis</h2>${props.map(p=>`<div class="card"><h3>${esc(p.name||'Sem nome')} ${esc(p.unit)}</h3><div class="mut">${esc(p.developer)} ${esc(p.tower)} · ${esc(p.client)}</div>
-<div class="row"><button class="p" data-a="start" data-x="${p.id}">Iniciar vistoria</button><button data-a="editp" data-x="${p.id}">Editar</button><button data-a="envs" data-x="${p.id}">Ambientes</button></div></div>`).join('')||'<p class="mut">Nenhum imóvel. Cadastre o primeiro.</p>'}
-<h2>Vistorias</h2>${insps.map(i=>{const c=cnt(i);return`<div class="card"><h3>${esc(pn(i.pid).name)} ${esc(pn(i.pid).unit)}</h3><div class="mut">${i.status.replace('_',' ').toLowerCase()} · ${c.pct}% · ${new Date(i.startedAt).toLocaleDateString('pt-BR')}</div><div class="bar"><i style="width:${c.pct}%"></i></div>
-<div class="row"><button class="p" data-a="open" data-x="${i.id}">Abrir</button><button data-a="rel" data-x="${i.id}">Relatório</button></div></div>`}).join('')||'<p class="mut">Nenhuma vistoria iniciada.</p>'}
+<div class="row"><button class="p" data-a="start" data-x="${esc(p.id)}">Iniciar vistoria</button><button data-a="editp" data-x="${esc(p.id)}">Editar</button><button data-a="envs" data-x="${esc(p.id)}">Ambientes</button></div></div>`).join('')||'<p class="mut">Nenhum imóvel. Cadastre o primeiro.</p>'}
+<h2>Vistorias</h2>${insps.map(i=>{const c=cnt(i);return`<div class="card"><h3>${esc((i.prop||pn(i.pid)).name)} ${esc((i.prop||pn(i.pid)).unit)}</h3><div class="mut">${esc(i.status.replace('_',' ').toLowerCase())} · ${c.pct}% · ${new Date(i.startedAt).toLocaleDateString('pt-BR')}</div><div class="bar"><i style="width:${c.pct}%"></i></div>
+<div class="row"><button class="p" data-a="open" data-x="${esc(i.id)}">Abrir</button><button data-a="rel" data-x="${esc(i.id)}">Relatório</button></div></div>`}).join('')||'<p class="mut">Nenhuma vistoria iniciada.</p>'}
 <h2>Backup</h2><div class="row"><button data-a="exp">Exportar backup</button><button onclick="$('#imp').click()">Importar backup</button></div><input id="imp" type="file" accept=".json" hidden>
 <p class="mut">Os dados ficam neste navegador. Exporte o backup com frequência.</p>`},
 prop(){const p=S.p;return`<div class="card">${fld('Identificação / nome do empreendimento','name',p.name)}${fld('Construtora/incorporadora','developer',p.developer)}${fld('Endereço','address',p.address)}${fld('Unidade','unit',p.unit)}${fld('Torre/bloco','tower',p.tower)}${fld('Cliente/proprietário','client',p.client)}${fld('Data prevista','date',p.date,'date')}<label>Observações</label><textarea data-p="notes">${esc(p.notes)}</textarea>
 <div class="row"><button class="p" data-a="savep">Salvar</button>${props.some(x=>x.id==p.id)?'<button class="d" data-a="delp">Excluir</button>':''}</div></div>`},
-start(){const l=envsOf(S.pid);return`<div class="card"><h3>${esc(pn(S.pid).name)} ${esc(pn(S.pid).unit)}</h3>${fld('Responsável pela inspeção','insp','')}<label>Ambientes a vistoriar</label>${l.map(e=>HASCAT(e.type)?`<label class="chk"><input type="checkbox" data-env="${e.id}" checked>${esc(e.name)}</label>`:`<div class="mut">${esc(e.name)} — sem checklist cadastrado</div>`).join('')||'<p class="mut">Configure os ambientes do imóvel antes de iniciar.</p>'}<p class="mut">Critérios que não se aplicam à configuração do ambiente entram como "Não se aplica" com justificativa (regras sugeridas, a validar).</p><div class="row"><button class="p" data-a="go">Iniciar vistoria</button><button data-a="envs" data-x="${S.pid}">Configurar ambientes</button></div></div>`},
+start(){const l=envsOf(S.pid);return`<div class="card"><h3>${esc(pn(S.pid).name)} ${esc(pn(S.pid).unit)}</h3>${fld('Responsável pela inspeção','insp','')}<label>Ambientes a vistoriar</label>${l.map(e=>HASCAT(e.type)?`<label class="chk"><input type="checkbox" data-env="${esc(e.id)}" checked>${esc(e.name)}</label>`:`<div class="mut">${esc(e.name)} — sem checklist cadastrado</div>`).join('')||'<p class="mut">Configure os ambientes do imóvel antes de iniciar.</p>'}<p class="mut">Só é sugerido "Não se aplica" quando a configuração do ambiente foi informada; dado não informado nunca é presumido e o critério fica pendente. Toda sugestão exige a sua confirmação.</p><div class="row"><button class="p" data-a="go">Iniciar vistoria</button><button data-a="envs" data-x="${esc(S.pid)}">Configurar ambientes</button></div></div>`},
 insp(){const c=cnt(cur);return`<div class="card"><div class="ctr"><div><b>${c.CONFORME}</b>conformes</div><div><b>${c.NAO_CONFORME}</b>não conf.</div><div><b>${c.NAO_SE_APLICA}</b>não aplica</div><div><b>${c.NAO_VERIFICADO}</b>não verif.</div><div><b>${c.pe}</b>pendentes</div><div><b>${c.pct}%</b>concluído</div></div><div class="bar"><i style="width:${c.pct}%"></i></div></div>
-${(cur.envs||[{id:'',name:'Banheiro'}]).map(e=>`<h3>${esc(e.name)}</h3>`+CAT.categories.filter(g=>cur.items.some(x=>x.cat==g.id&&(x.env||'')==(e.id||''))).map(g=>{const it=cur.items.filter(x=>x.cat==g.id&&(x.env||'')==(e.id||'')),d=it.filter(x=>x.st).length;return`<div class="card" data-a="cat" data-x="${g.id}" data-e="${e.id||''}" style="cursor:pointer"><h3>${esc(g.name)}</h3><span class="mut">${d}/${it.length} avaliados</span><div class="bar"><i style="width:${d/it.length*100}%"></i></div></div>`}).join('')).join('')}
-<div class="row"><button data-a="pause">${cur.status=='PAUSADA'?'Retomar':'Pausar'}</button><button data-a="rel" data-x="${cur.id}">Relatório</button><button class="p" data-a="fin" ${c.pe?'disabled':''}>Finalizar${c.pe?' (há pendentes)':''}</button></div>`},
+${(cur.envs||[{id:'',name:'Banheiro'}]).map(e=>`<h3>${esc(e.name)}</h3>`+CAT.categories.filter(g=>cur.items.some(x=>x.cat==g.id&&(x.env||'')==(e.id||''))).map(g=>{const it=cur.items.filter(x=>x.cat==g.id&&(x.env||'')==(e.id||'')),d=it.filter(x=>x.st).length;return`<div class="card" data-a="cat" data-x="${esc(g.id)}" data-e="${esc(e.id||'')}" style="cursor:pointer"><h3>${esc(g.name)}</h3><span class="mut">${d}/${it.length} avaliados</span><div class="bar"><i style="width:${d/it.length*100}%"></i></div></div>`}).join('')).join('')}
+<div class="row" data-ins="${esc(cur.id)}">${cur.status=='CONCLUIDA'?'<button data-a="reopen">Reabrir para editar</button>':`<button data-a="pause">${cur.status=='PAUSADA'?'Retomar':'Pausar'}</button>`}<button data-a="rel" data-x="${esc(cur.id)}">Relatório</button><button class="p" data-a="fin" ${c.pe||cur.status=='CONCLUIDA'?'disabled':''}>${cur.status=='CONCLUIDA'?'Concluída':'Finalizar'}${c.pe?' (há pendentes)':''}</button></div>`},
 cat(){return cur.items.map((x,i)=>x.cat==S.c&&(x.env||'')==(S.e||'')?item(x,i):'').join('')},
-rel(){const i=cur,c=cnt(i),p=pn(i.pid),sec=(t,f)=>{const l=i.items.filter(f);return l.length?`<h3>${t} (${l.length})</h3>`+l.map(x=>`<div class="card"><b>${x.id}</b> ${esc(x.d)}<br><span class="mut">${esc(x.en?x.en+" › ":"")}${esc(x.catName)}</span><br>${tag(x.st)}${x.na?` <span class="mut">${esc(x.na)}</span>`:''}${x.nv?` <span class="mut">Motivo: ${esc(x.nv)}</span>`:''}${x.note?`<br>Obs.: ${esc(x.note)}`:''}${x.nc?`<br>Ocorrência: ${esc(x.nc.desc)}<br>Local: ${esc(x.nc.loc)} · Prioridade: ${esc(x.nc.pri)}<br>Recomendação: ${esc(x.nc.rec)}<br>${esc(x.nc.obs)}`:''}<div class="ph">${x.ph.map(f=>`<img src="${urls[f]}">`).join('')}</div></div>`).join(''):''};
+rel(){const i=cur,c=cnt(i),p=i.prop||pn(i.pid),sec=(t,f)=>{const l=i.items.filter(f);return l.length?`<h3>${t} (${l.length})</h3>`+l.map(x=>`<div class="card"><b>${esc(x.id)}</b> ${esc(x.d)}<br><span class="mut">${esc(x.en?x.en+" › ":"")}${esc(x.catName)}</span><br>${tag(x.st)}${x.st=='NAO_SE_APLICA'&&x.na?` <span class="mut">${esc(x.na)}</span>`:''}${x.st=='NAO_VERIFICADO'&&x.nv?` <span class="mut">Motivo: ${esc(x.nv)}</span>`:''}${x.note?`<br>Obs.: ${esc(x.note)}`:''}${x.st=='NAO_CONFORME'&&x.nc?`<br>Ocorrência: ${esc(x.nc.desc)}<br>Local: ${esc(x.nc.loc)} · Prioridade: ${esc(x.nc.pri)}<br>Recomendação: ${esc(x.nc.rec)}<br>${esc(x.nc.obs)}`:''}<div class="ph">${x.ph.map(f=>urls[f]?`<img src="${urls[f]}">`:'<div class="mut">(foto ausente)</div>').join('')}</div></div>`).join(''):''};
 return`<div class="row noprint"><button class="p" data-a="print">Imprimir / salvar PDF</button></div><div class="card"><h2>Relatório de vistoria</h2>Imóvel: ${esc(p.name)} ${esc(p.unit)} ${esc(p.tower)}<br>Empreendimento/construtora: ${esc(p.developer)}<br>Endereço: ${esc(p.address)}<br>Cliente: ${esc(p.client)}<br>Data: ${new Date(i.startedAt).toLocaleDateString('pt-BR')} · Responsável: ${esc(i.insp)}<br>Catálogo ${esc(i.cat.id)} v${esc(i.cat.version)} (${esc(i.cat.status)})<br>Ambientes: ${(i.envs||[{name:"Banheiro"}]).map(e=>esc(e.name)).join(", ")}</div>
 <div class="card"><h3>Resumo</h3>Avaliados: ${c.n-c.pe} de ${c.n} · Conformes: ${c.CONFORME} · Não conformes: ${c.NAO_CONFORME} · Não se aplica: ${c.NAO_SE_APLICA} · Não verificados: ${c.NAO_VERIFICADO} · Pendentes: ${c.pe}</div>
 ${sec('Não conformidades',x=>x.st=='NAO_CONFORME')}${sec('Itens não verificados (limitações da inspeção)',x=>x.st=='NAO_VERIFICADO')}${sec('Conformes com observação',x=>x.st=='CONFORME'&&x.note)}
-<div class="card"><h3>Observações gerais e limitações</h3><textarea data-g="notes">${esc(i.notes||'')}</textarea><p class="mut">Inspeção visual, funcional e documental não destrutiva; não substitui ensaios técnicos específicos. As referências normativas do catálogo estão pendentes de validação e não foram aplicadas como critério de conformidade.</p><br><br>______________________________<br>${esc(i.insp)} — Responsável técnico</div>`}};
-function item(x,i){const s=x.st?ST[x.st][1]:'';return`<div class="card it ${s}"><b>${x.id}</b> ${esc(x.d)}<div class="mut">${esc(x.tipo)}${x.inst?' · '+esc(x.inst):''}</div>${x.na&&x.st=='NAO_SE_APLICA'&&x.auto?`<div class="mut">Justificativa automática: ${esc(x.na)}</div>`:''}
+<div class="card"><h3>Observações gerais e limitações</h3><textarea data-g="notes" data-ins="${esc(i.id)}">${esc(i.notes||'')}</textarea><p class="mut">Inspeção visual, funcional e documental não destrutiva; não substitui ensaios técnicos específicos. As referências normativas do catálogo estão pendentes de validação e não foram aplicadas como critério de conformidade.</p><br><br>______________________________<br>${esc(i.insp)} — Responsável técnico</div>`}};
+function item(x,i){const s=x.st?ST[x.st][1]:'';return`<div class="card it ${s}" data-ins="${esc(cur.id)}" data-ik="${esc(ikey(x))}"><b>${esc(x.id)}</b> ${esc(x.d)}<div class="mut">${esc(x.tipo)}${x.inst?' · '+esc(x.inst):''}</div>${!x.st&&(x.cfgMissing||[]).length?`<div class="mut">Configuração do ambiente não informada (${x.cfgMissing.map(f=>esc(CFG_LABEL[f]||'')).join(', ')}): avalie manualmente.</div>`:''}${x.st=='NAO_SE_APLICA'?`<label>Justificativa${x.auto?' (sugerida pela configuração; toque em &quot;Não se aplica&quot; para confirmar)':''}</label><textarea data-k="na">${esc(x.na)}</textarea>`:''}
 ${howBtn(x,i)}<div class="st">${Object.entries(ST).map(([k,v])=>`<button class="${v[1]} ${x.st==k?'on':''}" data-a="st" data-i="${i}" data-x="${k}">${v[0]}</button>`).join('')}</div>
 ${x.st=='NAO_VERIFICADO'?`<label>Motivo</label><select data-i="${i}" data-k="nv"><option value="">Selecione…</option>${NV.map(n=>`<option ${x.nv==n?'selected':''}>${n}</option>`).join('')}</select>`:''}
 ${x.st=='NAO_CONFORME'?`<div class="sub"><label>Descrição da ocorrência</label><textarea data-i="${i}" data-k="nc.desc">${esc(x.nc.desc)}</textarea><label>Localização exata</label><input data-i="${i}" data-k="nc.loc" value="${esc(x.nc.loc)}"><label>Prioridade</label><select data-i="${i}" data-k="nc.pri">${PRI.map(n=>`<option ${x.nc.pri==n?'selected':''}>${n}</option>`).join('')}</select><label>Recomendação técnica</label><textarea data-i="${i}" data-k="nc.rec">${esc(x.nc.rec)}</textarea><label>Observações adicionais</label><textarea data-i="${i}" data-k="nc.obs">${esc(x.nc.obs)}</textarea></div>`:''}
 <label>Observações</label><textarea data-i="${i}" data-k="note">${esc(x.note)}</textarea>
-<div class="ph">${x.ph.map(f=>`<div><img src="${urls[f]||''}"><b data-a="delph" data-i="${i}" data-x="${f}">×</b></div>`).join('')}</div>
+<div class="ph">${x.ph.map(f=>`<div><img src="${urls[f]||''}"><b data-a="delph" data-i="${i}" data-x="${esc(f)}">×</b></div>`).join('')}</div>
 <div class="row"><label class="btn" style="text-align:center;line-height:46px;margin:0">📷 Foto<input type="file" accept="image/*" capture="environment" hidden data-ph="${i}"></label></div></div>`}
 
 /* Ambientes do imóvel: tipos, materiais, configuração e ações (adicionar, editar, duplicar, excluir). */
@@ -5923,7 +6074,7 @@ const sel=(l,k,o,v)=>`<label>${l}</label><select data-p="${k}"><option value="">
 const envsOf=pid=>envs.filter(e=>e.pid==pid).sort((a,b)=>a.order-b.order);
 const envUsed=id=>insps.some(i=>(i.envs||[]).some(e=>e.id==id));
 Object.assign(V,{
-envs(){const l=envsOf(S.pid);return`<div class="card"><h3>${esc(pn(S.pid).name)} ${esc(pn(S.pid).unit)}</h3><span class="mut">Defina os ambientes da unidade e os materiais de cada um.</span><div class="row"><button class="p" data-a="newenv">+ Adicionar ambiente</button>${l.length?'':'<button data-a="defenvs">Criar ambientes padrão</button>'}</div></div>`+l.map(e=>`<div class="card"><h3>${esc(e.name)}</h3><div class="mut">${esc(e.type)} · ${MATS.map(m=>e[m[0]]).filter(Boolean).join(', ')||'materiais não informados'}</div><div>${HASCAT(e.type)?`<span class="tag ok">Checklist: ${nCrit(e.type)} critérios</span>`:'<span class="tag pe">Sem checklist cadastrado</span>'}</div><div class="row"><button data-a="editenv" data-x="${e.id}">Editar</button><button data-a="dupenv" data-x="${e.id}">Duplicar</button><button class="d" data-a="delenv" data-x="${e.id}">Excluir</button></div></div>`).join('')},
+envs(){const l=envsOf(S.pid);return`<div class="card"><h3>${esc(pn(S.pid).name)} ${esc(pn(S.pid).unit)}</h3><span class="mut">Defina os ambientes da unidade e os materiais de cada um.</span><div class="row"><button class="p" data-a="newenv">+ Adicionar ambiente</button>${l.length?'':'<button data-a="defenvs">Criar ambientes padrão</button>'}</div></div>`+l.map(e=>`<div class="card"><h3>${esc(e.name)}</h3><div class="mut">${esc(e.type)} · ${MATS.map(m=>esc(e[m[0]])).filter(Boolean).join(', ')||'materiais não informados'}</div><div>${HASCAT(e.type)?`<span class="tag ok">Checklist: ${nCrit(e.type)} critérios</span>`:'<span class="tag pe">Sem checklist cadastrado</span>'}</div><div class="row"><button data-a="editenv" data-x="${esc(e.id)}">Editar</button><button data-a="dupenv" data-x="${esc(e.id)}">Duplicar</button><button class="d" data-a="delenv" data-x="${esc(e.id)}">Excluir</button></div></div>`).join('')},
 env(){const e=S.p;return`<div class="card">${fld('Nome do ambiente','name',e.name)}<label>Tipo</label><select data-p="type">${ENV_TYPES.map(t=>`<option ${e.type==t?'selected':''}>${t}</option>`).join('')}</select>${MATS.map(m=>sel(m[1],m[0],m[2],e[m[0]])).join('')}`+(e.type=='Banheiro'?`${sel('Possui box/divisória','box',['Sim','Não'],e.box)}${sel('Possui exaustor','exaustor',['Sim','Não'],e.exaustor)}${sel('Tipo de chuveiro','chuveiro',['Elétrico','Aquecimento central/gás','Outro','Não instalado'],e.chuveiro)}`:'')+`<div class="row"><button class="p" data-a="saveenv">Salvar</button></div></div>`}});
 document.addEventListener('change',e=>{const t=e.target;if(S.v=='env'&&t.dataset.p=='type'){S.p.type=t.value;render()}});
 async function envClick(a,x){
@@ -5936,49 +6087,129 @@ async function envClick(a,x){
  if(a=='delenv'){if(envUsed(x)){alert('Este ambiente já foi usado em uma vistoria e não pode ser excluído.');return true}if(confirm('Excluir ambiente?')){await DB.del('envs',x);await load();render()}return true}
  return false}
 
+/* Backup: exportação com assinatura das fotos, validação, importação atômica e verificação de integridade. */
+const blobData=b=>new Promise((ok,er)=>{const f=new FileReader();f.onload=()=>ok(f.result);f.onerror=()=>er(f.error);f.readAsDataURL(b)});
+async function fpBytes(u){let h;if(window.crypto&&crypto.subtle){try{h=[...new Uint8Array(await crypto.subtle.digest('SHA-256',u))].map(b=>b.toString(16).padStart(2,'0')).join('')}catch(e){}}
+  if(!h){let x=2166136261;for(let i=0;i<u.length;i++){x^=u[i];x=Math.imul(x,16777619)>>>0}h='fnv'+x.toString(16)}return u.length+':'+h}
+const fpBlob=async b=>fpBytes(new Uint8Array(await b.arrayBuffer()));
+const dataBytes=s=>{const b=atob(s.slice(s.indexOf(',')+1)),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u};
+const MAGIC={'image/jpeg':[[0xFF,0xD8,0xFF]],'image/png':[[0x89,0x50,0x4E,0x47]],'image/gif':[[0x47,0x49,0x46,0x38]],'image/webp':[[0x52,0x49,0x46,0x46]]};
+const magicOk=(mime,u)=>(MAGIC[mime]||[]).some(m=>m.every((b,i)=>u[i]===b));
+async function buildBackup(){await flush();const [p,e,ph]=await Promise.all([DB.all('props'),DB.all('envs'),DB.all('photos')]),out=[];
+  for(const x of ph){const q={...x,data:await blobData(x.blob),fp:await fpBlob(x.blob)};delete q.blob;out.push(q)}
+  const i=[...INS.values()];return{app:BACKUP_APP,formatVersion:BACKUP_FORMAT,exportedAt:new Date().toISOString(),counts:{props:p.length,envs:e.length,insps:i.length,photos:out.length},props:p,envs:e,insps:i,photos:out}}
+function download(o,name){const l=document.createElement('a');l.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:'application/json'}));l.download=name;l.click()}
+const stamp=()=>new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');
+// Verificação de integridade entre os object stores (usada após importações)
+async function integrityScan(){const [p,e,ph]=await Promise.all([DB.all('props'),DB.all('envs'),DB.all('photos')]),ins=[...INS.values()];
+  const pid=new Set(p.map(x=>x.id)),phIds=new Set(ph.map(x=>x.id)),refd=new Set(),dangling=[];
+  for(const i of ins)for(const x of i.items||[])for(const f of x.ph||[]){refd.add(f);if(!phIds.has(f))dangling.push(i.id+'|'+ikey(x)+'|'+f)}
+  return{orphanPhotos:ph.filter(x=>!refd.has(x.id)).map(x=>x.id),danglingRefs:dangling,envsSemImovel:e.filter(x=>!pid.has(x.pid)).map(x=>x.id),vistoriasSemImovel:ins.filter(i=>!pid.has(i.pid)&&!i.prop).map(i=>i.id),fotosSemVistoria:ph.filter(x=>!INS.has(x.ins)).map(x=>x.id)}}
+const REJ='Backup REJEITADO. Nenhum dado foi alterado.\n\n';
+async function importBackup(file){
+  let d;try{d=JSON.parse(await file.text())}catch(e){return alert('Backup REJEITADO: o arquivo não é um JSON legível.\nNenhum dado foi alterado.')}
+  await flush();
+  const [lp,le,lph]=await Promise.all([DB.all('props'),DB.all('envs'),DB.all('photos')]);
+  const local={props:lp,envs:le,insps:[...INS.values()],photoIds:new Set(lph.map(x=>x.id)),photoIns:new Map(lph.map(x=>[x.id,x.ins]))};
+  let v=validateBackup(d,local);
+  if(v.errors.length)return alert(REJ+'Problemas encontrados ('+v.errors.length+'):\n'+fmtList(v.errors,10));
+  // assinatura e conteúdo real das imagens
+  const fpB=new Map(),fpL=new Map(),bad=[];
+  try{for(const p of d.photos){const u=dataBytes(p.data),mime=p.data.slice(5,p.data.indexOf(';'));if(!u.length||!magicOk(mime,u)){bad.push(`Foto ${p.id}: o conteúdo não é uma imagem ${mime} válida.`);continue}
+    const f=await fpBytes(u);fpB.set(p.id,f);if(p.fp&&!fpEq(p.fp,f))bad.push(`Foto ${p.id}: o conteúdo não corresponde à assinatura gravada no backup (arquivo corrompido).`)}}catch(e){bad.push('Dados de imagem ilegíveis: '+(e&&e.message||e))}
+  if(bad.length)return alert(REJ+'Problemas encontrados ('+bad.length+'):\n'+fmtList(bad,10));
+  for(const x of lph)if(fpB.has(x.id))fpL.set(x.id,await fpBlob(x.blob));
+  v=validateBackup(d,local,{backup:fpB,local:fpL});
+  const c=v.counts,nConf=c.props.df.length+c.envs.df.length+c.insps.df.length+c.photos.df.length,nNew=c.props.nw+c.envs.nw+c.insps.nw+c.photos.nw;
+  let msg=`Backup válido.\nNovos: ${c.props.nw} imóvel(is), ${c.envs.nw} ambiente(s), ${c.insps.nw} vistoria(s), ${c.photos.nw} foto(s).\nJá existentes e idênticos (ignorados): ${c.props.eq+c.envs.eq+c.insps.eq+c.photos.eq}.\nJá existentes e DIFERENTES: ${nConf} (por padrão, os dados atuais são mantidos).`;
+  if(v.warnings.length)msg+='\n\nAvisos ('+v.warnings.length+'):\n'+fmtList(v.warnings,5);
+  if(!nNew&&!nConf)return alert('Nada a importar: todos os registros do backup já existem e são idênticos.');
+  if(!confirm(msg+(nNew?'\n\nImportar os registros novos?':'\n\nNão há registros novos; só conflitos. Continuar?')))return;
+  let rep=false;
+  if(nConf&&confirm(`${nConf} registro(s) já existem com conteúdo diferente.\n\nOK = SUBSTITUIR pelos do backup (um backup do estado atual será baixado antes).\nCancelar = MANTER os dados atuais.`)){rep=true;download(await buildBackup(),`backup-antes-da-importacao-${stamp()}.json`)}
+  try{
+    const have=a=>new Set(a.map(r=>r.id)),pick=(arr,df,h)=>arr.filter(r=>!h.has(r.id)||(rep&&df.includes(r.id)));
+    const P=pick(d.props,c.props.df,have(lp)),E=pick(d.envs||[],c.envs.df,have(le)),I0=pick(d.insps,c.insps.df,have(local.insps));
+    // cópia das vistorias a importar: descarta referências a fotos inexistentes e preserva a numeração de versão
+    const bph=new Set(d.photos.map(p=>p.id));let stripped=0;
+    const I=I0.map(r=>{const q=JSON.parse(JSON.stringify(r)),lo=INS.get(q.id);for(const x of q.items){const k=[];for(const f of x.ph){if(bph.has(f)||local.photoIds.has(f))k.push(f);else stripped++}x.ph=[...new Set(k)]}q.rev=lo?(lo.rev||0)+1:(q.rev||0);return q});
+    const refs=new Set(I.flatMap(q=>q.items.flatMap(x=>x.ph))),photos=[];let orph=0;
+    for(const p of d.photos){if(!refs.has(p.id)){orph++;continue}
+      if(!local.photoIds.has(p.id)||(rep&&c.photos.df.includes(p.id))){const b=await (await fetch(p.data)).blob();if(!b.size||!b.type.startsWith('image/'))throw new Error('Foto '+p.id+' ilegível.');const q={...p,blob:b};delete q.data;delete q.fp;photos.push(q)}}
+    // fotos antigas de vistorias substituídas que não estão mais vinculadas
+    const dels=lph.filter(x=>INS.has(x.ins)&&I.some(q=>q.id==x.ins)&&!refs.has(x.id)).map(x=>x.id);
+    if(!P.length&&!E.length&&!I.length&&!photos.length&&!dels.length){toast('Nada foi importado; os dados atuais foram mantidos.');return}
+    await DB.multi([...P.map(r=>['props','put',r]),...E.map(r=>['envs','put',r]),...I.map(r=>['insps','put',r]),...photos.map(r=>['photos','put',r]),...dels.map(id=>['photos','delete',id])]); // atômico
+    for(const r of I){INS.set(r.id,r);UNSAVED.delete(r.id);DIRTY.delete(r.id);if(cur&&cur.id==r.id)cur=r;PL.delete(r.id)}
+    for(const p of photos)delete urls[p.id];for(const id of dels)delete urls[id];
+    await load();const sc=await integrityScan(),bad2=Object.entries(sc).filter(z=>z[1].length);
+    go('home');
+    const extra=[stripped?`${stripped} referência(s) a foto inexistente descartada(s)`:'',orph?`${orph} foto(s) órfã(s) do arquivo ignorada(s)`:'',dels.length?`${dels.length} foto(s) antiga(s) sem vínculo removida(s)`:''].filter(Boolean);
+    toast(`Importado: ${P.length} imóvel(is), ${E.length} ambiente(s), ${I.length} vistoria(s), ${photos.length} foto(s)`);
+    if(extra.length||bad2.length)alert('Importação concluída.\n'+extra.join('\n')+(bad2.length?'\n\nVerificação de integridade — itens a revisar:\n'+bad2.map(z=>`• ${z[0]}: ${z[1].length}`).join('\n'):''))
+  }catch(e){alert('A importação FALHOU e nenhum dado foi alterado.\n'+(e&&e.message||e))}}
+
 /* Navegação, eventos, fotos, backup e inicialização. */
-// ---- render / navegação ----
 const TT={home:'Vistoria Técnica',prop:'Imóvel',start:'Nova vistoria',insp:'Vistoria',cat:'Critérios',rel:'Relatório',envs:'Ambientes',env:'Ambiente'};
-async function render(){const y=scrollY;$('#ttl').textContent=S.v=='cat'?CAT.categories.find(g=>g.id==S.c).name:TT[S.v];$('#back').style.visibility=S.v=='home'?'hidden':'visible';
-  if(cur&&(S.v=='cat'||S.v=='rel'))for(const p of await DB.all('photos'))if(p.ins==cur.id&&!urls[p.id])urls[p.id]=URL.createObjectURL(p.blob);
-  $('#app').innerHTML=V[S.v]();scrollTo(0,y)}
-const go=(v,o={})=>{S={v,...o};render();scrollTo(0,0)};
+let RT=0;const PL=new Set();
+// Cada campo da tela traz a vistoria (data-ins) e o critério (data-ik) a que pertence: nada depende da "vistoria aberta no momento".
+const insOf=el=>{const c=el&&el.closest&&el.closest('[data-ins]');return c?INS.get(c.dataset.ins):null};
+const itOf=(ins,el)=>{const c=el&&el.closest&&el.closest('[data-ik]');return ins&&c?ins.items.find(x=>ikey(x)==c.dataset.ik):null};
+async function loadPhotos(id){if(PL.has(id))return;for(const p of await DB.all('photos'))if(p.ins==id&&!urls[p.id])urls[p.id]=URL.createObjectURL(p.blob);PL.add(id)}
+async function render(top=false){const tk=++RT,y=scrollY;if(cur&&(S.v=='cat'||S.v=='rel'))await loadPhotos(cur.id);if(tk!==RT)return; // tela mais nova já foi pedida
+  $('#ttl').textContent=S.v=='cat'?CAT.categories.find(g=>g.id==S.c).name:TT[S.v];$('#back').style.visibility=S.v=='home'?'hidden':'visible';
+  $('#app').innerHTML=V[S.v]();scrollTo(0,top?0:y)}
+const go=(v,o={})=>{flush();S={v,...o};render(true)};
 $('#back').onclick=()=>{if(S.v=='env')return go('envs',{pid:S.pid});if(S.v=='cat')return go('insp');if(S.v=='rel')return go(S.from=='insp'?'insp':'home');go('home')};
-const shrink=f=>new Promise(r=>{const i=new Image();i.onload=()=>{const k=Math.min(1,1600/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);c.toBlob(b=>r(b),'image/jpeg',.8)};i.src=URL.createObjectURL(f)});
-async function onClick(e){const t=e.target.closest('[data-a]');if(!t)return;const a=t.dataset.a,x=t.dataset.x,i=t.dataset.i;if(await envClick(a,x))return;if(a=='how'){const k=cur.id+':'+i;OPEN[k]=!OPEN[k];render();return}
+const shrink=f=>new Promise((ok,er)=>{const u=URL.createObjectURL(f),i=new Image();i.onerror=()=>{URL.revokeObjectURL(u);er(new Error('Não foi possível ler a imagem selecionada.'))};
+  i.onload=()=>{const k=Math.min(1,1600/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(i.width*k));c.height=Math.max(1,Math.round(i.height*k));c.getContext('2d').drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(b=>b?ok(b):er(new Error('Falha ao processar a imagem.')),'image/jpeg',.8)};i.src=u});
+const lockOk=ins=>{if(ins&&CONFLICT.has(ins.id)){toast('Vistoria alterada em outra aba ou janela: recarregue a página.');return false}if(ins&&ins.status!='CONCLUIDA')return true;toast('Vistoria concluída: reabra para editar.');if(ins===cur)render();return false};
+async function onClick(e){const t=e.target.closest('[data-a]');if(!t)return;const a=t.dataset.a,x=t.dataset.x;
+ if(await envClick(a,x))return;
+ const ins=insOf(t)||cur,it=itOf(ins,t);
+ if(a=='how'){if(!it)return;const k=ins.id+':'+ikey(it);OPEN[k]=!OPEN[k];render();return}
  if(a=='newp')go('prop',{p:{id:uid(),name:'',developer:'',address:'',unit:'',tower:'',client:'',date:'',notes:''}});
  if(a=='editp')go('prop',{p:{...props.find(p=>p.id==x)}});
  if(a=='savep'){if(!(S.p.name||'').trim())return alert('Informe o nome do empreendimento.');await DB.put('props',S.p);await load();go('home');toast('Imóvel cadastrado ✓')}
- if(a=='delp'){if(insps.some(v=>v.pid==S.p.id))return alert('Este imóvel possui vistorias e não pode ser excluído.');if(confirm('Excluir imóvel?')){await DB.del('props',S.p.id);await load();go('home')}}
+ if(a=='delp'){if(insps.some(v=>v.pid==S.p.id))return alert('Este imóvel possui vistorias e não pode ser excluído.');if(confirm('Excluir imóvel e seus ambientes?')){await DB.multi([['props','delete',S.p.id],...envs.filter(e=>e.pid==S.p.id).map(e=>['envs','delete',e.id])]);await load();go('home')}}
  if(a=='start')go('start',{pid:x});
- if(a=='go'){if(!CAT)await loadCat();const sl=[...document.querySelectorAll('[data-env]:checked')].map(c=>envs.find(e=>e.id==c.dataset.env));if(!sl.length)return alert('Selecione ao menos um ambiente com checklist.');const m=CAT.metadata;
-  cur={id:uid(),pid:S.pid,status:'EM_ANDAMENTO',insp:$('[data-p=insp]').value,startedAt:new Date().toISOString(),notes:'',envs:sl.map(e=>({...e})),cat:{id:m.catalog_id,version:m.version,status:m.status},refs:CAT.reference_library,
-  items:sl.flatMap(e=>{const c={box:e.box!='Não',exaustor:e.exaustor!='Não',chuveiro:e.chuveiro||'Elétrico'};return CAT.criteria.filter(k=>k.active&&k.environment_id==ENV_CAT[e.type]).map(k=>{const n=+k.id.slice(4),r=e.type=='Banheiro'&&k.id.startsWith('BAN')?naReason(n,c):'';return{id:k.id,env:e.id,en:e.name,cat:k.category_id,catName:k.category,d:k.description,tipo:k.inspection_type,inst:k.recommended_instrument=='—'?'':k.recommended_instrument,origin:k.origin,proc:k.procedure||k.how_to||'',st:r?'NAO_SE_APLICA':null,auto:!!r,na:r,note:'',nv:'',nc:null,ph:[]}})})};
-  await DB.put('insps',cur);await load();go('insp');toast('Vistoria iniciada ✓')}
- if(a=='open'){cur=insps.find(v=>v.id==x);go('insp')}
+ if(a=='go'){if(!CAT)await loadCat();const sl=[...document.querySelectorAll('[data-env]:checked')].map(c=>envs.find(e=>e.id==c.dataset.env)).filter(Boolean);if(!sl.length)return alert('Selecione ao menos um ambiente com checklist.');
+  const miss=sl.filter(e=>e.type=='Banheiro').map(e=>({e,f:Object.entries(cfgOf(e)).filter(z=>z[1]===undefined).map(z=>CFG_LABEL[z[0]])})).filter(z=>z.f.length);
+  if(miss.length&&!confirm('Configuração não informada:\n'+miss.map(z=>`• ${z.e.name}: ${z.f.join(', ')}`).join('\n')+'\n\nOs critérios que dependem desses dados ficarão PENDENTES para a sua avaliação. Continuar?'))return;
+  const m=CAT.metadata,n0={id:uid(),pid:S.pid,prop:{...pn(S.pid)},status:'EM_ANDAMENTO',insp:$('[data-p=insp]').value.trim(),startedAt:new Date().toISOString(),notes:'',envs:sl.map(e=>({...e})),cat:{id:m.catalog_id,version:m.version,status:m.status},refs:CAT.reference_library,
+  items:sl.flatMap(e=>{const c=cfgOf(e);return CAT.criteria.filter(k=>k.active&&k.environment_id==ENV_CAT[e.type]).map(k=>{const n=+k.id.slice(4),b=e.type=='Banheiro'&&k.id.startsWith('BAN'),r=b?naReason(n,c):'';return{id:k.id,env:e.id,en:e.name,cat:k.category_id,catName:k.category,d:k.description,tipo:k.inspection_type,inst:k.recommended_instrument=='—'?'':k.recommended_instrument,origin:k.origin,proc:k.procedure||k.how_to||'',st:r?'NAO_SE_APLICA':null,auto:!!r,na:r,cfgMissing:b?cfgMissing(n,c):[],note:'',nv:'',nc:null,ph:[]}})})};
+  try{await DB.put('insps',n0)}catch(err){return alert('Não foi possível criar a vistoria: '+(err&&err.message||err))}
+  INS.set(n0.id,n0);await load();cur=n0;go('insp');toast('Vistoria iniciada ✓')}
+ if(a=='open'){cur=INS.get(x);go('insp')}
  if(a=='cat')go('cat',{c:x,e:t.dataset.e||''});
- if(a=='st'){const it=cur.items[i];it.st=x;it.auto=false;if(x=='NAO_CONFORME'&&!it.nc)it.nc={desc:'',loc:'',pri:'Média',rec:'',obs:''};it.at=new Date().toISOString();save();render()}
- if(a=='delph'){const it=cur.items[i];it.ph=it.ph.filter(f=>f!=x);await DB.del('photos',x);save();render()}
- if(a=='pause'){cur.status=cur.status=='PAUSADA'?'EM_ANDAMENTO':'PAUSADA';save();render()}
- if(a=='fin'&&confirm('Finalizar a vistoria?')){cur.status='CONCLUIDA';cur.finishedAt=new Date().toISOString();await DB.put('insps',cur);await load();go('home')}
- if(a=='rel'){cur=insps.find(v=>v.id==x)||cur;go('rel',{from:S.v=='insp'?'insp':''})}
+ if(a=='st'){if(!it||!lockOk(ins))return;it.st=x;it.auto=false;if(x=='NAO_CONFORME'&&!it.nc)it.nc={desc:'',loc:'',pri:'Média',rec:'',obs:''};it.at=new Date().toISOString();save(ins,true);if(ins===cur)render()}
+ if(a=='delph'){if(!it||!lockOk(ins))return;it.ph=it.ph.filter(f=>f!=x);await save(ins,true);if(!SAVE_ERR)await DB.del('photos',x); // primeiro desfaz o vínculo, depois apaga o arquivo
+  if(ins===cur)render()}
+ if(a=='pause'){if(!lockOk(ins))return;ins.status=ins.status=='PAUSADA'?'EM_ANDAMENTO':'PAUSADA';save(ins,true);if(ins===cur)render()}
+ if(a=='reopen'){if(confirm('Reabrir esta vistoria concluída para edição? A reabertura ficará registrada.')){ins.status='EM_ANDAMENTO';ins.reopened=[...(ins.reopened||[]),{at:new Date().toISOString(),finishedAt:ins.finishedAt}];delete ins.finishedAt;save(ins,true);if(ins===cur)render()}}
+ if(a=='fin'){await flush();const v=validateInspection(ins);if(v.errors.length)return alert('Não é possível finalizar. Corrija:\n\n'+fmtList(v.errors,10));
+  if(!confirm('Finalizar a vistoria?'+(v.warnings.length?'\n\nAvisos (não impedem):\n'+fmtList(v.warnings,5):'')))return;
+  ins.status='CONCLUIDA';ins.finishedAt=new Date().toISOString();await save(ins,true);go('home')}
+ if(a=='rel'){cur=INS.get(x)||cur;go('rel',{from:S.v=='insp'?'insp':''})}
  if(a=='print')print();
- if(a=='exp'){const ph=await DB.all('photos');for(const p of ph){p.data=await new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(p.blob)});delete p.blob}
-  const b=new Blob([JSON.stringify({props,envs,insps,photos:ph})],{type:'application/json'}),l=document.createElement('a');l.href=URL.createObjectURL(b);l.download='backup-vistoria-'+new Date().toISOString().slice(0,10)+'.json';l.click()}}
+ if(a=='exp'){download(await buildBackup(),'backup-vistoria-'+stamp()+'.json');toast('Backup exportado')}}
 document.addEventListener('click',e=>onClick(e).catch(err=>alert('Erro: '+(err&&err.message||err))));
 addEventListener('unhandledrejection',e=>alert('Erro: '+(e.reason&&e.reason.message||e.reason)));
 document.addEventListener('input',e=>{const t=e.target;if(t.dataset.p!==undefined&&S.p)S.p[t.dataset.p]=t.value;
- if(t.dataset.g){cur.notes=t.value;save()}
- if(t.dataset.k){const it=cur.items[t.dataset.i],k=t.dataset.k;if(k.startsWith('nc.'))it.nc[k.slice(3)]=t.value;else it[k]=t.value;save()}});
+ if(t.dataset.g!==undefined){const ins=insOf(t);if(ins&&lockOk(ins)){ins.notes=t.value;save(ins)}return}
+ if(t.dataset.k){const ins=insOf(t),it=itOf(ins,t);if(!it||!lockOk(ins))return;const k=t.dataset.k;
+  if(k.startsWith('nc.')){it.nc=it.nc||{desc:'',loc:'',pri:'Média',rec:'',obs:''};it.nc[k.slice(3)]=t.value}else it[k]=t.value;
+  save(ins,t.tagName=='SELECT')}});
 document.addEventListener('change',async e=>{const t=e.target;
- if(t.dataset.ph!==undefined&&t.files[0]){const b=await shrink(t.files[0]),id=uid();await DB.put('photos',{id,ins:cur.id,item:cur.items[t.dataset.ph].id,blob:b,at:new Date().toISOString()});urls[id]=URL.createObjectURL(b);cur.items[t.dataset.ph].ph.push(id);save();render()}
- if(t.id=='imp'&&t.files[0]){const d=JSON.parse(await t.files[0].text());if(!confirm('Importar backup? Registros com o mesmo ID serão substituídos.'))return;
-  for(const p of d.props)await DB.put('props',p);for(const v of d.insps)await DB.put('insps',v);for(const v of d.envs||[])await DB.put('envs',v);
-  for(const p of d.photos){p.blob=await (await fetch(p.data)).blob();delete p.data;await DB.put('photos',p)}await load();go('home');toast('Backup importado')}});
+ if(t.dataset.ph!==undefined&&t.files[0]){const ins=insOf(t),it=itOf(ins,t),f=t.files[0];t.value=''; // vistoria e critério fixados ANTES de qualquer espera
+  if(!ins||!it||!lockOk(ins))return;const b=await shrink(f),id=uid();
+  await DB.put('photos',{id,ins:ins.id,item:it.id,itemKey:ikey(it),blob:b,at:new Date().toISOString()});urls[id]=URL.createObjectURL(b);it.ph.push(id);await save(ins,true);if(ins===cur)render()}
+ if(t.id=='imp'&&t.files[0]){const f=t.files[0];t.value='';await importBackup(f)}});
+document.addEventListener('focusout',()=>flush());const bye=()=>{walWrite();flush()};document.addEventListener('visibilitychange',()=>{if(document.hidden)bye();else checkStale()});addEventListener('focus',checkStale);addEventListener('pagehide',bye);addEventListener('beforeunload',walWrite);
 const net=()=>$('#net').textContent=navigator.onLine?'online':'offline';addEventListener('online',net);addEventListener('offline',net);net();
 if('serviceWorker'in navigator)navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister())).catch(()=>{});
 if(window.caches)caches.keys().then(k=>k.forEach(x=>caches.delete(x))).catch(()=>{});
 navigator.storage&&navigator.storage.persist&&navigator.storage.persist();
-Promise.all([load(),loadCat()]).then(()=>go('home')).catch(e=>{$('#app').innerHTML='<div class="card">Não foi possível carregar o catálogo: '+esc(e.message)+'. Abra o app por um endereço http(s), não pelo arquivo local.</div>'});
+walRecover().then(()=>Promise.all([load(),loadCat()])).then(()=>{go('home');setSS();if(RECOVERED)setTimeout(()=>toast('Alterações não gravadas da sessão anterior foram recuperadas ('+RECOVERED+' vistoria(s)).'),400)}).catch(e=>{$('#app').innerHTML='<div class="card">Não foi possível carregar o catálogo: '+esc(e.message)+'. Abra o app por um endereço http(s), não pelo arquivo local.</div>'});
 
 </script></body></html>
