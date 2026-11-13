@@ -29,7 +29,7 @@ body.immersive .bnav{display:none}body.immersive main{padding-bottom:24px}body.l
 /* componentes */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border:1px solid var(--ln2);border-radius:10px;background:var(--sf);color:var(--navy);font:inherit;font-weight:600;font-size:15px;cursor:pointer;text-decoration:none}
 .btn:hover{background:var(--pe-bg)}.btn.pri{background:var(--navy);border-color:var(--navy);color:#fff}.btn.pri:hover{background:var(--navy2)}.btn.sec{background:var(--teal);border-color:var(--teal);color:#fff}.btn.sec:hover{background:var(--teal-d)}
-.btn.ghost{border-color:transparent;background:none}.btn.ghost:hover{background:var(--pe-bg)}.btn.dng{color:var(--nc)}.btn.dng.solid{background:var(--nc);border-color:var(--nc);color:#fff}.btn.sm{min-height:40px;padding:0 12px;font-size:14px}.btn.dis{opacity:.55}.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{border-color:transparent;background:none}.btn.ghost:hover{background:var(--pe-bg)}.btn.dng{color:var(--nc)}.btn.dng.solid{background:var(--nc);border-color:var(--nc);color:#fff}.btn.sm{min-height:44px;padding:0 12px;font-size:14px}.btn.dis{opacity:.55}.btn:disabled{opacity:.5;cursor:not-allowed}
 .link{background:none;border:0;color:var(--teal-d);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer;padding:8px 0;min-height:44px}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.actions>.btn:not(.ghost){flex:1 1 auto}
 .card{background:var(--sf);border:1px solid var(--ln);border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin-bottom:14px}
@@ -93,6 +93,10 @@ details.cr{background:var(--sf);border:1px solid var(--ln);border-radius:10px;ma
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 .ss-ok{color:var(--ok)}.ss-run{color:var(--nv)}.ss-err{color:var(--nc);font-weight:700}.ssm{font-size:13px;white-space:nowrap}@media(min-width:900px){.ssm{display:none}}
+
+#modal:empty{display:none}.mdl{position:fixed;inset:0;z-index:120;background:rgba(10,20,40,.58);display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
+.mdl-b{background:#fff;border-radius:14px;max-width:540px;width:100%;padding:20px;box-shadow:0 20px 50px rgba(0,0,0,.3);max-height:100%;overflow:auto}.mdl-b h3{margin-bottom:10px}.mdl-c{font-size:15px}.mdl-c ul{padding-left:20px;margin:6px 0}.mdl-c li{margin:3px 0}
+.mchk{display:flex;gap:10px;align-items:flex-start;margin:14px 0 0;font-size:14px;font-weight:600;color:var(--navy)}.mchk input{margin-top:2px}.mdl .actions{margin-top:16px}.mdl .actions .btn{flex:1 1 140px}
 </style></head><body><div id="shell"></div>
 <script type="application/json" id="catalogo">{
   "metadata": {
@@ -6032,22 +6036,30 @@ const multi=async ops=>{const db=await o();return new Promise((ok,er)=>{const x=
   try{for(const [s,op,v] of ops)x.objectStore(s)[op](v)}catch(e){try{x.abort()}catch(_){}er(e)}})};
 // grava a vistoria somente se a versão (rev) no banco for a que esta aba conhece; senão, houve edição em outra aba
 const putRev=async ins=>{const db=await o();return new Promise((ok,er)=>{const x=db.transaction('insps','readwrite'),s=x.objectStore('insps'),g=s.get(ins.id);
-  g.onsuccess=()=>{const c=g.result;if(c&&(c.rev||0)!==(ins.rev||0)){const e=new Error('Vistoria alterada em outra aba ou janela.');e.conflict=true;try{x.abort()}catch(_){}return er(e)}
+  g.onsuccess=()=>{const c=g.result;if(!c){const e=new Error('Vistoria excluída em outra aba ou janela.');e.deleted=true;try{x.abort()}catch(_){}return er(e)}if((c.rev||0)!==(ins.rev||0)){const e=new Error('Vistoria alterada em outra aba ou janela.');e.conflict=true;try{x.abort()}catch(_){}return er(e)}
     const n=(ins.rev||0)+1;s.put(Object.assign({},ins,{rev:n}));x.oncomplete=()=>{ins.rev=n;ok()}};
   x.onerror=()=>er(x.error);x.onabort=()=>er(x.error||new Error('Transação abortada'))})};
-return{all:s=>t(s,'readonly',x=>x.getAll()),keys:s=>t(s,'readonly',x=>x.getAllKeys()),get:(s,k)=>t(s,'readonly',x=>x.get(k)),put:(s,v)=>t(s,'readwrite',x=>x.put(v)),del:(s,k)=>t(s,'readwrite',x=>x.delete(k)),multi,putRev}})();
+// Exclusão em cascata em UMA transação (vistorias, fotos, ambientes, imóveis): tudo ou nada.
+const cascade=async({propIds=[],insIds=[]})=>{const db=await o();return new Promise((ok,er)=>{const x=db.transaction(['props','envs','insps','photos'],'readwrite'),P=new Set(propIds),I=new Set(insIds),out={props:0,envs:0,insps:[],photos:[]};
+  try{const ps=x.objectStore('insps'),cI=ps.openCursor();
+   cI.onsuccess=()=>{const c=cI.result;if(c){if(P.has(c.value.pid)||I.has(c.key)){I.add(c.key);out.insps.push(c.key);c.delete()}c.continue();return}
+    const cP=x.objectStore('photos').openCursor();cP.onsuccess=()=>{const q=cP.result;if(!q)return;if(I.has(q.value.ins)){out.photos.push(q.key);q.delete()}q.continue()}};
+   const cE=x.objectStore('envs').openCursor();cE.onsuccess=()=>{const c=cE.result;if(!c)return;if(P.has(c.value.pid)){c.delete();out.envs++}c.continue()};
+   propIds.forEach(id=>{x.objectStore('props').delete(id);out.props++})}catch(e){try{x.abort()}catch(_){}return er(e)}
+  x.oncomplete=()=>ok(out);x.onerror=()=>er(x.error);x.onabort=()=>er(x.error||new Error('Transação abortada'))})};
+return{cascade,all:s=>t(s,'readonly',x=>x.getAll()),keys:s=>t(s,'readonly',x=>x.getAllKeys()),get:(s,k)=>t(s,'readonly',x=>x.get(k)),put:(s,v)=>t(s,'readwrite',x=>x.put(v)),del:(s,k)=>t(s,'readwrite',x=>x.delete(k)),multi,putRev}})();
 const toast=m=>{const e=$('#toast');e.textContent=m;e.style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.opacity=0,2200)};
 const uid=()=>crypto.randomUUID();
 // Registro único: existe UM objeto em memória por vistoria; toda edição acontece nele e é gravada a partir dele.
-const INS=new Map(),DIRTY=new Map(),UNSAVED=new Map(),FAILED=new Set(),CONFLICT=new Set();let CHAIN=Promise.resolve(),SAVE_ERR=false,INFLIGHT=0,RETRY=0,RECOVERED=0;
+const GONE=new Set(),INS=new Map(),DIRTY=new Map(),UNSAVED=new Map(),FAILED=new Set(),CONFLICT=new Set();let CHAIN=Promise.resolve(),SAVE_ERR=false,INFLIGHT=0,RETRY=0,RECOVERED=0;
 const banner=(id,on,text,top,btn,fn)=>{let e=document.getElementById(id);if(!e){e=document.createElement('div');e.id=id;e.style.cssText='position:fixed;left:0;right:0;z-index:20;background:#c0392b;color:#fff;padding:8px 12px;font-size:14px;text-align:center;top:'+top;e.appendChild(document.createTextNode(text+' '));if(btn){const b=document.createElement('button');b.textContent=btn;b.style.cssText='min-height:32px;padding:0 10px;margin-left:6px';b.onclick=fn;e.appendChild(b)}document.body.appendChild(e)}e.style.display=on?'block':'none'};
 const warnSave=on=>banner('savewarn',on,'⚠ Erro ao salvar neste aparelho. Nova tentativa automática. Exporte um backup e não feche o app.','0','Tentar agora',()=>{FAILED.forEach(i=>DIRTY.set(i.id,i));flush()});
-const warnConflict=()=>banner('conflictwarn',CONFLICT.size>0,'⚠ Esta vistoria foi alterada em outra aba ou janela. Novas alterações NÃO estão sendo gravadas, para não sobrescrever as mais recentes.','36px','Recarregar',()=>location.reload());
+const warnConflict=()=>banner('conflictwarn',CONFLICT.size>0,'⚠ Esta vistoria foi alterada ou excluída em outra aba ou janela. Novas alterações NÃO estão sendo gravadas, para não sobrescrever as mais recentes.','36px','Recarregar',()=>location.reload());
 // Indicador de estado — reflete o estado real da fila e do IndexedDB (só mostra "Salvo" com tudo confirmado)
 function setSS(){const pend=DIRTY.size>0||!!save.t,st=SAVE_ERR?['Erro ao salvar','ss-err']:CONFLICT.size?['Conflito: recarregue','ss-err']:INFLIGHT?['Salvando…','ss-run']:pend?['Alterações pendentes','ss-run']:['Salvo','ss-ok'];document.querySelectorAll('#ss,.ssm').forEach(e=>{e.textContent=st[0];e.className=(e.id=='ss'?'s ':'s ssm ')+st[1]})}
 const scheduleRetry=()=>{clearTimeout(RETRY);RETRY=setTimeout(()=>{FAILED.forEach(i=>DIRTY.set(i.id,i));flush()},4000)};
 // gravações em fila (uma por vez, em ordem); o objeto é lido no momento da gravação, então vale sempre o estado mais recente
-const persist=ins=>{INFLIGHT++;setSS();return CHAIN=CHAIN.then(()=>CONFLICT.has(ins.id)?null:DB.putRev(ins)).then(()=>{INFLIGHT--;FAILED.delete(ins);if(!DIRTY.has(ins.id)&&!CONFLICT.has(ins.id))UNSAVED.delete(ins.id);if(!FAILED.size&&SAVE_ERR){SAVE_ERR=false;warnSave(false)}setSS()},err=>{INFLIGHT--;if(err&&err.conflict){CONFLICT.add(ins.id);warnConflict()}else{FAILED.add(ins);SAVE_ERR=true;warnSave(true);scheduleRetry()}setSS()})};
+const persist=ins=>{INFLIGHT++;setSS();return CHAIN=CHAIN.then(()=>(CONFLICT.has(ins.id)||GONE.has(ins.id))?null:DB.putRev(ins)).then(()=>{INFLIGHT--;FAILED.delete(ins);if(!DIRTY.has(ins.id)&&!CONFLICT.has(ins.id))UNSAVED.delete(ins.id);if(!FAILED.size&&SAVE_ERR){SAVE_ERR=false;warnSave(false)}setSS()},err=>{INFLIGHT--;if(err&&(err.conflict||err.deleted)){CONFLICT.add(ins.id);warnConflict()}else{FAILED.add(ins);SAVE_ERR=true;warnSave(true);scheduleRetry()}setSS()})};
 function flush(){clearTimeout(save.t);save.t=0;const l=[...DIRTY.values()];DIRTY.clear();const ps=l.map(persist);setSS();return Promise.all(ps).then(()=>CHAIN).then(()=>{if(l.length&&!SAVE_ERR&&!CONFLICT.size)toast('Salvo ✓');if(!UNSAVED.size&&!DIRTY.size&&!FAILED.size)walClear();setSS()})}
 // now=true: grava já (escolhas e botões); false: pequena espera para agrupar digitação
 function save(ins,now=false){if(!ins)return Promise.resolve();DIRTY.set(ins.id,ins);UNSAVED.set(ins.id,ins);clearTimeout(save.t);if(now){setSS();return flush()}save.t=setTimeout(flush,120);setSS();return Promise.resolve()}
@@ -6057,9 +6069,11 @@ const WAL='vistoria-wal';
 const walWrite=()=>{if(!UNSAVED.size)return;try{localStorage.setItem(WAL,JSON.stringify([...UNSAVED.values()]))}catch(e){}};
 const walClear=()=>{try{localStorage.removeItem(WAL)}catch(e){}};
 async function walRecover(){let a=null;try{a=JSON.parse(localStorage.getItem(WAL)||'null')}catch(e){}if(!Array.isArray(a)||!a.length)return;let n=0;
-  try{for(const j of a){if(!isObj(j)||!okId(j.id)||!Array.isArray(j.items))continue;const r=await DB.get('insps',j.id);if(r&&(r.rev||0)!==(j.rev||0))continue;await DB.put('insps',Object.assign({},j,{rev:(j.rev||0)+1}));n++}walClear();RECOVERED=n}catch(e){}}
+  try{for(const j of a){if(!isObj(j)||!okId(j.id)||!Array.isArray(j.items))continue;const r=await DB.get('insps',j.id);if(!r||GONE.has(j.id)||(r.rev||0)!==(j.rev||0))continue;await DB.put('insps',Object.assign({},j,{rev:(j.rev||0)+1}));n++}walClear();RECOVERED=n}catch(e){}}
 // outra aba pode ter gravado versão mais nova: detecta ao voltar para a aplicação
-async function checkStale(){if(INFLIGHT||DIRTY.size)return;try{for(const r of await DB.all('insps')){const m=INS.get(r.id);if(m&&(r.rev||0)>(m.rev||0))CONFLICT.add(r.id)}}catch(e){}if(CONFLICT.size){warnConflict();setSS()}}
+async function checkStale(){if(INFLIGHT||DIRTY.size)return;try{const all=await DB.all('insps'),ids=new Set(all.map(r=>r.id));for(const r of all){const m=INS.get(r.id);if(m&&(r.rev||0)>(m.rev||0))CONFLICT.add(r.id)}for(const id of INS.keys())if(!ids.has(id)&&!GONE.has(id))CONFLICT.add(id)}catch(e){}if(CONFLICT.size){warnConflict();setSS()}}
+
+const walSync=()=>{if(UNSAVED.size)walWrite();else walClear()};
 
 /* Regras da vistoria: aplicabilidade sugerida, contagens de progresso e carregamento de dados/catálogo. */
 const cnt=i=>{const c={CONFORME:0,NAO_CONFORME:0,NAO_SE_APLICA:0,NAO_VERIFICADO:0,pe:0};i.items.forEach(x=>x.st?c[x.st]++:c.pe++);c.n=i.items.length;c.pct=c.n?Math.round((c.n-c.pe)/c.n*100):0;return c};
@@ -6081,6 +6095,16 @@ function buildShell(){const nav=NAVS.map(n=>`<button class="nb" data-nav="${n[0]
   <div class="main-col"><header class="top"><button id="back" aria-label="Voltar">${ico('left')}</button><h1 id="ttl">Vistoria</h1><span class="s" id="ss" role="status" aria-live="polite"></span><span class="s" id="net"></span></header><main id="app" tabindex="-1"></main></div>
   <nav class="bnav" aria-label="Menu principal">${mini}</nav></div><div id="toast" role="status" aria-live="polite"></div><div id="modal"></div><input id="imp" type="file" accept=".json" class="vh" tabindex="-1" aria-label="Arquivo de backup">`}
 buildShell();
+
+// Janela de confirmação acessível (role=dialog, foco preso, Esc cancela). Foco inicial no botão Cancelar.
+function askModal({title,html,okLabel,cancelLabel='Cancelar',check='',backup=false}){return new Promise(res=>{const m=document.getElementById('modal'),prev=document.activeElement;
+ m.innerHTML=`<div class="mdl"><div class="mdl-b" role="dialog" aria-modal="true" aria-labelledby="md-t"><h3 id="md-t">${esc(title)}</h3><div class="mdl-c">${html}</div>${backup?`<div class="alert warn" style="margin-top:12px">${ico('warn')}<span><b>Recomendação:</b> exporte um backup antes de excluir. A exclusão não pode ser desfeita.<br><button class="btn sm" data-md-bk style="margin-top:8px">${ico('down')}Exportar backup agora</button></span></div>`:''}${check?`<label class="mchk"><input type="checkbox" id="md-chk"><span>${esc(check)}</span></label>`:''}<div class="actions"><button class="btn" data-md="no">${esc(cancelLabel)}</button><button class="btn dng solid" data-md="ok" ${check?'disabled aria-disabled="true"':''}>${esc(okLabel)}</button></div></div></div>`;
+ const done=v=>{m.innerHTML='';document.removeEventListener('keydown',kd,true);if(prev&&prev.focus)try{prev.focus()}catch(_){}res(v)};
+ const kd=e=>{if(e.key=='Escape'){e.preventDefault();e.stopPropagation();done(false);return}if(e.key=='Tab'){const f=[...m.querySelectorAll('button:not([disabled]),input')];if(!f.length)return;const i=f.indexOf(document.activeElement);if(e.shiftKey&&i<=0){e.preventDefault();f[f.length-1].focus()}else if(!e.shiftKey&&(i==f.length-1||i<0)){e.preventDefault();f[0].focus()}}};
+ document.addEventListener('keydown',kd,true);
+ m.onclick=async e=>{const b=e.target.closest('[data-md]');if(b){if(b.disabled)return;done(b.dataset.md=='ok');return}if(e.target.closest('[data-md-bk]')){const t=e.target.closest('[data-md-bk]');t.disabled=true;try{download(await buildBackup(),'backup-antes-de-excluir-'+stamp()+'.json');t.textContent='Backup exportado ✓'}catch(err){t.disabled=false;alert('Não foi possível exportar: '+(err&&err.message||err))}return}if(e.target.classList.contains('mdl'))done(false)};
+ const ck=m.querySelector('#md-chk');if(ck)ck.onchange=()=>{const o=m.querySelector('[data-md=ok]');o.disabled=!ck.checked;o.setAttribute('aria-disabled',String(!ck.checked))};
+ m.querySelector('[data-md=no]').focus()})}
 
 /* "Como inspecionar?": orientação exibida junto de cada critério durante a vistoria.
    Conteúdo derivado do método, dos instrumentos e dos avisos do catálogo; se o catálogo trouxer
@@ -6120,13 +6144,13 @@ const ncN=i=>i.items.filter(x=>x.st=='NAO_CONFORME').length;
 const empty=(ic,t,s,b='')=>`<div class="empty">${ico(ic,'big')}<h4>${t}</h4><p>${s}</p>${b}</div>`;
 const kpi=(ic,l,n,to,c='')=>`<button class="kpi ${c}" data-nav="${to}">${ico(ic)}<span class="kn">${n}</span><span class="kl">${l}</span></button>`;
 const search=(ph,v)=>`<div class="search">${ico('search')}<input type="search" data-q="1" placeholder="${ph}" aria-label="${ph}" value="${esc(v||'')}"></div>`;
-function insCard(i){const c=cnt(i),done=i.status=='CONCLUIDA';return`<article class="card ins"><div class="ins-h"><div><h4>${esc(insName(i))}</h4><div class="mut">${esc(insP(i).client||'Sem cliente')} · ${fmtD(i.startedAt)}${i.insp?' · '+esc(i.insp):''}</div></div>${spill(i.status)}</div>${bar(c.pct,done?'done':'')}<div class="stats"><span>${c.pct}% avaliado</span><span>${c.pe} pendentes</span><span class="${c.NAO_CONFORME?'nc':''}">${c.NAO_CONFORME} não conformes</span></div><div class="actions"><button class="btn pri" data-a="open" data-x="${esc(i.id)}">${ico(done?'file':'play')}${done?'Abrir':'Continuar'}</button><button class="btn" data-a="rel" data-x="${esc(i.id)}">${ico('print')}Relatório</button></div></article>`}
-function propCard(p){const l=insps.filter(i=>i.pid==p.id),run=l.filter(i=>i.status!='CONCLUIDA').length;return`<article class="card"><h4>${esc(p.name||'Sem nome')}${p.unit?' · un. '+esc(p.unit):''}</h4><div class="mut">${esc(p.address||'Sem endereço')}</div><dl class="kv"><div><dt>Cliente</dt><dd>${esc(p.client||'—')}</dd></div><div><dt>Cadastro</dt><dd>${fmtD(p.createdAt)}</dd></div><div><dt>Vistorias</dt><dd>${l.length}${run?` · ${run} ativa(s)`:''}</dd></div></dl><div class="actions"><button class="btn pri" data-a="envs" data-x="${esc(p.id)}">Abrir</button><button class="btn" data-a="start" data-x="${esc(p.id)}">Nova vistoria</button><button class="btn ghost" data-a="editp" data-x="${esc(p.id)}" aria-label="Editar imóvel ${esc(p.name)}">${ico('edit')}</button></div></article>`}
+function insCard(i,del){const c=cnt(i),done=i.status=='CONCLUIDA';return`<article class="card ins"><div class="ins-h"><div><h4>${esc(insName(i))}</h4><div class="mut">${esc(insP(i).client||'Sem cliente')} · ${fmtD(i.startedAt)}${i.insp?' · '+esc(i.insp):''}</div></div>${spill(i.status)}</div>${bar(c.pct,done?'done':'')}<div class="stats"><span>${c.pct}% avaliado</span><span>${c.pe} pendentes</span><span class="${c.NAO_CONFORME?'nc':''}">${c.NAO_CONFORME} não conformes</span></div><div class="actions"><button class="btn pri" data-a="open" data-x="${esc(i.id)}">${ico(done?'file':'play')}${done?'Abrir':'Continuar'}</button><button class="btn" data-a="rel" data-x="${esc(i.id)}">${ico('print')}Relatório</button>${del?`<button class="btn ghost dng" data-a="delins" data-x="${esc(i.id)}" aria-label="Excluir vistoria de ${esc(insName(i))}, iniciada em ${fmtD(i.startedAt)}">${ico('trash')}</button>`:''}</div></article>`}
+function propCard(p){const l=insps.filter(i=>i.pid==p.id),run=l.filter(i=>i.status!='CONCLUIDA').length;return`<article class="card"><h4>${esc(p.name||'Sem nome')}${p.unit?' · un. '+esc(p.unit):''}</h4><div class="mut">${esc(p.address||'Sem endereço')}</div><dl class="kv"><div><dt>Cliente</dt><dd>${esc(p.client||'—')}</dd></div><div><dt>Cadastro</dt><dd>${fmtD(p.createdAt)}</dd></div><div><dt>Vistorias</dt><dd>${l.length}${run?` · ${run} ativa(s)`:''}</dd></div></dl><div class="actions"><button class="btn pri" data-a="envs" data-x="${esc(p.id)}">Abrir</button><button class="btn" data-a="start" data-x="${esc(p.id)}">Nova vistoria</button><button class="btn ghost" data-a="editp" data-x="${esc(p.id)}" aria-label="Editar imóvel ${esc(p.name)}">${ico('edit')}</button><button class="btn ghost dng" data-a="delprop" data-x="${esc(p.id)}" aria-label="Excluir cadastro do imóvel ${esc(p.name)}">${ico('trash')}</button></div></article>`}
 const propList=()=>{const q=(S.q||'').trim().toLowerCase(),l=props.filter(p=>!q||[p.name,p.unit,p.client,p.address,p.developer,p.tower].join(' ').toLowerCase().includes(q));
   return l.length?`<div class="grid">${l.map(propCard).join('')}</div>`:props.length?empty('search','Nenhum imóvel encontrado','Ajuste a busca.'):empty('building','Nenhum imóvel cadastrado','Cadastre o primeiro imóvel para criar vistorias.',`<button class="btn pri" data-a="newp">${ico('plus')}Cadastrar imóvel</button>`)};
 const insList=()=>{const q=(S.q||'').trim().toLowerCase(),t=S.t||'all',m={all:()=>1,run:i=>i.status=='EM_ANDAMENTO',pause:i=>i.status=='PAUSADA',done:i=>i.status=='CONCLUIDA'}[t];
   const l=insps.filter(i=>m(i)&&(!q||[insName(i),insP(i).client,i.insp].join(' ').toLowerCase().includes(q)));
-  return l.length?`<div class="grid">${l.map(insCard).join('')}</div>`:insps.length?empty('clip','Nenhuma vistoria neste filtro','Troque a aba ou a busca.'):empty('clip','Nenhuma vistoria iniciada','Escolha um imóvel e inicie a primeira vistoria.',`<button class="btn pri" data-a="newins">${ico('plus')}Nova vistoria</button>`)};
+  return l.length?`<div class="grid">${l.map(i=>insCard(i,true)).join('')}</div>`:insps.length?empty('clip','Nenhuma vistoria neste filtro','Troque a aba ou a busca.'):empty('clip','Nenhuma vistoria iniciada','Escolha um imóvel e inicie a primeira vistoria.',`<button class="btn pri" data-a="newins">${ico('plus')}Nova vistoria</button>`)};
 const relList=()=>{const q=(S.q||'').trim().toLowerCase(),l=insps.filter(i=>!q||[insName(i),insP(i).client,i.insp].join(' ').toLowerCase().includes(q));
   return l.length?`<div class="grid">${l.map(i=>{const c=cnt(i);return`<article class="card"><div class="ins-h"><div><h4>${esc(insName(i))}</h4><div class="mut">${esc(insP(i).client||'Sem cliente')} · ${fmtD(i.startedAt)}</div></div>${spill(i.status)}</div><div class="stats"><span>${c.n-c.pe} de ${c.n} avaliados</span><span class="${c.NAO_CONFORME?'nc':''}">${c.NAO_CONFORME} não conformes</span><span>${c.NAO_VERIFICADO} não verificados</span></div><div class="actions"><button class="btn pri" data-a="rel" data-x="${esc(i.id)}">${ico('file')}Conferir relatório</button></div></article>`}).join('')}</div>`:empty('file','Nenhum relatório disponível','Os relatórios são gerados a partir das vistorias.')};
 const catList=()=>{const amb=S.ce||'AMB-001',q=(S.q||'').toLowerCase(),its=CAT.criteria.filter(c=>c.environment_id==amb&&(!q||(c.id+' '+c.description+' '+c.category+' '+c.recommended_instrument).toLowerCase().includes(q))),gs=CAT.categories.filter(g=>its.some(c=>c.category_id==g.id));
@@ -6142,16 +6166,16 @@ const V={
 dash(){const run=insps.filter(i=>i.status!='CONCLUIDA'),done=insps.filter(i=>i.status=='CONCLUIDA'),pend=run.reduce((n,i)=>n+cnt(i).pe,0);
  return`<div class="kpis">${kpi('building','Imóveis cadastrados',props.length,'props')}${kpi('clip','Em andamento',run.length,'insps','prog')}${kpi('check','Concluídas',done.length,'insps','done')}${kpi('circle','Critérios pendentes',pend,'insps','pend')}</div>
  <div class="actions"><button class="btn pri" data-a="newins">${ico('plus')}Nova vistoria</button><button class="btn" data-a="newp">${ico('building')}Cadastrar imóvel</button><button class="btn" data-nav="catalog">${ico('book')}Catálogo técnico</button></div>
- <div class="sec-h"><h3>Continuar vistoria</h3></div>${run.length?`<div class="grid">${run.slice(0,4).map(insCard).join('')}</div>`:empty('clip','Nenhuma vistoria em andamento','Inicie uma nova vistoria para começar.')}
+ <div class="sec-h"><h3>Continuar vistoria</h3></div>${run.length?`<div class="grid">${run.slice(0,4).map(i=>insCard(i)).join('')}</div>`:empty('clip','Nenhuma vistoria em andamento','Inicie uma nova vistoria para começar.')}
  <div class="sec-h"><h3>Últimas vistorias</h3><button class="btn ghost sm" data-nav="insps">Ver todas</button></div>${insps.length?`<div class="grid">${insps.slice(0,6).map(i=>`<article class="card"><div class="ins-h"><div><h4>${esc(insName(i))}</h4><div class="mut">${fmtD(i.startedAt)} · ${cnt(i).pct}% avaliado</div></div>${spill(i.status)}</div></article>`).join('')}</div>`:'<p class="mut">Sem registros ainda.</p>'}`},
 props(){return`<div class="actions" style="margin:0 0 12px"><button class="btn pri" data-a="newp">${ico('plus')}Cadastrar imóvel</button></div>${search('Buscar por imóvel, cliente ou endereço',S.q)}<div id="list">${propList()}</div>`},
 prop(){const p=S.p,ex=props.some(x=>x.id==p.id);return`<form class="card" onsubmit="return false"><div class="grid2">${fld('Empreendimento / identificação','name',p.name,'text',true)}${fld('Construtora / incorporadora','developer',p.developer)}<div class="wide">${fld('Endereço','address',p.address)}</div>${fld('Unidade','unit',p.unit)}${fld('Torre / bloco','tower',p.tower)}${fld('Cliente / proprietário','client',p.client)}${fld('Data prevista da vistoria','date',p.date,'date')}<label class="f wide"><span>Observações</span><textarea data-p="notes">${esc(p.notes)}</textarea></label></div>
 <div class="actions"><button class="btn pri" data-a="savep" type="button">${ico('check')}Salvar imóvel</button>${ex?`<button class="btn dng" data-a="delp" type="button">${ico('trash')}Excluir</button>`:''}</div></form>`},
 envs(){const p=pn(S.pid),l=envsOf(S.pid),is=insps.filter(i=>i.pid==S.pid);
- return`<section class="card"><div class="ins-h"><div><h3>${esc(p.name)}${p.unit?' · un. '+esc(p.unit):''}</h3><p class="mut">${esc([p.developer,p.tower,p.address].filter(Boolean).join(' · ')||'Sem detalhes')}</p><p class="mut">Cliente: ${esc(p.client||'—')}</p></div></div><div class="actions"><button class="btn pri" data-a="start" data-x="${esc(S.pid)}">${ico('plus')}Nova vistoria</button><button class="btn" data-a="editp" data-x="${esc(S.pid)}">${ico('edit')}Editar imóvel</button></div></section>
+ return`<section class="card"><div class="ins-h"><div><h3>${esc(p.name)}${p.unit?' · un. '+esc(p.unit):''}</h3><p class="mut">${esc([p.developer,p.tower,p.address].filter(Boolean).join(' · ')||'Sem detalhes')}</p><p class="mut">Cliente: ${esc(p.client||'—')}</p></div></div><div class="actions"><button class="btn pri" data-a="start" data-x="${esc(S.pid)}">${ico('plus')}Nova vistoria</button><button class="btn" data-a="editp" data-x="${esc(S.pid)}">${ico('edit')}Editar imóvel</button><button class="btn dng" data-a="delprop" data-x="${esc(S.pid)}">${ico('trash')}Excluir cadastro</button></div></section>
  <div class="sec-h"><h3>Ambientes</h3><div class="actions"><button class="btn sec" data-a="newenv">${ico('plus')}Adicionar ambiente</button>${l.length?'':'<button class="btn" data-a="defenvs">Criar ambientes padrão</button>'}</div></div>
  ${l.length?`<div class="grid">${l.map(envCard).join('')}</div>`:empty('building','Nenhum ambiente','Crie os ambientes padrão (sala, cozinha, quartos, banheiro…) ou adicione um a um.')}
- <div class="sec-h"><h3>Vistorias deste imóvel</h3></div>${is.length?`<div class="grid">${is.map(insCard).join('')}</div>`:'<p class="mut">Nenhuma vistoria para este imóvel.</p>'}`},
+ <div class="sec-h"><h3>Vistorias deste imóvel</h3></div>${is.length?`<div class="grid">${is.map(i=>insCard(i,true)).join('')}</div>`:'<p class="mut">Nenhuma vistoria para este imóvel.</p>'}`},
 insps(){const t=S.t||'all',n=k=>insps.filter(i=>({all:1,run:i.status=='EM_ANDAMENTO',pause:i.status=='PAUSADA',done:i.status=='CONCLUIDA'}[k])).length;
  return`<div class="actions" style="margin:0 0 12px"><button class="btn pri" data-a="newins">${ico('plus')}Nova vistoria</button></div><div class="tabs" role="group" aria-label="Filtrar vistorias">${[['all','Todas'],['run','Em andamento'],['pause','Pausadas'],['done','Concluídas']].map(z=>`<button data-a="tab" data-x="${z[0]}" class="${t==z[0]?'on':''}" aria-pressed="${t==z[0]}">${z[1]} (${n(z[0])})</button>`).join('')}</div>${search('Buscar por imóvel, cliente ou responsável',S.q)}<div id="list">${insList()}</div>`},
 start(){const l=S.pid?envsOf(S.pid):[],pr=S.pid?pn(S.pid):null;
@@ -6304,6 +6328,44 @@ async function importBackup(file){
     if(extra.length||bad2.length)alert('Importação concluída.\n'+extra.join('\n')+(bad2.length?'\n\nVerificação de integridade — itens a revisar:\n'+bad2.map(z=>`• ${z[0]}: ${z[1].length}`).join('\n'):''))
   }catch(e){alert('A importação FALHOU e nenhum dado foi alterado.\n'+(e&&e.message||e))}}
 
+/* Exclusão de vistorias e de cadastros de imóveis: confirmação, transação única e limpeza de estados.
+   Nada é apagado fora de uma única transação do IndexedDB (tudo ou nada). */
+const nPh=i=>i.items.reduce((n,x)=>n+x.ph.length,0);
+async function removeData({propIds=[],insIds=[]}){
+  // 1) antes de apagar: impede que o salvamento automático, a nova tentativa e o diário recriem estas vistorias
+  const will=[...INS.values()].filter(i=>insIds.includes(i.id)||propIds.includes(i.pid)).map(i=>i.id);
+  will.forEach(id=>{GONE.add(id);DIRTY.delete(id);UNSAVED.delete(id);CONFLICT.delete(id);for(const f of [...FAILED])if(f.id==id)FAILED.delete(f)});
+  clearTimeout(save.t);save.t=DIRTY.size?setTimeout(flush,120):0;walSync();setSS();
+  try{
+    await CHAIN; // termina a gravação que já estava em andamento
+    const out=await DB.cascade({propIds,insIds}); // 2) exclusão atômica
+    for(const id of out.insps){GONE.add(id);INS.delete(id);DIRTY.delete(id);UNSAVED.delete(id);CONFLICT.delete(id);PL.delete(id);for(const f of [...FAILED])if(f.id==id)FAILED.delete(f);Object.keys(OPEN).forEach(k=>{if(k.startsWith(id+':'))delete OPEN[k]});if(cur&&cur.id==id)cur=null}
+    for(const pid of out.photos){if(urls[pid]){try{URL.revokeObjectURL(urls[pid])}catch(e){}delete urls[pid]}}
+    walSync();setSS();if(!UNSAVED.size&&!FAILED.size&&SAVE_ERR){SAVE_ERR=false;warnSave(false)}warnConflict();
+    return out;
+  }catch(e){ // falhou: nada foi apagado; as vistorias voltam a ser salvas normalmente
+    will.forEach(id=>{GONE.delete(id);const m=INS.get(id);if(m){DIRTY.set(id,m);UNSAVED.set(id,m)}});if(DIRTY.size)flush();setSS();throw e}}
+async function runDelete(opts,msg){
+  try{const out=await removeData(opts);await load();const pids=opts.propIds||[];
+    if(['insp','review','rel'].includes(S.v)&&!cur)go('insps');
+    else if(['envs','env','start'].includes(S.v)&&pids.includes(S.pid))go('props');
+    else if(S.v=='prop'&&S.p&&pids.includes(S.p.id))go('props');
+    else render();
+    toast(msg(out))}
+  catch(e){alert('A exclusão FALHOU e nenhum dado foi alterado.\n'+(e&&e.message||e));render()}}
+async function deleteInspection(id){await flush();const i=INS.get(id);if(!i)return;const c=cnt(i);
+  const ok=await askModal({title:'Excluir vistoria permanentemente?',okLabel:'Excluir definitivamente',backup:true,
+    html:`<p><b>Imóvel:</b> ${esc(insName(i))}<br><b>Vistoria:</b> iniciada em ${fmtD(i.startedAt)} · ${esc((PILL[i.status]||[i.status])[0])}${i.insp?' · '+esc(i.insp):''}<br><b>Registros:</b> ${c.n-c.pe} critério(s) avaliado(s), ${c.NAO_CONFORME} não conformidade(s), ${nPh(i)} fotografia(s)</p><p><b>A exclusão é permanente.</b> As fotografias, observações, resultados dos critérios e ocorrências desta vistoria serão removidos. O cadastro do imóvel e seus ambientes permanecem.</p>`});
+  if(!ok)return;await runDelete({insIds:[id]},()=>'Vistoria excluída')}
+async function deleteProperty(id){await flush();const p=props.find(x=>x.id==id);if(!p)return;
+  const all=(await DB.all('insps')).filter(i=>i.pid==id).map(r=>INS.get(r.id)||r),ne=envs.filter(e=>e.pid==id).length,ph=all.reduce((n,i)=>n+nPh(i),0),nm=(p.name||'Sem nome')+(p.unit?' · un. '+p.unit:'');
+  let ok;
+  if(!all.length)ok=await askModal({title:'Excluir cadastro do imóvel?',okLabel:'Excluir cadastro',backup:true,
+    html:`<p><b>${esc(nm)}</b>${p.client?'<br>Cliente: '+esc(p.client):''}</p><p>Serão removidos o <b>cadastro do imóvel</b> e <b>${ne} ambiente(s) configurado(s)</b>. Este imóvel não tem vistorias vinculadas.</p><p><b>A exclusão é permanente.</b></p>`});
+  else ok=await askModal({title:'Excluir cadastro E todas as vistorias?',okLabel:`Excluir cadastro e ${all.length} vistoria(s)`,cancelLabel:'Cancelar (manter tudo)',backup:true,check:'Entendo que o cadastro e todas as vistorias vinculadas serão excluídos definitivamente.',
+    html:`<p><b>${esc(nm)}</b> possui <b>${all.length} vistoria(s)</b> vinculada(s):</p><ul>${all.slice(0,8).map(i=>`<li>${fmtD(i.startedAt)} · ${esc((PILL[i.status]||[i.status])[0])} · ${cnt(i).NAO_CONFORME} não conformidade(s) · ${nPh(i)} foto(s)</li>`).join('')}${all.length>8?`<li>… e mais ${all.length-8}</li>`:''}</ul><p>Se continuar, serão excluídos <b>definitivamente</b>: o cadastro do imóvel, ${ne} ambiente(s), <b>${all.length} vistoria(s)</b> e ${ph} fotografia(s), com todos os resultados, observações e não conformidades. <b>Não há como desfazer.</b></p><p>Para manter tudo, escolha Cancelar.</p>`});
+  if(!ok)return;await runDelete({propIds:[id]},o=>`Cadastro excluído (${o.insps.length} vistoria(s), ${o.photos.length} foto(s), ${o.envs} ambiente(s))`)}
+
 /* Navegação, eventos, fotos, backup e inicialização. */
 const TT={dash:'Dashboard',props:'Imóveis',prop:'Imóvel',envs:'Imóvel',env:'Ambiente',insps:'Vistorias',start:'Nova vistoria',insp:'Vistoria',review:'Revisão e conclusão',rels:'Relatórios',rel:'Relatório',catalog:'Catálogo técnico',cfg:'Configurações'};
 const SECTION={dash:'dash',props:'props',prop:'props',envs:'props',env:'props',insps:'insps',start:'insps',insp:'insps',review:'insps',rels:'rels',rel:'rels',catalog:'catalog',cfg:'cfg'};
@@ -6340,7 +6402,9 @@ async function onClick(e){
  if(a=='newp')go('prop',{p:{id:uid(),name:'',developer:'',address:'',unit:'',tower:'',client:'',date:'',notes:'',createdAt:new Date().toISOString()},from:S.v=='envs'?'envs':''});
  if(a=='editp')go('prop',{p:{...props.find(p=>p.id==x)},from:S.v=='envs'?'envs':'',pid:S.v=='envs'?S.pid:undefined});
  if(a=='savep'){if(!(S.p.name||'').trim())return alert('Informe o nome do empreendimento.');const id=S.p.id,fromEnv=S.from=='envs';await DB.put('props',S.p);await load();if(fromEnv)go('envs',{pid:id});else go('props');toast('Imóvel salvo ✓')}
- if(a=='delp'){if(insps.some(v=>v.pid==S.p.id))return alert('Este imóvel possui vistorias e não pode ser excluído.');if(confirm('Excluir imóvel e seus ambientes?')){await DB.multi([['props','delete',S.p.id],...envs.filter(e=>e.pid==S.p.id).map(e=>['envs','delete',e.id])]);await load();go('props');toast('Imóvel excluído')}}
+ if(a=='delp'){await deleteProperty(S.p.id)}
+ if(a=='delprop'){await deleteProperty(x)}
+ if(a=='delins'){await deleteInspection(x)}
  if(a=='newins')go('start',{pid:'',from:S.v});
  if(a=='start')go('start',{pid:x,from:S.v});
  if(a=='tab'){S.t=x;render()}
@@ -6376,7 +6440,7 @@ async function onClick(e){
  if(a=='exp'){download(await buildBackup(),'backup-vistoria-'+stamp()+'.json');toast('Backup exportado')}}
 document.addEventListener('click',e=>onClick(e).catch(err=>alert('Erro: '+(err&&err.message||err))));
 addEventListener('unhandledrejection',e=>alert('Erro: '+(e.reason&&e.reason.message||e.reason)));
-document.addEventListener('keydown',e=>{if(e.key!='Escape')return;if($('#modal').innerHTML){closeZoom();return}if(S.v=='insp'&&S.k){S.k=null;render()}});
+document.addEventListener('keydown',e=>{if(e.key!='Escape')return;if(document.querySelector('.mdl'))return;if($('#modal').innerHTML){closeZoom();return}if(S.v=='insp'&&S.k){S.k=null;render()}});
 document.addEventListener('input',e=>{const t=e.target;if(t.dataset.p!==undefined&&S.p)S.p[t.dataset.p]=t.value;
  if(t.dataset.q!==undefined){S.q=t.value;const l=$('#list');if(l&&LISTS[S.v])l.innerHTML=LISTS[S.v]();return}
  if(t.dataset.g!==undefined){const ins=insOf(t);if(ins&&lockOk(ins)){ins.notes=t.value;save(ins)}return}
